@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotterdam — Puerto del Mundo Moderno</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --steel: #f0f5f9;
+    --slate: #dde8f2;
+    --port: #0c2d48;
+    --port-mid: #1a4d7a;
+    --port-light: #4a82b4;
+    --ink: #182530;
+    --ink-mid: #3d5a70;
+    --ink-light: #6a8fa8;
+    --orange: #c05012;
+    --orange-light: #d87840;
+    --orange-dark: #8a3208;
+    --gold: #a07018;
+    --gold-light: #c09030;
+    --green-acc: #2a6a3a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--steel);
+    color: var(--ink);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: var(--port);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(192,80,18,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 50%, rgba(26,77,122,0.14) 0%, transparent 60%);
+  }
+  .header-ornament {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-light);
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+    position: relative;
+  }
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    color: var(--steel);
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    position: relative;
+  }
+  .header h1 span { color: var(--orange-light); }
+  .header-sub {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    color: var(--ink-light);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    position: relative;
+  }
+  .header-dates {
+    display: inline-block;
+    margin-top: 1.2rem;
+    padding: 0.4rem 1.5rem;
+    border: 1px solid rgba(192,144,48,0.4);
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    position: relative;
+  }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 2rem;
+    margin: 2rem 0 1rem;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--slate); }
+  .divider-text {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ---- WARNINGS ---- */
+  .warnings {
+    margin: 0 2rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.75rem;
+  }
+  .warning-card {
+    background: var(--slate);
+    border-left: 3px solid var(--orange);
+    padding: 0.9rem 1.1rem;
+    border-radius: 0 4px 4px 0;
+  }
+  .warning-card.blue  { border-left-color: var(--port-mid); }
+  .warning-card.gold  { border-left-color: var(--gold); }
+  .warning-card.green { border-left-color: var(--green-acc); }
+  .warning-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 0.25rem;
+  }
+  .warning-card.blue  .warning-label { color: var(--port-mid); }
+  .warning-card.gold  .warning-label { color: var(--gold); }
+  .warning-card.green .warning-label { color: var(--green-acc); }
+  .warning-text { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.4; }
+
+  /* ---- DAY SECTION HEADER ---- */
+  .day-section { margin-bottom: 2.5rem; }
+  .day-header {
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .day-header.d1 { background: linear-gradient(135deg, #0c2d48 0%, #1a4d7a 100%); }
+  .day-header.d2 { background: linear-gradient(135deg, #0c2a1e 0%, #1a4a38 100%); }
+  .day-numeral {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    opacity: 0.22;
+    color: #fff;
+    line-height: 1;
+  }
+  .day-info h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--steel);
+    letter-spacing: 0.08em;
+  }
+  .day-info p { font-style: italic; color: rgba(255,255,255,0.48); font-size: 0.9rem; }
+  .day-badge {
+    margin-left: auto;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.48);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* ---- DAYS GRID ---- */
+  .days-grid {
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .day-card {
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(12,45,72,0.07);
+    border: 1px solid rgba(12,45,72,0.06);
+  }
+  .day-card-header {
+    padding: 0.9rem 1.2rem 0.7rem;
+    border-bottom: 1px solid var(--slate);
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .day-card-header.d1 { background: rgba(26,77,122,0.06); }
+  .day-card-header.d2 { background: rgba(26,74,56,0.06); }
+  .card-block { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-light); }
+  .card-date  { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+  .card-title { font-style: italic; font-size: 0.85rem; color: var(--ink-light); margin-left: auto; text-align: right; }
+  .day-card-body { padding: 1rem 1.2rem; }
+
+  /* ---- TIME BLOCKS ---- */
+  .time-block {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--slate);
+  }
+  .time-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .time-tag {
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-top: 0.1rem;
+  }
+  .time-tag.morning   { background: rgba(160,112,24,0.12); }
+  .time-tag.afternoon { background: rgba(192,80,18,0.11); }
+  .time-tag.evening   { background: rgba(12,45,72,0.08); }
+  .time-tag.transit   { background: rgba(26,77,122,0.10); }
+  .time-content { flex: 1; }
+  .time-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 0.15rem;
+    display: block;
+  }
+  .activity-name { font-size: 0.95rem; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 0.2rem; }
+  .activity-detail { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.4; }
+  .activity-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+  .tag {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+  .tag.reserve  { color: var(--orange);    border-color: var(--orange);    background: rgba(192,80,18,0.05); }
+  .tag.urgent   { color: #fff;             border-color: var(--orange-dark); background: var(--orange); }
+  .tag.price    { color: var(--gold);      border-color: var(--gold);      background: rgba(160,112,24,0.05); }
+  .tag.tip      { color: var(--port-mid);  border-color: var(--port-mid);  background: rgba(26,77,122,0.05); }
+  .tag.free     { color: var(--green-acc); border-color: var(--green-acc); background: rgba(42,106,58,0.05); }
+  .tag.photo    { color: #3a7a4a;          border-color: #3a7a4a;          background: rgba(58,122,74,0.05); }
+  .tag.transport{ color: #2a6090;          border-color: #2a6090;          background: rgba(42,96,144,0.05); }
+  .tag.food     { color: #6b4c8a;          border-color: #6b4c8a;          background: rgba(107,76,138,0.05); }
+
+  /* ---- FOOD HIGHLIGHT ---- */
+  .food-highlight {
+    background: rgba(107,76,138,0.06);
+    border: 1px solid rgba(107,76,138,0.15);
+    border-radius: 4px;
+    padding: 0.6rem 0.9rem;
+    margin-top: 0.5rem;
+  }
+  .food-highlight .resto { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
+  .food-highlight .dish  { font-style: italic; font-size: 0.82rem; color: var(--ink-mid); }
+
+  /* ---- BACKUP ---- */
+  .backup {
+    margin: 0 2rem 1.5rem;
+    background: var(--slate);
+    border-radius: 4px;
+    padding: 0.7rem 1rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+  .backup-icon { font-size: 0.9rem; margin-top: 0.1rem; flex-shrink: 0; }
+  .backup-text { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.4; }
+  .backup-text strong { font-style: normal; color: var(--ink); }
+
+  /* ---- SECTION BLOCK ---- */
+  .section-block { margin: 0 2rem 2.5rem; }
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--slate);
+    margin-bottom: 1rem;
+  }
+
+  /* ---- CARDS GRID (restaurants, photo) ---- */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .info-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(12,45,72,0.06);
+    box-shadow: 0 1px 6px rgba(12,45,72,0.04);
+  }
+  .info-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+    color: var(--orange);
+  }
+  .info-card h4.blue  { color: var(--port-mid); }
+  .info-card h4.green { color: var(--green-acc); }
+  .info-card h4.gold  { color: var(--gold); }
+  .card-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    font-size: 0.85rem;
+    color: var(--ink-mid);
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+  }
+  .card-item::before { content: '—'; color: var(--orange); flex-shrink: 0; font-size: 0.7rem; margin-top: 0.15rem; }
+  .info-card h4.blue  ~ .card-item::before { color: var(--port-mid); }
+  .info-card h4.green ~ .card-item::before { color: var(--green-acc); }
+
+  /* ---- PHOTO CARD (left accent) ---- */
+  .photo-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(12,45,72,0.06);
+    border-left: 3px solid var(--green-acc);
+    box-shadow: 0 1px 4px rgba(12,45,72,0.04);
+  }
+  .photo-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-acc);
+    margin-bottom: 0.5rem;
+  }
+  .photo-detail { font-size: 0.85rem; color: var(--ink-mid); line-height: 1.45; }
+  .photo-meta {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    margin-top: 0.45rem;
+  }
+
+  /* ---- BOOKING LIST ---- */
+  .booking-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .booking-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid rgba(12,45,72,0.06);
+    box-shadow: 0 1px 4px rgba(12,45,72,0.04);
+  }
+  .booking-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .booking-dot.red    { background: #c0392b; }
+  .booking-dot.yellow { background: var(--gold); }
+  .booking-dot.green  { background: #27ae60; }
+  .booking-name { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+  .booking-when { font-size: 0.78rem; font-style: italic; color: var(--ink-light); }
+  .booking-urgency {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink-light);
+  }
+  .booking-price { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold); white-space: nowrap; }
+
+  /* ---- BUDGET ---- */
+  .budget-box { background: white; border-radius: 6px; padding: 1.2rem 1.5rem; border: 1px solid rgba(12,45,72,0.06); box-shadow: 0 2px 8px rgba(12,45,72,0.05); }
+  .budget-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--slate);
+    font-size: 0.9rem;
+  }
+  .budget-row:last-child { border-bottom: none; font-weight: 600; font-size: 1rem; padding-top: 0.7rem; margin-top: 0.3rem; border-top: 2px solid var(--slate); }
+  .budget-label { color: var(--ink-mid); }
+  .budget-value { font-family: 'Cinzel', serif; color: var(--gold); }
+
+  /* ---- SECTION LABEL ---- */
+  .sub-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  /* ---- FOOTER ---- */
+  .footer { background: var(--port); text-align: center; padding: 2rem; margin-top: 3rem; }
+  .footer p { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--ink-light); text-transform: uppercase; }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 600px) {
+    .days-grid, .cards-grid { grid-template-columns: 1fr; }
+    .booking-item { grid-template-columns: auto 1fr; }
+    .booking-price { display: none; }
+    .header, .day-header { padding-left: 1rem; padding-right: 1rem; }
+    .days-grid, .warnings, .section-block, .backup { padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; }
+    .days-grid { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-ornament">⚓ Itinerario de viaje ⚓</div>
+  <h1>Rotter<span>dam</span></h1>
+  <p class="header-sub">Puerto del Mundo Moderno</p>
+  <div class="header-dates">21 Jun — 22 Jun · 2026 · 1 viajero</div>
+</div>
+
+<!-- PRACTICAL NOTES -->
+<div class="divider" style="margin-top:2rem">
+  <div class="divider-line"></div>
+  <div class="divider-text">Antes de salir</div>
+  <div class="divider-line"></div>
+</div>
+
+<div class="warnings">
+  <div class="warning-card">
+    <div class="warning-label">⚠ Reservar con antelación</div>
+    <div class="warning-text">Fenix Museum requiere entrada con franja horaria (fenix.nl · 15 €). Kinderdijk conviene reservar online con 1-2 días de margen (kinderdijk.nl · 19,50 €). Hacerlo antes del viernes.</div>
+  </div>
+  <div class="warning-card blue">
+    <div class="warning-label">🚢 Waterbus a Kinderdijk</div>
+    <div class="warning-text">Salida desde el muelle de Erasmusbrug (Boompjes, orilla norte). Línea 202 directa en verano, ~cada hora. Ticket en waterbus.nl o en el muelle. Ida y vuelta ~10 €.</div>
+  </div>
+  <div class="warning-card gold">
+    <div class="warning-label">🍽 FODMAP</div>
+    <div class="warning-text">Evitar el kapsalon (salsa de ajo). En Markthal: puestos de pescado y carne a la brasa son seguros. En Bazar: pedir a la brasa sin harissa. Gouda curado es FODMAP-seguro.</div>
+  </div>
+  <div class="warning-card green">
+    <div class="warning-label">📷 Fotografía</div>
+    <div class="warning-text">Erasmusbrug: mejor luz por la tarde desde el norte. Kinderdijk: llegar a las 10:00 antes de los grupos. Depot Boijmans: esfera reflectante en cualquier hora. Delfshaven: hora dorada.</div>
+  </div>
+</div>
+
+
+<!-- ============ DÍA 1 ============ -->
+<div class="day-section">
+  <div class="day-header d1">
+    <div class="day-numeral">I</div>
+    <div class="day-info">
+      <h2>Sábado 21 de junio</h2>
+      <p>Blaak · Erasmusbrug · Kop van Zuid · Fenix · Witte de With</p>
+    </div>
+    <div class="day-badge">Arquitectura</div>
+  </div>
+
+  <div class="days-grid">
+
+    <!-- MAÑANA -->
+    <div class="day-card">
+      <div class="day-card-header d1">
+        <div class="card-block">Mañana</div>
+        <div class="card-date">Blaak · Centrum</div>
+        <div class="card-title">Llegada · Arquitectura</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag transit">🚆</div>
+          <div class="time-content">
+            <span class="time-label">10:00 — Llegada</span>
+            <div class="activity-name">Rotterdam Centraal — la Kapsalon</div>
+            <div class="activity-detail">Dejar el equipaje en el alojamiento. Admirar la estación desde la plaza: la cubierta metálica triangular fue apodada "kapsalon" (bandeja de barbero) por los rotterdammers. El vestíbulo interior es uno de los mejores de Europa. Caminar hacia el sur por Coolsingel.</div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🏗️</div>
+          <div class="time-content">
+            <span class="time-label">10:30 — Cube Houses</span>
+            <div class="activity-name">Cube Houses + Kijk-Kubus</div>
+            <div class="activity-detail">Las casas cúbicas a 45° del arquitecto Piet Blom (1984). Concepto: vivir "en lo alto de los árboles". El Kijk-Kubus es una unidad visitable: la inclinación hace que no se pueda colgar nada en las paredes, los rincones se vuelven techos, los suelos son triángulos. Vale los 3 €. El exterior es completamente gratuito.</div>
+            <div class="activity-meta">
+              <span class="tag price">3 € Kijk-Kubus</span>
+              <span class="tag free">Exterior gratuito</span>
+              <span class="tag photo">📷 Desde abajo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🏛️</div>
+          <div class="time-content">
+            <span class="time-label">11:15 — Markthal</span>
+            <div class="activity-name">Markthal — el arco habitado</div>
+            <div class="activity-detail">El mercado cubierto más grande de los Países Bajos (2014, MVRDV). Entrar para ver el fresco del techo: 11.000 m² de frutas y verduras pintadas en la bóveda interior. La estructura es un arco con 228 apartamentos integrados — el mayor arco habitado del mundo. Varios puestos de comida para un snack o primer almuerzo.</div>
+            <div class="activity-meta">
+              <span class="tag free">Entrada gratuita</span>
+              <span class="tag photo">📷 Gran angular hacia arriba</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">⚓</div>
+          <div class="time-content">
+            <span class="time-label">12:00 — Puerto antiguo</span>
+            <div class="activity-name">Oude Haven + Witte Huis</div>
+            <div class="activity-detail">El puerto más antiguo de Rotterdam: barcazas históricas, puentes basculantes, callejuelas de almacenes. A 2 minutos: el Witte Huis (1898), el rascacielos más antiguo de los Países Bajos, con fachada neorrenacentista de ladrillo blanco. Construido cuando el acero de rascacielos apenas existía en América.</div>
+            <div class="activity-meta">
+              <span class="tag free">Gratuito</span>
+              <span class="tag photo">📷 Reflejo en el agua</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🍽️</div>
+          <div class="time-content">
+            <span class="time-label">12:30 — Comida</span>
+            <div class="food-highlight">
+              <div class="resto">Markthal — puestos de pescado</div>
+              <div class="dish">Pedir: <strong>haring (arenque) sin cebolla</strong> o cualquier puesto de pescado fresco y carne a la brasa. FODMAP: evitar puestos con salsas preparadas. Los puestos de sushi o pescado a la plancha son seguros.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TARDE -->
+    <div class="day-card">
+      <div class="day-card-header d1">
+        <div class="card-block">Tarde</div>
+        <div class="card-date">Erasmusbrug · Kop van Zuid</div>
+        <div class="card-title">El Cisne · Fenix</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🌉</div>
+          <div class="time-content">
+            <span class="time-label">13:30 — El Cisne</span>
+            <div class="activity-name">Erasmusbrug — cruzar a pie</div>
+            <div class="activity-detail">El puente atirantado asimétrico de 802 metros, símbolo moderno de la ciudad. Apodado "De Zwaan" (el cisne) por la forma de su único pilono. Cruzar desde la orilla norte (Boompjes) al sur en ~20 minutos a pie. Mejor fotografía de Rotterdam: desde el norte, luz de tarde, el puente con el skyline de Kop van Zuid al fondo.</div>
+            <div class="activity-meta">
+              <span class="tag free">Gratuito</span>
+              <span class="tag photo">📷 Mejor spot de la ciudad</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🏙️</div>
+          <div class="time-content">
+            <span class="time-label">14:00 — Wilhelminapier</span>
+            <div class="activity-name">Kop van Zuid — waterfront histórico-moderno</div>
+            <div class="activity-detail">La orilla sur del Nieuwe Maas: el Hotel New York (1901), antigua sede de la Holland America Line, desde donde millones de emigrantes europeos zarparon hacia América entre 1873 y 1971. El edificio art déco sobrevivió intacto rodeado de torres contemporáneas. Uno de los contrastes urbanos más fotogénicos de Europa.</div>
+            <div class="activity-meta">
+              <span class="tag free">Gratuito</span>
+              <span class="tag photo">📷 Hotel New York + torres modernas</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🏛️</div>
+          <div class="time-content">
+            <span class="time-label">14:45 — Fenix Museum</span>
+            <div class="activity-name">Fenix Museum — arte sobre la migración</div>
+            <div class="activity-detail">Inaugurado en mayo de 2025 en un almacén portuario restaurado de 16.000 m² en Katendrecht. La "Tornado": estructura espiral de acero y vidrio diseñada por MAD Architects que recorre el interior del edificio. Las exposiciones exploran el movimiento humano y la migración a través del arte contemporáneo. Visita: mínimo 90 minutos. ⚠️ Cierra a las 17:00 los sábados.</div>
+            <div class="activity-meta">
+              <span class="tag reserve">⚠ Reservar en fenix.nl</span>
+              <span class="tag price">15 € · ~2h</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🍺</div>
+          <div class="time-content">
+            <span class="time-label">17:00 — Mercado artesanal</span>
+            <div class="activity-name">Fenix Food Factory</div>
+            <div class="activity-detail">Mercado artesanal a 5 minutos del museo en el mismo muelle de Katendrecht. La Brouwerij Rotterdam (cervecería local), Kaashandel Van den Berg (queso — el Gouda extra belegen es FODMAP-seguro), puestos de marisco y embutidos. Más auténtico y menos turístico que el Markthal. Para una copa antes de volver al centro.</div>
+            <div class="activity-meta">
+              <span class="tag tip">Local · sin turistas</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- NOCHE -->
+    <div class="day-card">
+      <div class="day-card-header d1">
+        <div class="card-block">Noche</div>
+        <div class="card-date">Witte de Withstraat</div>
+        <div class="card-title">La calle más vibrante</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag evening">🚶</div>
+          <div class="time-content">
+            <span class="time-label">19:00 — Recorrido</span>
+            <div class="activity-name">Witte de Withstraat</div>
+            <div class="activity-detail">La calle cultural más densa de Rotterdam: galerías, bares independientes, restaurantes internacionales y clubs. Recorrer los ~700 metros de norte a sur despacio, entrar en alguna galería si está abierta, explorar los callejones laterales. Antes de elegir dónde cenar.</div>
+            <div class="activity-meta">
+              <span class="tag free">Gratuito</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🍽️</div>
+          <div class="time-content">
+            <span class="time-label">19:30 — Cena</span>
+            <div class="food-highlight">
+              <div class="resto">Bazar <span style="font-weight:300;font-size:0.78rem">(Witte de Withstraat 16)</span></div>
+              <div class="dish">Pedir: <strong>cordero asado, pollo con especias o halloumi a la brasa</strong>. Restaurante marroquí/turco instalado en una iglesia protestante del siglo XIX: columnatas, techo abovedado, ambiente excepcional. Uno de los restaurantes más únicos de los Países Bajos. FODMAP: pedir a la brasa, evitar harissa y salsas. Reservar mesa.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🍷</div>
+          <div class="time-content">
+            <span class="time-label">21:30 — Noche</span>
+            <div class="activity-name">Bares de Witte de With</div>
+            <div class="activity-detail">La calle tiene varios bares de carácter: Bar Mosaic, Café de Witte Aap (el bar más antiguo de Rotterdam, 1914), cervecerías locales con terrazas. Rotterdam tiene una escena nocturna más tranquila y auténtica que Ámsterdam. Terminar con una cerveza local de pie en una terraza.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /days-grid Sábado -->
+
+  <div class="backup">
+    <div class="backup-icon">☁️</div>
+    <div class="backup-text"><strong>Backup lluvia sábado:</strong> El Markthal y el Kijk-Kubus son totalmente interiores. El Fenix Museum también. Si llueve por la mañana empezar por ellos y mover el paseo de Erasmusbrug a la tarde (la lluvia da un ambiente especial al puente). <strong>Si el Fenix está lleno:</strong> Kunsthal Rotterdam (Museumpark, exposiciones temporales, ~17,50 €) o el Maritiem Museum (historia del puerto, ~16 €).</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 2 ============ -->
+<div class="day-section">
+  <div class="day-header d2">
+    <div class="day-numeral">II</div>
+    <div class="day-info">
+      <h2>Domingo 22 de junio</h2>
+      <p>Kinderdijk · Delfshaven · Depot Boijmans · Luchtsingel</p>
+    </div>
+    <div class="day-badge">Molinos y Pólders</div>
+  </div>
+
+  <div class="days-grid">
+
+    <!-- KINDERDIJK -->
+    <div class="day-card">
+      <div class="day-card-header d2">
+        <div class="card-block">Mañana</div>
+        <div class="card-date">Kinderdijk</div>
+        <div class="card-title">Patrimonio UNESCO</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag transit">🚶</div>
+          <div class="time-content">
+            <span class="time-label">09:15 — Salida</span>
+            <div class="activity-name">Muelle Erasmusbrug (Boompjes, orilla norte)</div>
+            <div class="activity-detail">15 minutos andando desde el centro. Comprar ticket Waterbus ida y vuelta en waterbus.nl o en el muelle. Verificar horario de verano línea 202 antes de salir.</div>
+            <div class="activity-meta"><span class="tag transport">waterbus.nl</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag transit">🚢</div>
+          <div class="time-content">
+            <span class="time-label">09:30 — Waterbus</span>
+            <div class="activity-name">Línea 202 directo → Kinderdijk</div>
+            <div class="activity-detail">35 minutos de travesía fluvial por el delta del Rin y el Mosa. El trayecto es parte de la experiencia: el puerto de Rotterdam visto desde el agua, después los pólders y los diques del delta holandés. En verano opera ~cada hora.</div>
+            <div class="activity-meta"><span class="tag transport">~10 € ida y vuelta</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🌬️</div>
+          <div class="time-content">
+            <span class="time-label">10:15 — Todo lo que queda</span>
+            <div class="activity-name">Kinderdijk — 19 molinos de viento UNESCO</div>
+            <div class="activity-detail">El conjunto de molinos más grande de los Países Bajos, construidos en el siglo XVIII para drenar los pólders. La entrada incluye: 2 molinos-museo visitables desde el interior (con el mecanismo funcionando), la estación de bombeo Wisboom, el film del centro de visitantes y el tour en barca por los canales entre los molinos. Llegar antes de las 11:00 para evitar los grupos de crucero. Mejor luz y menos gente en la primera hora.</div>
+            <div class="activity-meta">
+              <span class="tag reserve">⚠ Reservar en kinderdijk.nl</span>
+              <span class="tag price">19,50 €</span>
+              <span class="tag photo">📷 Canal principal · luz matinal</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag transit">🚢</div>
+          <div class="time-content">
+            <span class="time-label">13:00 — Regreso</span>
+            <div class="activity-name">Waterbus de vuelta a Rotterdam</div>
+            <div class="activity-detail">Llegada a Rotterdam ~13:35. Metro líneas B/D (parada Delfshaven) o 25 minutos andando hacia el barrio histórico. <em>Backup si el Waterbus no opera:</em> Bus 489 desde Rotterdam Kralingse Zoom, cada 30 min, 35 min de trayecto.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TARDE -->
+    <div class="day-card">
+      <div class="day-card-header d2">
+        <div class="card-block">Tarde</div>
+        <div class="card-date">Delfshaven · Museumpark</div>
+        <div class="card-title">Barrio histórico · Depot</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🍽️</div>
+          <div class="time-content">
+            <span class="time-label">14:00 — Comida</span>
+            <div class="food-highlight">
+              <div class="resto">Café Sijf <span style="font-weight:300;font-size:0.78rem">(Voorhaven 13 · Delfshaven)</span></div>
+              <div class="dish">Pedir: <strong>broodje (bocadillo artesanal) o sopa del día</strong>. Café tradicional holandés con vistas directas al canal histórico de Delfshaven. Sin turistas. ~10-15 € pp. Abre desde las 11h.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">⚓</div>
+          <div class="time-content">
+            <span class="time-label">14:45 — El único barrio que sobrevivió</span>
+            <div class="activity-name">Delfshaven</div>
+            <div class="activity-detail">El único barrio de Rotterdam que no fue destruido en el bombardeo alemán de mayo de 1940. La Pelgrimvaderskerk (iglesia de 1417): aquí se despidieron los Pilgrim Fathers antes de zarpar hacia América en 1620. El molino de viento Ooievaarspolder en pleno funcionamiento. Los almacenes históricos del Voorhaven reflejados en el canal. ~45 minutos.</div>
+            <div class="activity-meta">
+              <span class="tag free">Gratuito</span>
+              <span class="tag photo">📷 Reflejo en el canal · hora dorada</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🔮</div>
+          <div class="time-content">
+            <span class="time-label">15:45 — La esfera espejo</span>
+            <div class="activity-name">Depot Boijmans Van Beuningen</div>
+            <div class="activity-detail">El edificio esférico de espejo del Museumpark (2021), primer almacén de arte abierto al público del mundo: 151.000 obras del Museo Boijmans en estanterías visitables. La azotea tiene acceso libre y da vistas de 360° sobre la ciudad — el mejor mirador gratuito de Rotterdam. El interior (22,50 €) merece la visita solo si te interesa el arte contemporáneo.</div>
+            <div class="activity-meta">
+              <span class="tag free">Azotea gratuita</span>
+              <span class="tag price">22,50 € interior</span>
+              <span class="tag photo">📷 Esfera reflectante · skyline</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🌉</div>
+          <div class="time-content">
+            <span class="time-label">16:30 — El puente naranja</span>
+            <div class="activity-name">Luchtsingel</div>
+            <div class="activity-detail">El puente peatonal elevado de madera naranja financiado por crowdfunding ciudadano, que conecta el área de la Estación Centraal con Hofbogen. Un proyecto urbano único en el mundo: diseñado por ZUS Architects, construido tablón a tablón con donaciones de 25 € cada una. 10 minutos de desvío desde Museumpark hacia Centraal. Vistas sobre los tejados imposibles desde cualquier otro punto.</div>
+            <div class="activity-meta">
+              <span class="tag free">Gratuito</span>
+              <span class="tag photo">📷 Vista sobre tejados y Centraal</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag transit">🚆</div>
+          <div class="time-content">
+            <span class="time-label">17:30 — Vuelta</span>
+            <div class="activity-name">Rotterdam Centraal → Maastricht</div>
+            <div class="activity-detail">La suscripción NS Weekend es válida hasta medianoche del domingo — no hay prisa. Trayecto ~2h30m con 1 cambio (normalmente Eindhoven). Se puede alargar el día y coger un tren más tarde sin coste adicional.</div>
+            <div class="activity-meta"><span class="tag transport">NS Weekend · gratuito hasta medianoche</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /days-grid Domingo -->
+
+  <div class="backup">
+    <div class="backup-icon">🌧️</div>
+    <div class="backup-text"><strong>Backup lluvia domingo:</strong> Si llueve intensamente por la mañana, mover Kinderdijk al sábado tarde (el Waterbus opera con lluvia) y usar el domingo para el Depot Boijmans interior + Maritiem Museum. Delfshaven se puede visitar con lluvia ligera bajo los aleros de los almacenes históricos. <strong>Si el Waterbus está suspendido por viento fuerte:</strong> Bus 489 desde Rotterdam Kralingse Zoom, cada 30 min, 35 min de trayecto.</div>
+  </div>
+</div>
+
+
+<!-- ============ RESTAURANTES ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1.5rem">
+    <div class="divider-line"></div>
+    <div class="divider-text">Guía de restaurantes</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <p style="font-style:italic;color:var(--ink-light);font-size:0.88rem;margin-bottom:1.5rem;">Opciones para los dos días — organizadas por tipo y momento del día.</p>
+
+  <div class="sub-label" style="color:var(--orange);">🍽️ Cenas</div>
+  <div class="cards-grid" style="margin-bottom:2rem;">
+
+    <div class="info-card">
+      <h4>🕌 Bazar ⭐ Imprescindible</h4>
+      <div class="card-item">Witte de Withstraat 16 · Centrum</div>
+      <div class="card-item">Restaurante en una iglesia protestante del siglo XIX reconvertida. Columnatas, techos abovedados, lámparas de araña marroquíes. El lugar más fotogénico y con más personalidad de Rotterdam. Cocina norteafricana y turca.</div>
+      <div class="card-item">Pedir: cordero asado, halloumi a la brasa, pollo con ras el hanout</div>
+      <div class="card-item">⚠️ FODMAP: pedir a la brasa sin salsas, evitar harissa y guisos con cebolla · Reservar mesa · Abre todos los días desde las 11h</div>
+    </div>
+
+    <div class="info-card">
+      <h4>⚓ De Matroos en het Meisje</h4>
+      <div class="card-item">Witte de Withstraat 72 · Centrum</div>
+      <div class="card-item">"El marinero y la chica". Cocina holandesa local sin pretensiones — la opción más auténtica de la calle. Ambiente de barrio, precios razonables, clientela de vecinos.</div>
+      <div class="card-item">Pedir: dagschotel (plato del día), stampot (patata+verdura, FODMAP-seguro), bitterballen</div>
+      <div class="card-item">Cierra lunes · Sin necesidad de reserva</div>
+    </div>
+
+    <div class="info-card">
+      <h4>🍷 FRED</h4>
+      <div class="card-item">Kortekade 46 · cerca de Witte de With</div>
+      <div class="card-item">Uno de los restaurantes más queridos de Rotterdam. Cocina holandesa contemporánea con menú que cambia según el mercado. Para una cena más elaborada sin exceso de formalidad.</div>
+      <div class="card-item">Pedir: menú de temporada · ~35-45 € pp</div>
+      <div class="card-item">Reservar con antelación · Cierra domingos y lunes</div>
+    </div>
+
+    <div class="info-card">
+      <h4>🏛️ Hotel New York Restaurant</h4>
+      <div class="card-item">Koninginnenhoofd 1 · Wilhelminapier</div>
+      <div class="card-item">El restaurante dentro del edificio art déco de la Holland America Line (1901). Vale la visita solo por el interior histórico. La cocina es correcta y el ambiente excepcional.</div>
+      <div class="card-item">Pedir: mariscos del día, filete, platos clásicos · ~30-40 € pp</div>
+      <div class="card-item">Abre todos los días · Reservar para cena</div>
+    </div>
+
+  </div>
+
+  <div class="sub-label" style="color:var(--port-mid);">🥗 Almuerzos y meriendas</div>
+  <div class="cards-grid" style="margin-bottom:2rem;">
+
+    <div class="info-card">
+      <h4 class="blue">🐟 Markthal — puestos de pescado</h4>
+      <div class="card-item">Dominee Jan Scharpstraat 298 · Blaak</div>
+      <div class="card-item">El haring (arenque en salmuera) es el snack más holandés que existe. Se come sostenido por la cola, en un mordisco, o sobre pan con pepinillo. Los puestos de sushi y pescado fresco son seguros para FODMAP.</div>
+      <div class="card-item">Pedir: haring sin cebolla, rollmops, sashimi del día</div>
+      <div class="card-item">Abre todos los días desde las 10h · Mercado cerrado lunes</div>
+    </div>
+
+    <div class="info-card">
+      <h4 class="blue">☕ Café Sijf</h4>
+      <div class="card-item">Voorhaven 13 · Delfshaven</div>
+      <div class="card-item">Café tradicional en el canal del Voorhaven. Sin turistas. El mejor almuerzo del domingo antes de Kinderdijk o después de volver.</div>
+      <div class="card-item">Pedir: broodje o sopa del día · ~10-15 € pp</div>
+      <div class="card-item">Abre desde las 11h · Terraza sobre el canal</div>
+    </div>
+
+    <div class="info-card">
+      <h4 class="blue">🍺 Fenix Food Factory</h4>
+      <div class="card-item">Veerlaan 19D · Katendrecht</div>
+      <div class="card-item">Mercado artesanal en el mismo muelle del Fenix Museum. Brouwerij Rotterdam (cervecería), Van den Berg (quesos — gouda extra belegen FODMAP-seguro), marisco fresco. Para la merienda del sábado.</div>
+      <div class="card-item">Pedir: cerveza local + tabla de queso · ~10-15 € pp</div>
+      <div class="card-item">Cerrado lunes · Abre 11h</div>
+    </div>
+
+    <div class="info-card">
+      <h4 class="blue">☕ Gare du Nord</h4>
+      <div class="card-item">Proveniersstraat 61 · cerca de Centraal</div>
+      <div class="card-item">Brasserie de barrio popular entre los trabajadores del área de la estación. Para el primer café al llegar el sábado o un almuerzo rápido sin trampa turística.</div>
+      <div class="card-item">Pedir: tostadas, broodje, sopa del día · ~10 € pp</div>
+      <div class="card-item">Abre todos los días desde las 8h</div>
+    </div>
+
+    <div class="info-card">
+      <h4 class="blue">🍻 Aloha Bar</h4>
+      <div class="card-item">Entrepothaven 9 · Katendrecht</div>
+      <div class="card-item">Bar con terraza en el mismo muelle del Fenix Food Factory. Vistas directas al agua y al skyline del Nieuwe Maas. Ideal para el aperitivo de tarde del sábado después del Fenix.</div>
+      <div class="card-item">Pedir: cerveza local, tabla · ~15 € pp · Cerrado lunes</div>
+    </div>
+
+    <div class="info-card">
+      <h4 class="blue">🧀 Kaashandel Van den Berg</h4>
+      <div class="card-item">Dentro de Fenix Food Factory · Katendrecht</div>
+      <div class="card-item">Quesería artesanal con Gouda envejecido, Jong Belegen y especialidades regionales. El Gouda extra belegen (curado) es completamente FODMAP-seguro. Para una tabla o llevarse algo al tren de vuelta.</div>
+      <div class="card-item">Pedir: gouda extra belegen + membrillo · ~8-12 € tabla</div>
+    </div>
+
+  </div>
+
+  <div class="sub-label" style="color:var(--port-mid);">🍟 Street food y snacks holandeses</div>
+  <div class="cards-grid">
+
+    <div class="info-card">
+      <h4 class="blue">🥙 Kapsalon — el plato de Rotterdam</h4>
+      <div class="card-item">En cualquier kebab o snackbar de la ciudad</div>
+      <div class="card-item">Inventado en Rotterdam en 2003: bandeja de aluminio con patatas fritas, döner, lechuga, tomate, queso gouda gratinado y salsas. Omnipresente en la ciudad, completamente local.</div>
+      <div class="card-item">⚠️ FODMAP: pedir sin garlic sauce (salsa de ajo). El resto es seguro · ~8-10 €</div>
+    </div>
+
+    <div class="info-card">
+      <h4 class="blue">🐟 Haring — snack holandés</h4>
+      <div class="card-item">Puestos de pescado en Markthal o mercados</div>
+      <div class="card-item">El arenque en salmuera (nieuwe haring), el snack más holandés. Se come sostenido por la cola, con la cabeza levantada, de un mordisco, o en pan con pepinillo.</div>
+      <div class="card-item">Pedir: sin cebolla (FODMAP) · ~3-4 € por pieza</div>
+    </div>
+
+    <div class="info-card">
+      <h4 class="blue">🧆 Bitterballen</h4>
+      <div class="card-item">En cualquier café, bar o brasserie</div>
+      <div class="card-item">Las croquetas holandesas de ragú de ternera — el aperitivo por defecto en todo el país. Crujientes, cremosas. Se sirven con mostaza. Revisar ingredientes para FODMAP (pueden llevar cebolla).</div>
+      <div class="card-item">Pedir: con mostaza dijon · ~6-8 € la ración</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ============ FOTOGRAFÍA ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1.5rem">
+    <div class="divider-line"></div>
+    <div class="divider-text">Spots fotográficos</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;">
+
+    <div class="photo-card">
+      <h4>📷 Erasmusbrug</h4>
+      <div class="photo-detail">El mejor spot de la ciudad. Desde la orilla norte (Boompjes), mirar al sur con el pilono asimétrico y el Nieuwe Maas en primer plano. Con luz de tarde el pilono brilla y el puente se recorta contra el skyline sur. Desde el puente en sí: vista del puerto y las grúas.</div>
+      <div class="photo-meta">Tarde · Orilla norte · 35-50mm</div>
+    </div>
+
+    <div class="photo-card">
+      <h4>📷 Markthal interior</h4>
+      <div class="photo-detail">El fresco del techo (11.000 m²) requiere gran angular apuntando hacia arriba. La luz natural entra por las fachadas de vidrio a los extremos. El arco completo se captura bien desde el centro del pasillo. Más fácil con poca gente, a la apertura.</div>
+      <div class="photo-meta">Mañana temprano · Gran angular · Trípode si es posible</div>
+    </div>
+
+    <div class="photo-card">
+      <h4>📷 Cube Houses</h4>
+      <div class="photo-detail">El ángulo más reconocible: desde abajo mirando hacia arriba, los cubos apilados sobre el puente peatonal de Overblaak. Desde el interior del Kijk-Kubus: las ventanas inclinadas con la ciudad como fondo distorsionado. Gran angular para el contexto.</div>
+      <div class="photo-meta">Cualquier hora · Gran angular · Desde abajo</div>
+    </div>
+
+    <div class="photo-card">
+      <h4>📷 Kinderdijk</h4>
+      <div class="photo-detail">El canal principal con los 19 molinos en perspectiva es el shot clásico. Primera hora (10:00-11:00) antes de los grupos, con luz baja rasante y posibles reflejos en el agua. El tour en barca da ángulos imposibles desde tierra. Teleobjetivo para aislar uno o dos molinos.</div>
+      <div class="photo-meta">10:00-11:00 · Canal principal · 50-135mm</div>
+    </div>
+
+    <div class="photo-card">
+      <h4>📷 Depot Boijmans</h4>
+      <div class="photo-detail">La esfera de espejo refleja el Museumpark y el skyline de manera distorsionada y siempre cambiante. Cada ángulo da una imagen diferente según la posición del sol. La azotea da una vista de 360° sobre la ciudad. Funciona bien en cualquier condición de luz.</div>
+      <div class="photo-meta">Cualquier hora · Esfera · Angular o normal</div>
+    </div>
+
+    <div class="photo-card">
+      <h4>📷 Delfshaven</h4>
+      <div class="photo-detail">El Voorhaven con los almacenes históricos reflejados en el canal es la toma más pintoresca de Rotterdam — la única estética de "ciudad vieja". Mejor en hora dorada de tarde. El molino Ooievaarspolder como primer plano con los almacenes al fondo.</div>
+      <div class="photo-meta">Hora dorada tarde · Reflejo canal · 35-50mm</div>
+    </div>
+
+    <div class="photo-card">
+      <h4>📷 Hotel New York</h4>
+      <div class="photo-detail">El edificio art déco de 1901 rodeado de torres contemporáneas es el contraste histórico-moderno más fotogénico de la ciudad. Con teleobjetivo medio-largo se puede aislar el edificio antiguo contra el fondo de cristal y acero moderno.</div>
+      <div class="photo-meta">Cualquier hora · 70-135mm para el contraste</div>
+    </div>
+
+    <div class="photo-card">
+      <h4>📷 Rotterdam Centraal</h4>
+      <div class="photo-detail">La fachada triangular metálica es una de las más fotogénicas de Europa. El vestíbulo interior con la estructura metálica dorada. La plaza delantera con los tranvías en movimiento. Interesante también de noche, iluminada.</div>
+      <div class="photo-meta">Llegada (10h) o noche · Interior + fachada</div>
+    </div>
+
+    <div class="photo-card">
+      <h4>📷 Luchtsingel</h4>
+      <div class="photo-detail">Desde el puente elevado: vistas sobre los tejados con la Estación Centraal al fondo — perspectiva única. Desde abajo: la estructura naranja de madera sobre el cielo es un sujeto fotográfico en sí mismo. Poco fotografiado, pocas personas.</div>
+      <div class="photo-meta">Tarde · Vista sobre tejados · Gran angular</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ============ RESERVAS ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1rem">
+    <div class="divider-line"></div>
+    <div class="divider-text">Lista de reservas</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="booking-list">
+    <div class="booking-item">
+      <div class="booking-dot red"></div>
+      <div>
+        <div class="booking-name">Alojamiento — Sáb 21 · Check-in mañana</div>
+        <div class="booking-when">Stayokay Rotterdam 47 € (junto a Cube Houses, renovado 2026) · Hotel Van Walsum 123 € (8,7 · 3★) · booking.com</div>
+      </div>
+      <div class="booking-urgency">🔴 Reservar ahora</div>
+      <div class="booking-price">47 – 134 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot red"></div>
+      <div>
+        <div class="booking-name">Fenix Museum — Sáb 21 · Franja 14:45–17:00</div>
+        <div class="booking-when">fenix.nl · Reservar franja horaria · Cierra a las 17:00 los sábados · Reservar con 2-3 días de antelación</div>
+      </div>
+      <div class="booking-urgency">🔴 Reservar</div>
+      <div class="booking-price">15 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot red"></div>
+      <div>
+        <div class="booking-name">Kinderdijk — Dom 22 · Entrada 10:00–13:00</div>
+        <div class="booking-when">kinderdijk.nl · Entrada online (ligeramente más barata) · Evita colas · Reservar con 1-2 días</div>
+      </div>
+      <div class="booking-urgency">🔴 Reservar</div>
+      <div class="booking-price">19,50 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot yellow"></div>
+      <div>
+        <div class="booking-name">Waterbus — Dom 22 · Salida 09:30 desde Boompjes</div>
+        <div class="booking-when">waterbus.nl · Verificar horario verano línea 202 · Se puede comprar en el muelle</div>
+      </div>
+      <div class="booking-urgency">🟡 Verificar horario</div>
+      <div class="booking-price">~10 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot yellow"></div>
+      <div>
+        <div class="booking-name">Bazar — Sáb 21 · Cena ~20:00</div>
+        <div class="booking-when">Witte de Withstraat 16 · Reservar mesa online · Especialmente en sábado noche</div>
+      </div>
+      <div class="booking-urgency">🟡 Recomendable</div>
+      <div class="booking-price">~25 € pp</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Depot Boijmans — Dom 22 · Azotea</div>
+        <div class="booking-when">depotboijmans.nl · Azotea gratuita sin reserva · Interior 22,50 € si interesa, reservar en web</div>
+      </div>
+      <div class="booking-urgency">🟢 Azotea libre</div>
+      <div class="booking-price">Gratis / 22,50 €</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PRESUPUESTO ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1rem">
+    <div class="divider-line"></div>
+    <div class="divider-text">Presupuesto estimado</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="budget-box">
+    <div class="budget-row">
+      <span class="budget-label">Alojamiento (1 noche · sábado)</span>
+      <span class="budget-value">47 – 134 €</span>
+    </div>
+    <div class="budget-row">
+      <span class="budget-label">Fenix Museum</span>
+      <span class="budget-value">15 €</span>
+    </div>
+    <div class="budget-row">
+      <span class="budget-label">Kinderdijk — entrada + tour en barca</span>
+      <span class="budget-value">19,50 €</span>
+    </div>
+    <div class="budget-row">
+      <span class="budget-label">Waterbus Erasmusbrug ↔ Kinderdijk</span>
+      <span class="budget-value">~10 €</span>
+    </div>
+    <div class="budget-row">
+      <span class="budget-label">Comidas y bebidas (2 días)</span>
+      <span class="budget-value">60 – 80 €</span>
+    </div>
+    <div class="budget-row">
+      <span class="budget-label">Varios (Kijk-Kubus, Depot interior optativo)</span>
+      <span class="budget-value">3 – 26 €</span>
+    </div>
+    <div class="budget-row">
+      <span class="budget-label">Tren Maastricht ↔ Rotterdam · sáb. ida · dom. vuelta</span>
+      <span class="budget-value">Incluido — NS Weekend</span>
+    </div>
+    <div class="budget-row">
+      <span class="budget-label">Total estimado</span>
+      <span class="budget-value">~155 – 285 €</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Rotterdam · Puerto del Mundo Moderno · Junio 2026</p>
+</div>
+
+</body>
+</html>
