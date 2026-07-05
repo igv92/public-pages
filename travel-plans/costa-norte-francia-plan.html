@@ -1,467 +1,467 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Côte d'Opale & Baie de Somme — Acantilados, Hormigón y Marea</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --chalk: #eef1f1;
-    --mist: #dce5e5;
-    --channel: #16323b;
-    --channel-mid: #2c6478;
-    --channel-light: #5f93a6;
-    --ink: #1a2429;
-    --ink-mid: #3d545c;
-    --ink-light: #6f878f;
-    --opal: #c9852f;
-    --opal-light: #dda254;
-    --opal-dark: #8f5a17;
-    --gold: #a8792a;
-    --gold-light: #c49a3e;
-    --concrete: #6a6f6e;
-    --concrete-dark: #404443;
-    --green-acc: #35674e;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Côte d'Opale & Baie de Somme — Acantilados, Hormigón y Marea</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --chalk: #eef1f1;
+      --mist: #dce5e5;
+      --channel: #16323b;
+      --channel-mid: #2c6478;
+      --channel-light: #5f93a6;
+      --ink: #1a2429;
+      --ink-mid: #3d545c;
+      --ink-light: #6f878f;
+      --opal: #c9852f;
+      --opal-light: #dda254;
+      --opal-dark: #8f5a17;
+      --gold: #a8792a;
+      --gold-light: #c49a3e;
+      --concrete: #6a6f6e;
+      --concrete-dark: #404443;
+      --green-acc: #35674e;
+    }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    background-color: var(--chalk);
-    color: var(--ink);
-    font-family: 'Crimson Pro', Georgia, serif;
-    font-size: 16px;
-    line-height: 1.6;
-  }
+    body {
+      background-color: var(--chalk);
+      color: var(--ink);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
 
-  /* ---- HEADER ---- */
-  .header {
-    background: var(--channel);
-    padding: 3rem 2rem 2.5rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse at 18% 50%, rgba(201,133,47,0.16) 0%, transparent 60%),
-      radial-gradient(ellipse at 82% 50%, rgba(95,147,166,0.22) 0%, transparent 60%);
-  }
-  .header-ornament {
-    font-family: 'Cinzel', serif;
-    color: var(--opal-light);
-    font-size: 0.7rem;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    opacity: 0.85;
-    position: relative;
-  }
-  .header h1 {
-    font-family: 'Cinzel', serif;
-    font-weight: 700;
-    font-size: clamp(1.8rem, 5vw, 3.2rem);
-    color: var(--chalk);
-    letter-spacing: 0.04em;
-    line-height: 1.2;
-    position: relative;
-  }
-  .header h1 span { color: var(--opal-light); }
-  .header-sub {
-    font-family: 'Crimson Pro', serif;
-    font-style: italic;
-    color: var(--channel-light);
-    font-size: 1.1rem;
-    margin-top: 0.5rem;
-    position: relative;
-  }
-  .header-dates {
-    display: inline-block;
-    margin-top: 1.2rem;
-    padding: 0.4rem 1.5rem;
-    border: 1px solid rgba(196,154,62,0.4);
-    color: var(--opal-light);
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.22em;
-    position: relative;
-  }
+    /* ---- HEADER ---- */
+    .header {
+      background: var(--channel);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+              radial-gradient(ellipse at 18% 50%, rgba(201,133,47,0.16) 0%, transparent 60%),
+              radial-gradient(ellipse at 82% 50%, rgba(95,147,166,0.22) 0%, transparent 60%);
+    }
+    .header-ornament {
+      font-family: 'Cinzel', serif;
+      color: var(--opal-light);
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      opacity: 0.85;
+      position: relative;
+    }
+    .header h1 {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      color: var(--chalk);
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+      position: relative;
+    }
+    .header h1 span { color: var(--opal-light); }
+    .header-sub {
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      color: var(--channel-light);
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
+      position: relative;
+    }
+    .header-dates {
+      display: inline-block;
+      margin-top: 1.2rem;
+      padding: 0.4rem 1.5rem;
+      border: 1px solid rgba(196,154,62,0.4);
+      color: var(--opal-light);
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.22em;
+      position: relative;
+    }
 
-  /* ---- DIVIDER ---- */
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0 2rem;
-    margin: 2rem 0 1rem;
-  }
-  .divider-line { flex: 1; height: 1px; background: var(--mist); }
-  .divider-text {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.35em;
-    color: var(--ink-light);
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
+    /* ---- DIVIDER ---- */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0 2rem;
+      margin: 2rem 0 1rem;
+    }
+    .divider-line { flex: 1; height: 1px; background: var(--mist); }
+    .divider-text {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      color: var(--ink-light);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
 
-  /* ---- WARNINGS ---- */
-  .warnings {
-    margin: 0 2rem 2rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 0.75rem;
-  }
-  .warning-card {
-    background: var(--mist);
-    border-left: 3px solid var(--opal);
-    padding: 0.9rem 1.1rem;
-    border-radius: 0 4px 4px 0;
-  }
-  .warning-card.blue     { border-left-color: var(--channel-mid); }
-  .warning-card.gold     { border-left-color: var(--gold); }
-  .warning-card.green    { border-left-color: var(--green-acc); }
-  .warning-card.concrete { border-left-color: var(--concrete); }
-  .warning-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--opal-dark);
-    margin-bottom: 0.25rem;
-  }
-  .warning-card.blue     .warning-label { color: var(--channel-mid); }
-  .warning-card.gold     .warning-label { color: var(--gold); }
-  .warning-card.green    .warning-label { color: var(--green-acc); }
-  .warning-card.concrete .warning-label { color: var(--concrete-dark); }
-  .warning-text { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.4; }
-  .warning-text strong { color: var(--ink); }
+    /* ---- WARNINGS ---- */
+    .warnings {
+      margin: 0 2rem 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 0.75rem;
+    }
+    .warning-card {
+      background: var(--mist);
+      border-left: 3px solid var(--opal);
+      padding: 0.9rem 1.1rem;
+      border-radius: 0 4px 4px 0;
+    }
+    .warning-card.blue     { border-left-color: var(--channel-mid); }
+    .warning-card.gold     { border-left-color: var(--gold); }
+    .warning-card.green    { border-left-color: var(--green-acc); }
+    .warning-card.concrete { border-left-color: var(--concrete); }
+    .warning-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--opal-dark);
+      margin-bottom: 0.25rem;
+    }
+    .warning-card.blue     .warning-label { color: var(--channel-mid); }
+    .warning-card.gold     .warning-label { color: var(--gold); }
+    .warning-card.green    .warning-label { color: var(--green-acc); }
+    .warning-card.concrete .warning-label { color: var(--concrete-dark); }
+    .warning-text { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.4; }
+    .warning-text strong { color: var(--ink); }
 
-  /* ---- DAY SECTION HEADER ---- */
-  .day-section { margin-bottom: 2.5rem; }
-  .day-header {
-    padding: 1.2rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  .day-header.opale   { background: linear-gradient(135deg, #16323b 0%, #2c6478 100%); }
-  .day-header.somme   { background: linear-gradient(135deg, #123528 0%, #35674e 100%); }
-  .day-header.transit { background: linear-gradient(135deg, #3a3f3e 0%, #6a6f6e 100%); }
-  .day-numeral {
-    font-family: 'Cinzel', serif;
-    font-size: 2.5rem;
-    font-weight: 700;
-    opacity: 0.24;
-    color: #fff;
-    line-height: 1;
-    min-width: 1.8rem;
-  }
-  .day-info h2 {
-    font-family: 'Cinzel', serif;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--chalk);
-    letter-spacing: 0.06em;
-  }
-  .day-info p { font-style: italic; color: rgba(255,255,255,0.5); font-size: 0.88rem; }
-  .day-badge {
-    margin-left: auto;
-    font-family: 'Cinzel', serif;
-    font-size: 0.58rem;
-    letter-spacing: 0.18em;
-    padding: 0.3rem 0.8rem;
-    border: 1px solid rgba(255,255,255,0.22);
-    color: rgba(255,255,255,0.55);
-    border-radius: 2px;
-    white-space: nowrap;
-  }
+    /* ---- DAY SECTION HEADER ---- */
+    .day-section { margin-bottom: 2.5rem; }
+    .day-header {
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .day-header.opale   { background: linear-gradient(135deg, #16323b 0%, #2c6478 100%); }
+    .day-header.somme   { background: linear-gradient(135deg, #123528 0%, #35674e 100%); }
+    .day-header.transit { background: linear-gradient(135deg, #3a3f3e 0%, #6a6f6e 100%); }
+    .day-numeral {
+      font-family: 'Cinzel', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      opacity: 0.24;
+      color: #fff;
+      line-height: 1;
+      min-width: 1.8rem;
+    }
+    .day-info h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--chalk);
+      letter-spacing: 0.06em;
+    }
+    .day-info p { font-style: italic; color: rgba(255,255,255,0.5); font-size: 0.88rem; }
+    .day-badge {
+      margin-left: auto;
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid rgba(255,255,255,0.22);
+      color: rgba(255,255,255,0.55);
+      border-radius: 2px;
+      white-space: nowrap;
+    }
 
-  /* ---- DAYS GRID ---- */
-  .days-grid {
-    padding: 0 2rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  .day-card {
-    background: white;
-    border-radius: 6px;
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(22,50,59,0.07);
-    border: 1px solid rgba(22,50,59,0.06);
-  }
-  .day-card-header {
-    padding: 0.9rem 1.2rem 0.7rem;
-    border-bottom: 1px solid var(--mist);
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-  }
-  .day-card-header.opale { background: rgba(44,100,120,0.06); }
-  .day-card-header.somme { background: rgba(53,103,78,0.06); }
-  .day-card-header.transit { background: rgba(106,111,110,0.06); }
-  .card-block { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-light); }
-  .card-date  { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600; color: var(--ink); }
-  .card-title { font-style: italic; font-size: 0.85rem; color: var(--ink-light); margin-left: auto; text-align: right; }
-  .day-card-body { padding: 1rem 1.2rem; }
+    /* ---- DAYS GRID ---- */
+    .days-grid {
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .day-card {
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(22,50,59,0.07);
+      border: 1px solid rgba(22,50,59,0.06);
+    }
+    .day-card-header {
+      padding: 0.9rem 1.2rem 0.7rem;
+      border-bottom: 1px solid var(--mist);
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+    .day-card-header.opale { background: rgba(44,100,120,0.06); }
+    .day-card-header.somme { background: rgba(53,103,78,0.06); }
+    .day-card-header.transit { background: rgba(106,111,110,0.06); }
+    .card-block { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-light); }
+    .card-date  { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+    .card-title { font-style: italic; font-size: 0.85rem; color: var(--ink-light); margin-left: auto; text-align: right; }
+    .day-card-body { padding: 1rem 1.2rem; }
 
-  /* ---- TIME BLOCKS ---- */
-  .time-block {
-    display: flex;
-    gap: 0.8rem;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--mist);
-  }
-  .time-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-  .time-tag {
-    flex-shrink: 0;
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    margin-top: 0.1rem;
-  }
-  .time-tag.morning   { background: rgba(168,121,42,0.12); }
-  .time-tag.afternoon { background: rgba(201,133,47,0.12); }
-  .time-tag.evening   { background: rgba(22,50,59,0.08); }
-  .time-tag.transit   { background: rgba(44,100,120,0.10); }
-  .time-tag.wwii      { background: rgba(106,111,110,0.16); }
-  .time-content { flex: 1; }
-  .time-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.58rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--ink-light);
-    margin-bottom: 0.15rem;
-    display: block;
-  }
-  .activity-name { font-size: 0.95rem; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 0.2rem; }
-  .activity-detail { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.45; }
-  .activity-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
-  .tag {
-    font-family: 'Cinzel', serif;
-    font-size: 0.55rem;
-    letter-spacing: 0.15em;
-    padding: 0.15rem 0.5rem;
-    border-radius: 2px;
-    text-transform: uppercase;
-    border: 1px solid;
-  }
-  .tag.reserve  { color: var(--opal-dark);   border-color: var(--opal-dark);   background: rgba(201,133,47,0.06); }
-  .tag.wwii     { color: #fff;               border-color: var(--concrete-dark); background: var(--concrete); }
-  .tag.price    { color: var(--gold);        border-color: var(--gold);        background: rgba(168,121,42,0.05); }
-  .tag.tip      { color: var(--channel-mid); border-color: var(--channel-mid); background: rgba(44,100,120,0.05); }
-  .tag.free     { color: var(--green-acc);   border-color: var(--green-acc);   background: rgba(53,103,78,0.05); }
-  .tag.photo    { color: #3a7a4a;            border-color: #3a7a4a;            background: rgba(58,122,74,0.05); }
-  .tag.tide     { color: #2a6090;            border-color: #2a6090;            background: rgba(42,96,144,0.05); }
-  .tag.transport{ color: var(--channel-mid); border-color: var(--channel-mid); background: rgba(44,100,120,0.05); }
-  .tag.food     { color: #6b4c8a;            border-color: #6b4c8a;            background: rgba(107,76,138,0.05); }
+    /* ---- TIME BLOCKS ---- */
+    .time-block {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--mist);
+    }
+    .time-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .time-tag {
+      flex-shrink: 0;
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      margin-top: 0.1rem;
+    }
+    .time-tag.morning   { background: rgba(168,121,42,0.12); }
+    .time-tag.afternoon { background: rgba(201,133,47,0.12); }
+    .time-tag.evening   { background: rgba(22,50,59,0.08); }
+    .time-tag.transit   { background: rgba(44,100,120,0.10); }
+    .time-tag.wwii      { background: rgba(106,111,110,0.16); }
+    .time-content { flex: 1; }
+    .time-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 0.15rem;
+      display: block;
+    }
+    .activity-name { font-size: 0.95rem; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 0.2rem; }
+    .activity-detail { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.45; }
+    .activity-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+    .tag {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+      text-transform: uppercase;
+      border: 1px solid;
+    }
+    .tag.reserve  { color: var(--opal-dark);   border-color: var(--opal-dark);   background: rgba(201,133,47,0.06); }
+    .tag.wwii     { color: #fff;               border-color: var(--concrete-dark); background: var(--concrete); }
+    .tag.price    { color: var(--gold);        border-color: var(--gold);        background: rgba(168,121,42,0.05); }
+    .tag.tip      { color: var(--channel-mid); border-color: var(--channel-mid); background: rgba(44,100,120,0.05); }
+    .tag.free     { color: var(--green-acc);   border-color: var(--green-acc);   background: rgba(53,103,78,0.05); }
+    .tag.photo    { color: #3a7a4a;            border-color: #3a7a4a;            background: rgba(58,122,74,0.05); }
+    .tag.tide     { color: #2a6090;            border-color: #2a6090;            background: rgba(42,96,144,0.05); }
+    .tag.transport{ color: var(--channel-mid); border-color: var(--channel-mid); background: rgba(44,100,120,0.05); }
+    .tag.food     { color: #6b4c8a;            border-color: #6b4c8a;            background: rgba(107,76,138,0.05); }
 
-  /* ---- FOOD HIGHLIGHT ---- */
-  .food-highlight {
-    background: rgba(107,76,138,0.06);
-    border: 1px solid rgba(107,76,138,0.15);
-    border-radius: 4px;
-    padding: 0.6rem 0.9rem;
-    margin-top: 0.5rem;
-  }
-  .food-highlight .resto { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
-  .food-highlight .dish  { font-style: italic; font-size: 0.82rem; color: var(--ink-mid); }
-  .food-highlight .dish strong { font-style: normal; }
+    /* ---- FOOD HIGHLIGHT ---- */
+    .food-highlight {
+      background: rgba(107,76,138,0.06);
+      border: 1px solid rgba(107,76,138,0.15);
+      border-radius: 4px;
+      padding: 0.6rem 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .food-highlight .resto { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
+    .food-highlight .dish  { font-style: italic; font-size: 0.82rem; color: var(--ink-mid); }
+    .food-highlight .dish strong { font-style: normal; }
 
-  /* ---- BACKUP ---- */
-  .backup {
-    margin: 0 2rem 1.5rem;
-    background: var(--mist);
-    border-radius: 4px;
-    padding: 0.7rem 1rem;
-    display: flex;
-    gap: 0.6rem;
-    align-items: flex-start;
-  }
-  .backup-icon { font-size: 0.9rem; margin-top: 0.1rem; flex-shrink: 0; }
-  .backup-text { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.4; }
-  .backup-text strong { font-style: normal; color: var(--ink); }
+    /* ---- BACKUP ---- */
+    .backup {
+      margin: 0 2rem 1.5rem;
+      background: var(--mist);
+      border-radius: 4px;
+      padding: 0.7rem 1rem;
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+    .backup-icon { font-size: 0.9rem; margin-top: 0.1rem; flex-shrink: 0; }
+    .backup-text { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.4; }
+    .backup-text strong { font-style: normal; color: var(--ink); }
 
-  /* ---- SECTION BLOCK ---- */
-  .section-block { margin: 0 2rem 2.5rem; }
+    /* ---- SECTION BLOCK ---- */
+    .section-block { margin: 0 2rem 2.5rem; }
 
-  /* ---- CARDS GRID ---- */
-  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; }
-  .info-card {
-    background: white;
-    border-radius: 6px;
-    padding: 1rem 1.1rem;
-    border: 1px solid rgba(22,50,59,0.06);
-    box-shadow: 0 1px 6px rgba(22,50,59,0.04);
-  }
-  .info-card h4 {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 0.7rem;
-    color: var(--opal-dark);
-  }
-  .info-card h4.blue     { color: var(--channel-mid); }
-  .info-card h4.green    { color: var(--green-acc); }
-  .info-card h4.concrete { color: var(--concrete-dark); }
-  .card-item {
-    position: relative;
-    padding-left: 1.1rem;
-    font-size: 0.85rem;
-    color: var(--ink-mid);
-    margin-bottom: 0.4rem;
-    line-height: 1.45;
-  }
-  .card-item::before { content: '—'; position: absolute; left: 0; top: 0; color: var(--opal); font-size: 0.7rem; }
-  .info-card h4.blue     ~ .card-item::before { color: var(--channel-mid); }
-  .info-card h4.green    ~ .card-item::before { color: var(--green-acc); }
-  .info-card h4.concrete ~ .card-item::before { color: var(--concrete); }
-  .card-item.safe   { color: var(--green-acc); }
-  .card-item.safe::before { content: '✓'; color: var(--green-acc); }
-  .card-item.avoid  { color: var(--opal-dark); font-weight: 600; }
-  .card-item.avoid::before { content: '⚠'; color: var(--opal-dark); }
+    /* ---- CARDS GRID ---- */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; }
+    .info-card {
+      background: white;
+      border-radius: 6px;
+      padding: 1rem 1.1rem;
+      border: 1px solid rgba(22,50,59,0.06);
+      box-shadow: 0 1px 6px rgba(22,50,59,0.04);
+    }
+    .info-card h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+      color: var(--opal-dark);
+    }
+    .info-card h4.blue     { color: var(--channel-mid); }
+    .info-card h4.green    { color: var(--green-acc); }
+    .info-card h4.concrete { color: var(--concrete-dark); }
+    .card-item {
+      position: relative;
+      padding-left: 1.1rem;
+      font-size: 0.85rem;
+      color: var(--ink-mid);
+      margin-bottom: 0.4rem;
+      line-height: 1.45;
+    }
+    .card-item::before { content: '—'; position: absolute; left: 0; top: 0; color: var(--opal); font-size: 0.7rem; }
+    .info-card h4.blue     ~ .card-item::before { color: var(--channel-mid); }
+    .info-card h4.green    ~ .card-item::before { color: var(--green-acc); }
+    .info-card h4.concrete ~ .card-item::before { color: var(--concrete); }
+    .card-item.safe   { color: var(--green-acc); }
+    .card-item.safe::before { content: '✓'; color: var(--green-acc); }
+    .card-item.avoid  { color: var(--opal-dark); font-weight: 600; }
+    .card-item.avoid::before { content: '⚠'; color: var(--opal-dark); }
 
-  /* ---- PHOTO CARD ---- */
-  .photo-card {
-    background: white;
-    border-radius: 6px;
-    padding: 1rem 1.1rem;
-    border: 1px solid rgba(22,50,59,0.06);
-    border-left: 3px solid var(--green-acc);
-    box-shadow: 0 1px 4px rgba(22,50,59,0.04);
-  }
-  .photo-card h4 {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--green-acc);
-    margin-bottom: 0.5rem;
-  }
-  .photo-detail { font-size: 0.85rem; color: var(--ink-mid); line-height: 1.45; }
-  .photo-meta {
-    font-family: 'Cinzel', serif;
-    font-size: 0.55rem;
-    letter-spacing: 0.1em;
-    color: var(--ink-light);
-    text-transform: uppercase;
-    margin-top: 0.45rem;
-  }
+    /* ---- PHOTO CARD ---- */
+    .photo-card {
+      background: white;
+      border-radius: 6px;
+      padding: 1rem 1.1rem;
+      border: 1px solid rgba(22,50,59,0.06);
+      border-left: 3px solid var(--green-acc);
+      box-shadow: 0 1px 4px rgba(22,50,59,0.04);
+    }
+    .photo-card h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--green-acc);
+      margin-bottom: 0.5rem;
+    }
+    .photo-detail { font-size: 0.85rem; color: var(--ink-mid); line-height: 1.45; }
+    .photo-meta {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-light);
+      text-transform: uppercase;
+      margin-top: 0.45rem;
+    }
 
-  /* ---- BOOKING LIST ---- */
-  .booking-list { display: flex; flex-direction: column; gap: 0.5rem; }
-  .booking-item {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.7rem 1rem;
-    background: white;
-    border-radius: 4px;
-    border: 1px solid rgba(22,50,59,0.06);
-    box-shadow: 0 1px 4px rgba(22,50,59,0.04);
-  }
-  .booking-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .booking-dot.red    { background: #c0392b; }
-  .booking-dot.yellow { background: var(--gold); }
-  .booking-dot.green  { background: #27ae60; }
-  .booking-name { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
-  .booking-when { font-size: 0.78rem; font-style: italic; color: var(--ink-light); }
-  .booking-urgency {
-    font-family: 'Cinzel', serif;
-    font-size: 0.55rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    color: var(--ink-light);
-  }
-  .booking-price { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold); white-space: nowrap; }
+    /* ---- BOOKING LIST ---- */
+    .booking-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .booking-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 1rem;
+      background: white;
+      border-radius: 4px;
+      border: 1px solid rgba(22,50,59,0.06);
+      box-shadow: 0 1px 4px rgba(22,50,59,0.04);
+    }
+    .booking-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .booking-dot.red    { background: #c0392b; }
+    .booking-dot.yellow { background: var(--gold); }
+    .booking-dot.green  { background: #27ae60; }
+    .booking-name { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+    .booking-when { font-size: 0.78rem; font-style: italic; color: var(--ink-light); }
+    .booking-urgency {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: var(--ink-light);
+    }
+    .booking-price { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold); white-space: nowrap; }
 
-  /* ---- CHECKLIST ---- */
-  .checklist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
-  .checklist-card {
-    background: white;
-    border-radius: 6px;
-    padding: 1rem 1.1rem;
-    border: 1px solid rgba(22,50,59,0.06);
-    box-shadow: 0 1px 6px rgba(22,50,59,0.04);
-  }
-  .checklist-card h4 {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--opal-dark);
-    margin-bottom: 0.7rem;
-  }
-  .checklist-item {
-    display: flex;
-    gap: 0.5rem;
-    align-items: flex-start;
-    font-size: 0.85rem;
-    color: var(--ink-mid);
-    margin-bottom: 0.4rem;
-    line-height: 1.4;
-  }
-  .checklist-item::before {
-    content: '—';
-    color: var(--opal);
-    flex-shrink: 0;
-    font-size: 0.7rem;
-    margin-top: 0.15rem;
-  }
+    /* ---- CHECKLIST ---- */
+    .checklist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .checklist-card {
+      background: white;
+      border-radius: 6px;
+      padding: 1rem 1.1rem;
+      border: 1px solid rgba(22,50,59,0.06);
+      box-shadow: 0 1px 6px rgba(22,50,59,0.04);
+    }
+    .checklist-card h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--opal-dark);
+      margin-bottom: 0.7rem;
+    }
+    .checklist-item {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      font-size: 0.85rem;
+      color: var(--ink-mid);
+      margin-bottom: 0.4rem;
+      line-height: 1.4;
+    }
+    .checklist-item::before {
+      content: '—';
+      color: var(--opal);
+      flex-shrink: 0;
+      font-size: 0.7rem;
+      margin-top: 0.15rem;
+    }
 
-  /* ---- BUDGET ---- */
-  .budget-box { background: white; border-radius: 6px; padding: 1.2rem 1.5rem; border: 1px solid rgba(22,50,59,0.06); box-shadow: 0 2px 8px rgba(22,50,59,0.05); }
-  .budget-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--mist);
-    font-size: 0.9rem;
-  }
-  .budget-row:last-child { border-bottom: none; font-weight: 600; font-size: 1rem; padding-top: 0.7rem; margin-top: 0.3rem; border-top: 2px solid var(--mist); }
-  .budget-label { color: var(--ink-mid); }
-  .budget-value { font-family: 'Cinzel', serif; color: var(--gold); }
+    /* ---- BUDGET ---- */
+    .budget-box { background: white; border-radius: 6px; padding: 1.2rem 1.5rem; border: 1px solid rgba(22,50,59,0.06); box-shadow: 0 2px 8px rgba(22,50,59,0.05); }
+    .budget-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--mist);
+      font-size: 0.9rem;
+    }
+    .budget-row:last-child { border-bottom: none; font-weight: 600; font-size: 1rem; padding-top: 0.7rem; margin-top: 0.3rem; border-top: 2px solid var(--mist); }
+    .budget-label { color: var(--ink-mid); }
+    .budget-value { font-family: 'Cinzel', serif; color: var(--gold); }
 
-  /* ---- SUB LABEL ---- */
-  .sub-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-    margin-top: 0.5rem;
-  }
+    /* ---- SUB LABEL ---- */
+    .sub-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      margin-top: 0.5rem;
+    }
 
-  /* ---- FOOTER ---- */
-  .footer { background: var(--channel); text-align: center; padding: 2rem; margin-top: 3rem; }
-  .footer p { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--channel-light); text-transform: uppercase; }
+    /* ---- FOOTER ---- */
+    .footer { background: var(--channel); text-align: center; padding: 2rem; margin-top: 3rem; }
+    .footer p { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--channel-light); text-transform: uppercase; }
 
-  /* ---- RESPONSIVE ---- */
-  @media (max-width: 600px) {
-    .cards-grid { grid-template-columns: 1fr; }
-    .booking-item { grid-template-columns: auto 1fr; }
-    .booking-price { display: none; }
-    .header, .day-header { padding-left: 1rem; padding-right: 1rem; }
-    .warnings, .section-block, .backup { padding-left: 0; padding-right: 0; margin-left: 1rem; margin-right: 1rem; }
-    .days-grid { padding: 0 1rem; }
-  }
-</style>
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 600px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      .booking-item { grid-template-columns: auto 1fr; }
+      .booking-price { display: none; }
+      .header, .day-header { padding-left: 1rem; padding-right: 1rem; }
+      .warnings, .section-block, .backup { padding-left: 0; padding-right: 0; margin-left: 1rem; margin-right: 1rem; }
+      .days-grid { padding: 0 1rem; }
+    }
+  </style>
 </head>
 <body>
 
@@ -499,7 +499,7 @@
   </div>
   <div class="warning-card green">
     <div class="warning-label">📷 Clima, viento y luz</div>
-    <div class="warning-text">Septiembre = temporada media: menos gente, luz cálida, cielos cambiantes (ideales). En los cabos y en el Hourdel <strong>hace mucho viento</strong> — cortavientos y algo para fijar el trípode. Días aún largos. La reserva de otoño ya está en marcha en Marquenterre.</div>
+    <div class="warning-text">Septiembre = temporada media: menos gente, luz cálida, cielos cambiantes (ideales). En los cabos, en Cayeux y en el Hourdel <strong>hace mucho viento</strong> — cortavientos y algo para fijar el trípode. Días aún largos.</div>
   </div>
   <div class="warning-card concrete">
     <div class="warning-label">🏛 Journées du Patrimoine</div>
@@ -519,13 +519,13 @@
     <div class="info-card">
       <h4 class="blue">🚗 Cómo moverse</h4>
       <div class="card-item">Todo el viaje es en coche. La <strong>D940</strong> es la carretera costera panorámica que enhebra los cabos, Ambleteuse, Wimereux y Boulogne — lenta y preciosa, tómala en vez de la autopista dentro de la zona.</div>
-      <div class="card-item">Aparcamiento gratuito o barato en casi todos los sitios naturales (cabos, Hourdel, Marquenterre). En Boulogne y Saint-Valery, deja el coche y muévete a pie.</div>
+      <div class="card-item">Aparcamiento gratuito o barato en casi todos los sitios naturales (cabos, Hourdel, Cayeux). En Boulogne y Saint-Valery, deja el coche y muévete a pie.</div>
       <div class="card-item">En los cabos, los aparcamientos altos se llenan un poco en fin de semana con buen tiempo; llega temprano.</div>
     </div>
     <div class="info-card">
       <h4 class="blue">⚠ Errores típicos a evitar</h4>
       <div class="card-item">No mirar la <strong>marea</strong> antes del Hourdel (con marea alta casi no verás focas) ni antes de bajar a la playa de Blanc-Nez.</div>
-      <div class="card-item">Dar por hecho el <strong>tren de vapor</strong>: la temporada acaba a mediados de septiembre — verifica el calendario para tu día.</div>
+      <div class="card-item">Cruzar el estuario sin necesidad: el día 5 se queda en el lóbulo suroeste (Hourdel + Cayeux). Le Crotoy y Marquenterre quedan al norte y obligan a rodear por Noyelles — fuera del plan ligero.</div>
       <div class="card-item">No aventurarse solo por los bancos de arena de la bahía: la marea sube rápido y es peligroso.</div>
     </div>
   </div>
@@ -861,8 +861,8 @@
   <div class="day-header somme">
     <div class="day-numeral">V</div>
     <div class="day-info">
-      <h2>Baie de Somme — focas, aves y pueblos</h2>
-      <p>Pointe du Hourdel · Le Crotoy · Marquenterre</p>
+      <h2>Baie de Somme — focas, galets y estuario</h2>
+      <p>Pointe du Hourdel · Cayeux-sur-Mer · Saint-Valery</p>
     </div>
     <div class="day-badge">Naturaleza</div>
   </div>
@@ -881,7 +881,7 @@
           <div class="time-content">
             <span class="time-label">Mañana — según marea</span>
             <div class="activity-name">Pointe du Hourdel — la mayor colonia de focas de Francia</div>
-            <div class="activity-detail">~20 min desde Saint-Valery. Focas comunes (veaux-marins) y grises descansando en los bancos de arena — se ven mejor con marea baja (±2 h de la bajamar), desde la digue de galets. Parking gratuito junto al puerto/faro. Longvista o teleobjetivo y 300 m de distancia. De camino, Cayeux-sur-Mer: el paseo de tablas más largo de Europa y sus cabinas de colores.</div>
+            <div class="activity-detail">~20 min desde Saint-Valery, pasando por Cayeux. Focas comunes (veaux-marins) y grises descansando en los bancos de arena — se ven mejor con marea baja (±2 h de la bajamar), desde la digue de galets. Parking gratuito junto al puerto/faro del Hourdel. Longvista o teleobjetivo y 300 m de distancia. Hoy la marea es el único reloj del día: ordena todo alrededor de la bajamar.</div>
             <div class="activity-meta"><span class="tag tide">🌊 planear con bajamar</span><span class="tag photo">📷 Teleobjetivo 200-400mm</span></div>
           </div>
         </div>
@@ -897,33 +897,33 @@
         </div>
 
         <div class="time-block">
-          <div class="time-tag afternoon">⚓</div>
+          <div class="time-tag afternoon">🦐</div>
           <div class="time-content">
             <span class="time-label">Mediodía — comida</span>
             <div class="food-highlight">
-              <div class="resto">Le Crotoy <span style="font-weight:300;font-size:0.78rem">(orilla norte de la bahía)</span></div>
-              <div class="dish">Puerto pesquero con la única playa del norte de Francia orientada al sur. Marisco fresco: <strong>pescado a la plancha o mejillones sin cebolla ni chalota</strong> (pídelo explícito). Evita la <em>ficelle picarde</em> (champiñón + bechamel).</div>
+              <div class="resto">La Pointe du Hourdel <span style="font-weight:300;font-size:0.78rem">(Quai Gavois, Le Hourdel)</span></div>
+              <div class="dish">Brasserie de marineros a pie del puerto, justo en el punto de las focas — cero desvío. Institución de la baja Somme (café de pescadores desde 1880), ambiente local y precios contenidos (16-25 €). Pide las <strong>crevettes grises</strong> (gamba gris cocida, la especialidad del muelle y FODMAP-segura) o <strong>pescado del día a la plancha / friture d'éperlan</strong>. Evita moules marinière y ficelle picarde. Abierto todo el año sin reserva.</div>
             </div>
           </div>
         </div>
 
         <div class="time-block">
-          <div class="time-tag afternoon">🦩</div>
+          <div class="time-tag afternoon">🏖️</div>
           <div class="time-content">
             <span class="time-label">Tarde</span>
-            <div class="activity-name">Parc du Marquenterre — reserva ornitológica</div>
-            <div class="activity-detail">La gran reserva de aves de la bahía (6 km de recorrido, 13 observatorios), en plena <strong>migración de otoño</strong>: espátulas, limícolas, cigüeñas, quizá un águila pescadora. Guía naturalista incluido a las 10:30 y 14:00. Alquiler de prismáticos en la entrada. 2-3 h de naturaleza tranquila. Abierto a diario 10-19 h.</div>
-            <div class="activity-meta"><span class="tag price">11,50 €</span><span class="tag photo">📷 Aves · migración</span></div>
+            <div class="activity-name">Cayeux-sur-Mer — galets, cabinas y faro</div>
+            <div class="activity-detail">Sin cruzar el estuario: te quedas en el lóbulo suroeste. El paseo de tablas (<em>estacade</em>) más largo de Europa (~1,5 km) alineado con más de 400 cabinas de playa de colores, la playa infinita de galets y el faro de Brighton. Ritmo lento, viento y cielo abierto — tu tipo de foto sin presión de horarios. Paseo por el cordón de galets hacia el faro del Hourdel si quieres estirar la tarde.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Cabinas + estacade + galets</span></div>
           </div>
         </div>
 
         <div class="time-block">
-          <div class="time-tag evening">🚂</div>
+          <div class="time-tag evening">🌇</div>
           <div class="time-content">
-            <span class="time-label">Alternativa</span>
-            <div class="activity-name">Tren de vapor de la Baie de Somme</div>
-            <div class="activity-detail">El ferrocarril histórico de vapor une Le Crotoy, Noyelles, Saint-Valery y Cayeux bordeando las marismas (25 km/h, muy fotogénico). <strong>Ojo: la temporada acaba a mediados de septiembre</strong> — verifica el calendario de circulación para tu día exacto antes de contar con él.</div>
-            <div class="activity-meta"><span class="tag reserve">verificar calendario</span></div>
+            <span class="time-label">Atardecer</span>
+            <div class="activity-name">Vuelta a Saint-Valery — hora dorada en los quais</div>
+            <div class="activity-detail">~20 min de regreso a la base. Última luz sobre el estuario desde el paseo del dique hacia Cap Hornu, con la marea variable y las barcas. Sin prisa y sin coche por la tarde.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Estuario · última luz</span></div>
           </div>
         </div>
 
@@ -944,7 +944,7 @@
 
   <div class="backup">
     <div class="backup-icon">🌊</div>
-    <div class="backup-text"><strong>Backup marea alta a mediodía:</strong> invierte el orden — Marquenterre por la mañana y Hourdel cuando baje la marea por la tarde. Si la bajamar cae muy pronto o muy tarde, una <em>traversée</em> guiada de la bahía a pie (con guía por seguridad) es la alternativa clásica y también permite ver focas y aves.</div>
+    <div class="backup-text"><strong>Backup marea alta a mediodía:</strong> invierte el orden — Cayeux (estacade, cabinas, faro) por la mañana y Hourdel cuando baje la marea por la tarde, con las focas en luz cálida. Si la bajamar cae muy pronto o muy tarde, una <em>traversée</em> guiada de la bahía a pie (con guía por seguridad) es la alternativa clásica y también permite ver focas. Con lluvia, Saint-Valery (Herbarium, callejuelas del Courtgain) aguanta una tarde suave.</div>
   </div>
 </div>
 
@@ -1051,10 +1051,11 @@
       <div class="card-item safe">Pescado a la plancha, cordero a la brasa</div>
     </div>
     <div class="info-card">
-      <h4 class="green">⚓ Le Crotoy — marisco</h4>
-      <div class="card-item">Puerto de Le Crotoy</div>
-      <div class="card-item">Pescado y marisco fresco en el puerto de la orilla norte. Para la comida del día 5.</div>
-      <div class="card-item avoid">Mejillones: pedir sin cebolla ni chalota, o mejor pescado a la plancha</div>
+      <h4 class="green">🦐 La Pointe du Hourdel</h4>
+      <div class="card-item">Quai Gavois, Le Hourdel (Cayeux-sur-Mer)</div>
+      <div class="card-item">Brasserie de marineros a pie de muelle, justo en el punto de las focas. Café de pescadores desde 1880, precios contenidos (16-25 €). Para la comida del día 5.</div>
+      <div class="card-item safe">Crevettes grises, pescado a la plancha, friture d'éperlan, ostras = FODMAP-seguros · sin reserva</div>
+      <div class="card-item avoid">Evita moules marinière y ficelle picarde</div>
     </div>
   </div>
 
@@ -1138,19 +1139,9 @@
       <div class="photo-meta">Bajamar · 200-400mm</div>
     </div>
     <div class="photo-card">
-      <h4>📷 Marquenterre</h4>
-      <div class="photo-detail">Aves en migración de otoño desde los observatorios: espátulas, limícolas, cigüeñas. Paciencia y teleobjetivo; los reflejos en las lagunas dan planos limpios.</div>
-      <div class="photo-meta">Tarde · 300mm+</div>
-    </div>
-    <div class="photo-card">
-      <h4>📷 Le Crotoy &amp; Cayeux</h4>
-      <div class="photo-detail">El puerto de Le Crotoy y las cabinas de playa de colores de Cayeux sobre el paseo de tablas. Cielos amplios de la bahía y barcas varadas en marea baja.</div>
-      <div class="photo-meta">Tarde · 35-85mm</div>
-    </div>
-    <div class="photo-card">
-      <h4>📷 Tren de vapor</h4>
-      <div class="photo-detail">La locomotora de vapor cruzando las marismas y prados salados, con penacho de humo. Busca un paso a nivel o un dique elevado para el plano lateral (si la temporada sigue activa).</div>
-      <div class="photo-meta">Según circulación · 70-200mm</div>
+      <h4>📷 Cayeux-sur-Mer</h4>
+      <div class="photo-detail">Las más de 400 cabinas de colores alineadas sobre la estacade más larga de Europa, el faro de Brighton y la playa infinita de galets. Líneas y repetición cromática, cielos amplios de la bahía. Barcas varadas en el Hourdel con marea baja.</div>
+      <div class="photo-meta">Tarde · 24-85mm</div>
     </div>
   </div>
 </div>
@@ -1199,24 +1190,6 @@
       </div>
       <div class="booking-urgency">🟡 Reservar</div>
       <div class="booking-price">~16-20 €</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot yellow"></div>
-      <div>
-        <div class="booking-name">Tren de vapor Baie de Somme — Día 5 (opcional)</div>
-        <div class="booking-when">chemindefer-baiedesomme.fr · temporada acaba a mediados de sep. — VERIFICAR calendario para tu día</div>
-      </div>
-      <div class="booking-urgency">🟡 Verificar</div>
-      <div class="booking-price">desde ~12,30 €</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot green"></div>
-      <div>
-        <div class="booking-name">Parc du Marquenterre — Día 5</div>
-        <div class="booking-when">parcdumarquenterre.fr · a diario 10-19 h · comprar online recomendable · guía incluido 10:30/14:00</div>
-      </div>
-      <div class="booking-urgency">🟢 Online</div>
-      <div class="booking-price">11,50 €</div>
     </div>
     <div class="booking-item">
       <div class="booking-dot green"></div>
