@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Côte d'Opale & Baie de Somme — Acantilados, Hormigón y Marea</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --chalk: #eef1f1;
+    --mist: #dce5e5;
+    --channel: #16323b;
+    --channel-mid: #2c6478;
+    --channel-light: #5f93a6;
+    --ink: #1a2429;
+    --ink-mid: #3d545c;
+    --ink-light: #6f878f;
+    --opal: #c9852f;
+    --opal-light: #dda254;
+    --opal-dark: #8f5a17;
+    --gold: #a8792a;
+    --gold-light: #c49a3e;
+    --concrete: #6a6f6e;
+    --concrete-dark: #404443;
+    --green-acc: #35674e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--chalk);
+    color: var(--ink);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: var(--channel);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 18% 50%, rgba(201,133,47,0.16) 0%, transparent 60%),
+      radial-gradient(ellipse at 82% 50%, rgba(95,147,166,0.22) 0%, transparent 60%);
+  }
+  .header-ornament {
+    font-family: 'Cinzel', serif;
+    color: var(--opal-light);
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.85;
+    position: relative;
+  }
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    color: var(--chalk);
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    position: relative;
+  }
+  .header h1 span { color: var(--opal-light); }
+  .header-sub {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    color: var(--channel-light);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    position: relative;
+  }
+  .header-dates {
+    display: inline-block;
+    margin-top: 1.2rem;
+    padding: 0.4rem 1.5rem;
+    border: 1px solid rgba(196,154,62,0.4);
+    color: var(--opal-light);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    position: relative;
+  }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 2rem;
+    margin: 2rem 0 1rem;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--mist); }
+  .divider-text {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ---- WARNINGS ---- */
+  .warnings {
+    margin: 0 2rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.75rem;
+  }
+  .warning-card {
+    background: var(--mist);
+    border-left: 3px solid var(--opal);
+    padding: 0.9rem 1.1rem;
+    border-radius: 0 4px 4px 0;
+  }
+  .warning-card.blue     { border-left-color: var(--channel-mid); }
+  .warning-card.gold     { border-left-color: var(--gold); }
+  .warning-card.green    { border-left-color: var(--green-acc); }
+  .warning-card.concrete { border-left-color: var(--concrete); }
+  .warning-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--opal-dark);
+    margin-bottom: 0.25rem;
+  }
+  .warning-card.blue     .warning-label { color: var(--channel-mid); }
+  .warning-card.gold     .warning-label { color: var(--gold); }
+  .warning-card.green    .warning-label { color: var(--green-acc); }
+  .warning-card.concrete .warning-label { color: var(--concrete-dark); }
+  .warning-text { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.4; }
+  .warning-text strong { color: var(--ink); }
+
+  /* ---- DAY SECTION HEADER ---- */
+  .day-section { margin-bottom: 2.5rem; }
+  .day-header {
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .day-header.opale   { background: linear-gradient(135deg, #16323b 0%, #2c6478 100%); }
+  .day-header.somme   { background: linear-gradient(135deg, #123528 0%, #35674e 100%); }
+  .day-header.transit { background: linear-gradient(135deg, #3a3f3e 0%, #6a6f6e 100%); }
+  .day-numeral {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    opacity: 0.24;
+    color: #fff;
+    line-height: 1;
+    min-width: 1.8rem;
+  }
+  .day-info h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--chalk);
+    letter-spacing: 0.06em;
+  }
+  .day-info p { font-style: italic; color: rgba(255,255,255,0.5); font-size: 0.88rem; }
+  .day-badge {
+    margin-left: auto;
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(255,255,255,0.22);
+    color: rgba(255,255,255,0.55);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* ---- DAYS GRID ---- */
+  .days-grid {
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .day-card {
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(22,50,59,0.07);
+    border: 1px solid rgba(22,50,59,0.06);
+  }
+  .day-card-header {
+    padding: 0.9rem 1.2rem 0.7rem;
+    border-bottom: 1px solid var(--mist);
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .day-card-header.opale { background: rgba(44,100,120,0.06); }
+  .day-card-header.somme { background: rgba(53,103,78,0.06); }
+  .day-card-header.transit { background: rgba(106,111,110,0.06); }
+  .card-block { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-light); }
+  .card-date  { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+  .card-title { font-style: italic; font-size: 0.85rem; color: var(--ink-light); margin-left: auto; text-align: right; }
+  .day-card-body { padding: 1rem 1.2rem; }
+
+  /* ---- TIME BLOCKS ---- */
+  .time-block {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--mist);
+  }
+  .time-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .time-tag {
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-top: 0.1rem;
+  }
+  .time-tag.morning   { background: rgba(168,121,42,0.12); }
+  .time-tag.afternoon { background: rgba(201,133,47,0.12); }
+  .time-tag.evening   { background: rgba(22,50,59,0.08); }
+  .time-tag.transit   { background: rgba(44,100,120,0.10); }
+  .time-tag.wwii      { background: rgba(106,111,110,0.16); }
+  .time-content { flex: 1; }
+  .time-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 0.15rem;
+    display: block;
+  }
+  .activity-name { font-size: 0.95rem; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 0.2rem; }
+  .activity-detail { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.45; }
+  .activity-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+  .tag {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+  .tag.reserve  { color: var(--opal-dark);   border-color: var(--opal-dark);   background: rgba(201,133,47,0.06); }
+  .tag.wwii     { color: #fff;               border-color: var(--concrete-dark); background: var(--concrete); }
+  .tag.price    { color: var(--gold);        border-color: var(--gold);        background: rgba(168,121,42,0.05); }
+  .tag.tip      { color: var(--channel-mid); border-color: var(--channel-mid); background: rgba(44,100,120,0.05); }
+  .tag.free     { color: var(--green-acc);   border-color: var(--green-acc);   background: rgba(53,103,78,0.05); }
+  .tag.photo    { color: #3a7a4a;            border-color: #3a7a4a;            background: rgba(58,122,74,0.05); }
+  .tag.tide     { color: #2a6090;            border-color: #2a6090;            background: rgba(42,96,144,0.05); }
+  .tag.transport{ color: var(--channel-mid); border-color: var(--channel-mid); background: rgba(44,100,120,0.05); }
+  .tag.food     { color: #6b4c8a;            border-color: #6b4c8a;            background: rgba(107,76,138,0.05); }
+
+  /* ---- FOOD HIGHLIGHT ---- */
+  .food-highlight {
+    background: rgba(107,76,138,0.06);
+    border: 1px solid rgba(107,76,138,0.15);
+    border-radius: 4px;
+    padding: 0.6rem 0.9rem;
+    margin-top: 0.5rem;
+  }
+  .food-highlight .resto { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
+  .food-highlight .dish  { font-style: italic; font-size: 0.82rem; color: var(--ink-mid); }
+  .food-highlight .dish strong { font-style: normal; }
+
+  /* ---- BACKUP ---- */
+  .backup {
+    margin: 0 2rem 1.5rem;
+    background: var(--mist);
+    border-radius: 4px;
+    padding: 0.7rem 1rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+  .backup-icon { font-size: 0.9rem; margin-top: 0.1rem; flex-shrink: 0; }
+  .backup-text { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.4; }
+  .backup-text strong { font-style: normal; color: var(--ink); }
+
+  /* ---- SECTION BLOCK ---- */
+  .section-block { margin: 0 2rem 2.5rem; }
+
+  /* ---- CARDS GRID ---- */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; }
+  .info-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(22,50,59,0.06);
+    box-shadow: 0 1px 6px rgba(22,50,59,0.04);
+  }
+  .info-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+    color: var(--opal-dark);
+  }
+  .info-card h4.blue     { color: var(--channel-mid); }
+  .info-card h4.green    { color: var(--green-acc); }
+  .info-card h4.concrete { color: var(--concrete-dark); }
+  .card-item {
+    position: relative;
+    padding-left: 1.1rem;
+    font-size: 0.85rem;
+    color: var(--ink-mid);
+    margin-bottom: 0.4rem;
+    line-height: 1.45;
+  }
+  .card-item::before { content: '—'; position: absolute; left: 0; top: 0; color: var(--opal); font-size: 0.7rem; }
+  .info-card h4.blue     ~ .card-item::before { color: var(--channel-mid); }
+  .info-card h4.green    ~ .card-item::before { color: var(--green-acc); }
+  .info-card h4.concrete ~ .card-item::before { color: var(--concrete); }
+  .card-item.safe   { color: var(--green-acc); }
+  .card-item.safe::before { content: '✓'; color: var(--green-acc); }
+  .card-item.avoid  { color: var(--opal-dark); font-weight: 600; }
+  .card-item.avoid::before { content: '⚠'; color: var(--opal-dark); }
+
+  /* ---- PHOTO CARD ---- */
+  .photo-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(22,50,59,0.06);
+    border-left: 3px solid var(--green-acc);
+    box-shadow: 0 1px 4px rgba(22,50,59,0.04);
+  }
+  .photo-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green-acc);
+    margin-bottom: 0.5rem;
+  }
+  .photo-detail { font-size: 0.85rem; color: var(--ink-mid); line-height: 1.45; }
+  .photo-meta {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    margin-top: 0.45rem;
+  }
+
+  /* ---- BOOKING LIST ---- */
+  .booking-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .booking-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid rgba(22,50,59,0.06);
+    box-shadow: 0 1px 4px rgba(22,50,59,0.04);
+  }
+  .booking-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .booking-dot.red    { background: #c0392b; }
+  .booking-dot.yellow { background: var(--gold); }
+  .booking-dot.green  { background: #27ae60; }
+  .booking-name { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+  .booking-when { font-size: 0.78rem; font-style: italic; color: var(--ink-light); }
+  .booking-urgency {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink-light);
+  }
+  .booking-price { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold); white-space: nowrap; }
+
+  /* ---- CHECKLIST ---- */
+  .checklist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .checklist-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(22,50,59,0.06);
+    box-shadow: 0 1px 6px rgba(22,50,59,0.04);
+  }
+  .checklist-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--opal-dark);
+    margin-bottom: 0.7rem;
+  }
+  .checklist-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    font-size: 0.85rem;
+    color: var(--ink-mid);
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+  }
+  .checklist-item::before {
+    content: '—';
+    color: var(--opal);
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    margin-top: 0.15rem;
+  }
+
+  /* ---- BUDGET ---- */
+  .budget-box { background: white; border-radius: 6px; padding: 1.2rem 1.5rem; border: 1px solid rgba(22,50,59,0.06); box-shadow: 0 2px 8px rgba(22,50,59,0.05); }
+  .budget-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--mist);
+    font-size: 0.9rem;
+  }
+  .budget-row:last-child { border-bottom: none; font-weight: 600; font-size: 1rem; padding-top: 0.7rem; margin-top: 0.3rem; border-top: 2px solid var(--mist); }
+  .budget-label { color: var(--ink-mid); }
+  .budget-value { font-family: 'Cinzel', serif; color: var(--gold); }
+
+  /* ---- SUB LABEL ---- */
+  .sub-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  /* ---- FOOTER ---- */
+  .footer { background: var(--channel); text-align: center; padding: 2rem; margin-top: 3rem; }
+  .footer p { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--channel-light); text-transform: uppercase; }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 600px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .booking-item { grid-template-columns: auto 1fr; }
+    .booking-price { display: none; }
+    .header, .day-header { padding-left: 1rem; padding-right: 1rem; }
+    .warnings, .section-block, .backup { padding-left: 0; padding-right: 0; margin-left: 1rem; margin-right: 1rem; }
+    .days-grid { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-ornament">☁ Itinerario de viaje ☁</div>
+  <h1>Côte d'Opale <span>&amp; Baie de Somme</span></h1>
+  <p class="header-sub">Acantilados de creta, hormigón y marea - Costa Norte Francia</p>
+  <div class="header-dates">Mediados de septiembre · 2026 · 6 días · 1 viajero</div>
+</div>
+
+<!-- ============ ANTES DE SALIR ============ -->
+<div class="divider" style="margin-top:2rem">
+  <div class="divider-line"></div>
+  <div class="divider-text">Antes de salir</div>
+  <div class="divider-line"></div>
+</div>
+
+<div class="warnings">
+  <div class="warning-card blue" style="grid-column:1/-1;">
+    <div class="warning-label">🏨 Bases · dónde dormir</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:0.5rem;">
+      <span style="background:transparent;border:0px solid rgba(22,50,59,0.10);border-radius:6px;padding:0.5rem 0.9rem;text-align:center;line-height:1.3;">🏞️ <strong style="color:var(--ink);">Boulogne-sur-Mer</strong><br><span style="font-size:0.78rem;color:var(--ink-light);font-style:italic;">3 noches · días 1-3</span></span>
+      <span style="font-family:'Cinzel',serif;color:var(--channel-mid);font-size:1.15rem;white-space:nowrap;"> ⟶ </span>
+      <span style="background:transparent;border:0px solid rgba(22,50,59,0.10);border-radius:6px;padding:0.5rem 0.9rem;text-align:center;line-height:1.3;">🦭 <strong style="color:var(--ink);">Saint-Valery-sur-Somme</strong><br><span style="font-size:0.78rem;color:var(--ink-light);font-style:italic;">2 noches · días 4-5</span></span>
+    </div>
+  </div>
+  <div class="warning-card blue">
+    <div class="warning-label">🚗 Conducción y peajes</div>
+    <div class="warning-text">Maastricht → Boulogne ~3 h 15 (~300 km) por Bélgica y Lille. El <strong>Blockhaus d'Éperlecques queda sobre la A26 de aproximación</strong>, sin desvío. Autopistas belgas gratuitas; A26/A16 francesas con peaje (~30-50 € ida y vuelta). Dentro del bucle conduces menos de 1 h al día.</div>
+  </div>
+  <div class="warning-card blue">
+    <div class="warning-label">🌊 Mareas — focas</div>
+    <div class="warning-text">Las focas de la <strong>Pointe du Hourdel</strong> se ven mejor con <strong>marea baja</strong> (bancos de arena expuestos; presencia ~3 h antes y hasta ~2 h 30 después de la bajamar). Consulta los <em>horaires de marée</em> de la baliza de <strong>Cayeux</strong> para tu día y organiza el día 5 alrededor de la bajamar. Longvista o teleobjetivo imprescindible; distancia mínima 300 m.</div>
+  </div>
+  <div class="warning-card green">
+    <div class="warning-label">📷 Clima, viento y luz</div>
+    <div class="warning-text">Septiembre = temporada media: menos gente, luz cálida, cielos cambiantes (ideales). En los cabos y en el Hourdel <strong>hace mucho viento</strong> — cortavientos y algo para fijar el trípode. Días aún largos. La reserva de otoño ya está en marcha en Marquenterre.</div>
+  </div>
+  <div class="warning-card concrete">
+    <div class="warning-label">🏛 Journées du Patrimoine</div>
+    <div class="warning-text">Las <strong>Jornadas Europeas del Patrimonio caen el 19-20 de septiembre</strong> (tema 2026: "Patrimonio de la fotografía"). Si tus fechas las tocan, hay aperturas gratuitas y especiales de monumentos — pero también más gente y alojamiento más lleno: reserva antes.</div>
+  </div>
+</div>
+
+<!-- ============ CONTEXTO LOCAL ============ -->
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-text">Contexto local &amp; práctico</div>
+  <div class="divider-line"></div>
+</div>
+
+<div class="section-block">
+  <div class="cards-grid">
+    <div class="info-card">
+      <h4 class="blue">🚗 Cómo moverse</h4>
+      <div class="card-item">Todo el viaje es en coche. La <strong>D940</strong> es la carretera costera panorámica que enhebra los cabos, Ambleteuse, Wimereux y Boulogne — lenta y preciosa, tómala en vez de la autopista dentro de la zona.</div>
+      <div class="card-item">Aparcamiento gratuito o barato en casi todos los sitios naturales (cabos, Hourdel, Marquenterre). En Boulogne y Saint-Valery, deja el coche y muévete a pie.</div>
+      <div class="card-item">En los cabos, los aparcamientos altos se llenan un poco en fin de semana con buen tiempo; llega temprano.</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">⚠ Errores típicos a evitar</h4>
+      <div class="card-item">No mirar la <strong>marea</strong> antes del Hourdel (con marea alta casi no verás focas) ni antes de bajar a la playa de Blanc-Nez.</div>
+      <div class="card-item">Dar por hecho el <strong>tren de vapor</strong>: la temporada acaba a mediados de septiembre — verifica el calendario para tu día.</div>
+      <div class="card-item">No aventurarse solo por los bancos de arena de la bahía: la marea sube rápido y es peligroso.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DÍA 1 ============ -->
+<div class="day-section">
+  <div class="day-header opale">
+    <div class="day-numeral">I</div>
+    <div class="day-info">
+      <h2>Llegada + Blockhaus d'Éperlecques</h2>
+      <p>Maastricht · Saint-Omer · Boulogne-sur-Mer</p>
+    </div>
+    <div class="day-badge">Memoria V2</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header opale">
+        <div class="card-block">Día 1</div>
+        <div class="card-date">Mediados de sep</div>
+        <div class="card-title">Llegada · memoria de guerra</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag transit">🚗</div>
+          <div class="time-content">
+            <span class="time-label">Mañana — salida</span>
+            <div class="activity-name">Maastricht → Éperlecques</div>
+            <div class="activity-detail">Salir a media mañana. ~3 h directas por Lieja, Bruselas, Lille y la A26. El blockhaus está junto a Watten/Saint-Omer, prácticamente sobre la vía de aproximación: cero desvío.</div>
+            <div class="activity-meta"><span class="tag transport">~285 km · peaje A26</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag wwii">🛰️</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — visita</span>
+            <div class="activity-name">Blockhaus d'Éperlecques</div>
+            <div class="activity-detail">El mayor búnker del norte de Francia. Construido en 1943 como base de ensamblaje y lanzamiento de cohetes V2 contra Londres; nunca llegó a operar por los bombardeos aliados. Se recorre como "parque de la historia" en un bosque, con puntos sonoros, una rampa de lanzamiento V1 y un V2. Impresiona por su masa de hormigón (~90.000 t) más que por la museografía. Audioguía en español. ~1 h 30.</div>
+            <div class="activity-meta"><span class="tag wwii">2ª Guerra Mundial</span><span class="tag price">~10 €</span><span class="tag transport">a diario en sep.</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🚗</div>
+          <div class="time-content">
+            <span class="time-label">Tarde — traslado + check-in</span>
+            <div class="activity-name">A Boulogne-sur-Mer</div>
+            <div class="activity-detail">~1 h hasta la costa. Boulogne es la base de los tres primeros días: el mayor puerto pesquero de Francia, con casco histórico amurallado y buena oferta de comida y alojamiento. Deja el coche y muévete a pie.</div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🏰</div>
+          <div class="time-content">
+            <span class="time-label">Atardecer</span>
+            <div class="activity-name">Boulogne — primer paseo por la ville haute</div>
+            <div class="activity-detail">Primer contacto con la ciudad alta amurallada: las murallas medievales (paseo de ronda), la Basílica de Notre-Dame con su cúpula y el ambiente del puerto al atardecer. Un aperitivo de lo que verás con calma el día 3.</div>
+            <div class="activity-meta"><span class="tag free">Murallas gratuitas</span><span class="tag photo">📷 Casco medieval + puerto</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🐟</div>
+          <div class="time-content">
+            <span class="time-label">Cena</span>
+            <div class="food-highlight">
+              <div class="resto">Chez Sandrine — La Poissonnerie du Port <span style="font-weight:300;font-size:0.78rem">(puerto de Boulogne)</span></div>
+              <div class="dish">Pescadería-restaurante del puerto, muy bien valorada. <strong>Pescado del día a la plancha</strong> = FODMAP-seguro. (Le Châtillon, la otra institución del puerto, es solo mediodía entre semana — queda para el día 3.)</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">☁️</div>
+    <div class="backup-text"><strong>Backup:</strong> si sales tarde o el museo estuviera cerrado ese día, Éperlecques también encaja en la vuelta (día 6), ya que queda hacia el noreste. En ese caso ve directo a Boulogne y aprovecha la tarde de luz en la ville haute.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 2 ============ -->
+<div class="day-section">
+  <div class="day-header opale">
+    <div class="day-numeral">II</div>
+    <div class="day-info">
+      <h2>Les Deux Caps + Batterie Todt</h2>
+      <p>Cap Blanc-Nez · Wissant · Audresselles · Cap Gris-Nez</p>
+    </div>
+    <div class="day-badge">Gran Sitio de Francia</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header opale">
+        <div class="card-block">Día 2</div>
+        <div class="card-date">Mediados de sep</div>
+        <div class="card-title">Acantilados y Muro Atlántico</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag morning">🏔️</div>
+          <div class="time-content">
+            <span class="time-label">Mañana</span>
+            <div class="activity-name">Cap Blanc-Nez — acantilados de creta</div>
+            <div class="activity-detail">~35 min desde Boulogne. Los acantilados blancos gemelos de los de Dover (134 m), coronados por el obelisco del Dover Patrol. En día claro se ve Inglaterra. Subida a pie por la pradera batida por el viento; abajo, la playa muestra los estratos de creta. La postal del norte.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Acantilado + monumento</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🏖️</div>
+          <div class="time-content">
+            <span class="time-label">Media mañana</span>
+            <div class="activity-name">Wissant — búnkeres en la duna</div>
+            <div class="activity-detail">Pueblo pesquero entre los dos cabos, con blockhaus del Muro Atlántico semihundidos en la arena y la duna. Uno de los últimos con pesca tradicional en barca de madera (flobart). Hormigón contra cielo cambiante: tu tipo de foto.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Búnker + duna</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🦀</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — comida</span>
+            <div class="food-highlight">
+              <div class="resto">Audresselles <span style="font-weight:300;font-size:0.78rem">(pueblo pesquero)</span></div>
+              <div class="dish">Aldea de pescadores diminuta y auténtica, famosa por el <strong>cangrejo (tourteau) y el bogavante</strong>. Marisco cocido sin salsa = FODMAP-seguro. Mesas en la plaza (La Marie Galante, Au P'tit Bonheur).</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag wwii">🔫</div>
+          <div class="time-content">
+            <span class="time-label">Tarde — memoria de guerra</span>
+            <div class="activity-name">Batterie Todt · Musée du Mur de l'Atlantique (Audinghen)</div>
+            <div class="activity-detail">Enorme batería costera del Muro Atlántico, junto a Gris-Nez. Oculto dentro: un <strong>cañón ferroviario alemán K5 de 280 mm</strong>, uno de los dos que quedan en el mundo (el otro en EE.UU.), con 86 km de alcance para batir Inglaterra. Diez salas de colección; cuatro casamatas dominan el acantilado. ~1 h.</div>
+            <div class="activity-meta"><span class="tag wwii">2ª Guerra Mundial</span><span class="tag price">~9 €</span><span class="tag transport">abierta en sep. 10-18h</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🌅</div>
+          <div class="time-content">
+            <span class="time-label">Atardecer</span>
+            <div class="activity-name">Cap Gris-Nez — el punto más cercano a Inglaterra</div>
+            <div class="activity-detail">A ~28 km de Inglaterra, con faro, aves marinas y búnkeres alemanes en el promontorio. Mira al oeste: es el mejor sitio de la ruta para una puesta de sol con cielo dramático sobre el Canal. Sendero llano hasta la punta.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Faro + puesta de sol</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🍽️</div>
+          <div class="time-content">
+            <span class="time-label">Cena</span>
+            <div class="food-highlight">
+              <div class="resto">Wissant o vuelta a Boulogne</div>
+              <div class="dish">Cena de pescado en Wissant, o de vuelta en Boulogne (~35 min). <strong>Pescado a la plancha</strong> como apuesta segura; evita mejillones "marinière" (chalota).</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">💨</div>
+    <div class="backup-text"><strong>Backup:</strong> con viento fuerte o niebla en los cabos, adelanta la Batterie Todt (interior) y guarda los acantilados para cuando abra la luz. Si el día se estropea del todo, la ville haute de Boulogne y Nausicaá (acuario, interior) rescatan la tarde.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 3 ============ -->
+<div class="day-section">
+  <div class="day-header opale">
+    <div class="day-numeral">III</div>
+    <div class="day-info">
+      <h2>Ambleteuse, Wimereux &amp; Boulogne</h2>
+      <p>Fort Vauban · Musée 39-45 · puerto pesquero</p>
+    </div>
+    <div class="day-badge">Costa + puerto</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header opale">
+        <div class="card-block">Día 3</div>
+        <div class="card-date">Mediados de sep</div>
+        <div class="card-title">Fuerte, museo y ciudad alta</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag wwii">🎖️</div>
+          <div class="time-content">
+            <span class="time-label">Mañana — memoria de guerra</span>
+            <div class="activity-name">Ambleteuse — Fort d'Ambleteuse + Musée 39-45</div>
+            <div class="activity-detail">En la D940: el <strong>Fort d'Ambleteuse</strong> de Vauban se alza sobre las rocas a pie de mar (exterior muy fotogénico, sobre todo con marea alta). Al lado, el <strong>Musée 39-45</strong>, colección privada reunida durante 40 años: 120 maniquíes equipados en situación, miles de objetos y un tanque Sherman en la entrada. Muy bien valorado por lo cuidado de las reconstrucciones. ~1 h 30.</div>
+            <div class="activity-meta"><span class="tag wwii">2ª Guerra Mundial</span><span class="tag price">~8,90 €</span><span class="tag photo">📷 Fuerte + marea</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🐟</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — comida</span>
+            <div class="food-highlight">
+              <div class="resto">Le Châtillon <span style="font-weight:300;font-size:0.78rem">(Capécure, puerto de Boulogne)</span></div>
+              <div class="dish">Institución desde 1950 en el mayor puerto pesquero de Francia, aún frecuentada por marineros y estibadores. <strong>Pescado del barco al plato, a la plancha</strong> = FODMAP-seguro. Solo mediodía entre semana (y 1er domingo de mes): encaja perfecto hoy.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🏰</div>
+          <div class="time-content">
+            <span class="time-label">Tarde</span>
+            <div class="activity-name">Boulogne-sur-Mer — ville haute con calma</div>
+            <div class="activity-detail">La ciudad alta medieval intacta: murallas por las que se pasea (paseo de ronda completo), la Basílica de Notre-Dame con su enorme cripta (una de las mayores de Francia), el castillo condal (Château-Musée). Casco histórico sin trampa turística.</div>
+            <div class="activity-meta"><span class="tag free">Murallas gratuitas</span><span class="tag photo">📷 Arquitectura medieval</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🏛️</div>
+          <div class="time-content">
+            <span class="time-label">Atardecer — cena</span>
+            <div class="activity-name">Wimereux — Belle Époque frente al mar</div>
+            <div class="activity-detail">A 10 min al norte: villas Belle Époque de colores en el paseo marítimo, arquitectura balnearia de finales del s.XIX con hora dorada. Ambiente local y buenos restaurantes del dique para cenar antes de volver a Boulogne.</div>
+            <div class="activity-meta"><span class="tag photo">📷 Villas + hora dorada</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">🌧️</div>
+    <div class="backup-text"><strong>Backup lluvia:</strong> Nausicaá (uno de los mayores acuarios de Europa) y el Château-Musée de Boulogne son totalmente interiores y cubren la tarde con holgura. El Musée 39-45 ya es de interior, así que la mañana no peligra.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 4 ============ -->
+<div class="day-section">
+  <div class="day-header somme">
+    <div class="day-numeral">IV</div>
+    <div class="day-info">
+      <h2>Sur a la Baie de Somme</h2>
+      <p>Montreuil-sur-Mer · Saint-Valery-sur-Somme</p>
+    </div>
+    <div class="day-badge">Cambio de base</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header somme">
+        <div class="card-block">Día 4</div>
+        <div class="card-date">Mediados de sep</div>
+        <div class="card-title">Traslado + primera bahía</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag transit">🚗</div>
+          <div class="time-content">
+            <span class="time-label">Mañana — en ruta</span>
+            <div class="activity-name">Montreuil-sur-Mer — ciudadela de Vauban</div>
+            <div class="activity-detail">A ~40 min de Boulogne, parada a mitad de camino: ciudad amurallada sobre una colina, ciudadela de Vauban, calles empedradas y escenario de <em>Los Miserables</em> de Victor Hugo. Paseo de ronda por las murallas (~3 km) ~1 h. Ciudad gastronómica.</div>
+            <div class="activity-meta"><span class="tag photo">📷 Murallas + empedrado</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🍴</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — comida</span>
+            <div class="food-highlight">
+              <div class="resto">Montreuil-sur-Mer <span style="font-weight:300;font-size:0.78rem">(en ruta)</span></div>
+              <div class="dish">Ciudad de mesa (aquí cocina el chef con estrella Alexandre Gauthier). Para FODMAP, tira de un bistró con <strong>pescado o carne a la plancha, sin salsa</strong>. Alternativa en ruta: Le Touquet.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🚗</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — llegada</span>
+            <div class="activity-name">Saint-Valery-sur-Somme + check-in</div>
+            <div class="activity-detail">~1 h más hasta la Baie de Somme. Saint-Valery es la base de los dos últimos días: pueblo medieval y marítimo, uno de los más bonitos del norte. Deja el coche; casi todo se hace a pie.</div>
+            <div class="activity-meta"><span class="tag transport">~1 h desde Montreuil</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🎨</div>
+          <div class="time-content">
+            <span class="time-label">Tarde</span>
+            <div class="activity-name">Quartier du Courtgain + ciudad alta</div>
+            <div class="activity-detail">El barrio de pescadores del Courtgain: casitas de colores en callejones empinados con vistas a la bahía. La ville haute medieval, las Torres/Puerta Guillaume (desde aquí zarpó Guillermo el Conquistador en 1066) y la capilla de los marineros con vista de 180° sobre la bahía. Hora dorada sobre el estuario.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Casas de colores + bahía</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🐑</div>
+          <div class="time-content">
+            <span class="time-label">Cena</span>
+            <div class="food-highlight">
+              <div class="resto">Saint-Valery — agneau de pré-salé</div>
+              <div class="dish">La especialidad de la bahía: cordero de las praderas saladas. <strong>A la brasa/parrilla = FODMAP-seguro</strong> y genuinamente local. Buenas mesas con vista de bahía: La Table des Corderies, Le Mathurin, Le Café de Jeanne. Guarnición segura: <strong>salicorne</strong> (salicornia de la bahía).</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">⏱️</div>
+    <div class="backup-text"><strong>Backup:</strong> si vas justo de tiempo o quieres cazar una marea/luz concreta, sáltate Montreuil y llega antes a la bahía (también encaja como parada en la vuelta). Con lluvia, el Herbarium y las callejuelas cubiertas de Saint-Valery aguantan bien una tarde suave.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 5 ============ -->
+<div class="day-section">
+  <div class="day-header somme">
+    <div class="day-numeral">V</div>
+    <div class="day-info">
+      <h2>Baie de Somme — focas, aves y pueblos</h2>
+      <p>Pointe du Hourdel · Le Crotoy · Marquenterre</p>
+    </div>
+    <div class="day-badge">Naturaleza</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header somme">
+        <div class="card-block">Día 5</div>
+        <div class="card-date">Mediados de sep</div>
+        <div class="card-title">El día de la bahía</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag morning">🦭</div>
+          <div class="time-content">
+            <span class="time-label">Mañana — según marea</span>
+            <div class="activity-name">Pointe du Hourdel — la mayor colonia de focas de Francia</div>
+            <div class="activity-detail">~20 min desde Saint-Valery. Focas comunes (veaux-marins) y grises descansando en los bancos de arena — se ven mejor con marea baja (±2 h de la bajamar), desde la digue de galets. Parking gratuito junto al puerto/faro. Longvista o teleobjetivo y 300 m de distancia. De camino, Cayeux-sur-Mer: el paseo de tablas más largo de Europa y sus cabinas de colores.</div>
+            <div class="activity-meta"><span class="tag tide">🌊 planear con bajamar</span><span class="tag photo">📷 Teleobjetivo 200-400mm</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🧭</div>
+          <div class="time-content">
+            <span class="time-label">Opción — con guía</span>
+            <div class="activity-name">Sortie nature guiada de focas</div>
+            <div class="activity-detail">Guías locales (Picardie Nature y guías Qualinat) organizan salidas de ~2 h 30 con longvista, RDV en el faro del Hourdel. Mejor comprensión y observación sin molestar a la colonia. Reservar según la marea.</div>
+            <div class="activity-meta"><span class="tag reserve">reservar</span><span class="tag price">~16-20 €</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">⚓</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — comida</span>
+            <div class="food-highlight">
+              <div class="resto">Le Crotoy <span style="font-weight:300;font-size:0.78rem">(orilla norte de la bahía)</span></div>
+              <div class="dish">Puerto pesquero con la única playa del norte de Francia orientada al sur. Marisco fresco: <strong>pescado a la plancha o mejillones sin cebolla ni chalota</strong> (pídelo explícito). Evita la <em>ficelle picarde</em> (champiñón + bechamel).</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🦩</div>
+          <div class="time-content">
+            <span class="time-label">Tarde</span>
+            <div class="activity-name">Parc du Marquenterre — reserva ornitológica</div>
+            <div class="activity-detail">La gran reserva de aves de la bahía (6 km de recorrido, 13 observatorios), en plena <strong>migración de otoño</strong>: espátulas, limícolas, cigüeñas, quizá un águila pescadora. Guía naturalista incluido a las 10:30 y 14:00. Alquiler de prismáticos en la entrada. 2-3 h de naturaleza tranquila. Abierto a diario 10-19 h.</div>
+            <div class="activity-meta"><span class="tag price">11,50 €</span><span class="tag photo">📷 Aves · migración</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🚂</div>
+          <div class="time-content">
+            <span class="time-label">Alternativa</span>
+            <div class="activity-name">Tren de vapor de la Baie de Somme</div>
+            <div class="activity-detail">El ferrocarril histórico de vapor une Le Crotoy, Noyelles, Saint-Valery y Cayeux bordeando las marismas (25 km/h, muy fotogénico). <strong>Ojo: la temporada acaba a mediados de septiembre</strong> — verifica el calendario de circulación para tu día exacto antes de contar con él.</div>
+            <div class="activity-meta"><span class="tag reserve">verificar calendario</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🍷</div>
+          <div class="time-content">
+            <span class="time-label">Cena</span>
+            <div class="food-highlight">
+              <div class="resto">Saint-Valery-sur-Somme</div>
+              <div class="dish">Vuelta a la base. Otra vez <strong>agneau de pré-salé a la brasa</strong> o pescado del día; salicorne de guarnición. Paseo por los quais iluminados.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">🌊</div>
+    <div class="backup-text"><strong>Backup marea alta a mediodía:</strong> invierte el orden — Marquenterre por la mañana y Hourdel cuando baje la marea por la tarde. Si la bajamar cae muy pronto o muy tarde, una <em>traversée</em> guiada de la bahía a pie (con guía por seguridad) es la alternativa clásica y también permite ver focas y aves.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 6 ============ -->
+<div class="day-section">
+  <div class="day-header transit">
+    <div class="day-numeral">VI</div>
+    <div class="day-info">
+      <h2>Última mañana + regreso</h2>
+      <p>Cap Hornu · Saint-Valery · Maastricht</p>
+    </div>
+    <div class="day-badge">Regreso</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header transit">
+        <div class="card-block">Día 6</div>
+        <div class="card-date">Mediados de sep</div>
+        <div class="card-title">Cierre y vuelta a casa</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag morning">🚶</div>
+          <div class="time-content">
+            <span class="time-label">Mañana</span>
+            <div class="activity-name">Cap Hornu / paseo por los diques</div>
+            <div class="activity-detail">Últimas fotos: el paseo del dique de Saint-Valery hacia Cap Hornu, con la bahía en marea variable, o el mercado local si cae en día de mercado (domingo por la mañana en Saint-Valery). Café y salida sin prisa.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Bahía · última luz</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag transit">🚗</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — regreso</span>
+            <div class="activity-name">Saint-Valery-sur-Somme → Maastricht</div>
+            <div class="activity-detail">~3 h 45 - 4 h 15 directas (~330 km). Si no hiciste Éperlecques el día 1, encaja aquí con un pequeño desvío hacia el noreste. Alternativa de última parada: Cassel o Bergues (Flandes interior), aunque alarga el día.</div>
+            <div class="activity-meta"><span class="tag transport">~330 km · peaje</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">🚗</div>
+    <div class="backup-text"><strong>Backup:</strong> si sobra mañana y buen tiempo, una última vuelta por el Courtgain con otra luz, o parada en Montreuil-sur-Mer en la vuelta si te lo saltaste el día 4.</div>
+  </div>
+</div>
+
+<!-- ============ GASTRONOMÍA ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1.5rem">
+    <div class="divider-line"></div>
+    <div class="divider-text">Guía gastronómica · FODMAP</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="sub-label" style="color:var(--channel-mid);">🐟 Côte d'Opale (días 1-3)</div>
+  <div class="cards-grid" style="margin-bottom:2rem;">
+    <div class="info-card">
+      <h4 class="blue">🐟 Le Châtillon ⭐</h4>
+      <div class="card-item">Capécure (puerto), Boulogne-sur-Mer</div>
+      <div class="card-item">Institución de pescadores desde 1950, en el mayor puerto pesquero de Francia. Pescado del barco al plato, ambiente de trabajadores del muelle.</div>
+      <div class="card-item">Pedir: pescado del día a la plancha</div>
+      <div class="card-item safe">Solo mediodía entre semana + 1er domingo de mes · FODMAP-seguro a la plancha</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">🐟 Chez Sandrine</h4>
+      <div class="card-item">La Poissonnerie du Port · Boulogne</div>
+      <div class="card-item">Pescadería-restaurante del puerto, valoración altísima. Producto fresquísimo, sencillo.</div>
+      <div class="card-item">Pedir: pescado o marisco del día, plancha</div>
+      <div class="card-item safe">Buena opción de cena de pescado el día 1</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">🦀 Audresselles</h4>
+      <div class="card-item">Plaza del pueblo (La Marie Galante, Au P'tit Bonheur)</div>
+      <div class="card-item">Marisco de la aldea pesquera entre los cabos: cangrejo, bogavante, plateaux de fruits de mer.</div>
+      <div class="card-item safe">Marisco cocido sin salsa = FODMAP-seguro · comida del día 2</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">🧀 Philippe Olivier</h4>
+      <div class="card-item">Boulogne-sur-Mer (quesería histórica)</div>
+      <div class="card-item">Una de las mejores queserías de Francia. Para llevar tabla o picnic.</div>
+      <div class="card-item safe">Quesos curados (mimolette, maroilles afinado) = FODMAP-seguros con moderación</div>
+    </div>
+  </div>
+
+  <div class="sub-label" style="color:var(--green-acc);">🐑 Baie de Somme (días 4-6)</div>
+  <div class="cards-grid" style="margin-bottom:2rem;">
+    <div class="info-card">
+      <h4 class="green">🐑 La Table des Corderies</h4>
+      <div class="card-item">Saint-Valery-sur-Somme (con vista a la bahía)</div>
+      <div class="card-item">Cocina de temporada con producto local; buen sitio para el agneau de pré-salé y el pescado del día.</div>
+      <div class="card-item safe">Agneau de pré-salé a la brasa + salicorne = FODMAP-seguro</div>
+    </div>
+    <div class="info-card">
+      <h4 class="green">🍴 Le Mathurin · Le Café de Jeanne</h4>
+      <div class="card-item">Quais de Saint-Valery-sur-Somme</div>
+      <div class="card-item">Brasseries del muelle, ambiente local, para cenas sin complicación frente a la bahía.</div>
+      <div class="card-item safe">Pescado a la plancha, cordero a la brasa</div>
+    </div>
+    <div class="info-card">
+      <h4 class="green">⚓ Le Crotoy — marisco</h4>
+      <div class="card-item">Puerto de Le Crotoy</div>
+      <div class="card-item">Pescado y marisco fresco en el puerto de la orilla norte. Para la comida del día 5.</div>
+      <div class="card-item avoid">Mejillones: pedir sin cebolla ni chalota, o mejor pescado a la plancha</div>
+    </div>
+  </div>
+
+  <div class="sub-label" style="color:var(--opal-dark);">✓ Refugios FODMAP &amp; ✕ a evitar</div>
+  <div class="cards-grid">
+    <div class="info-card">
+      <h4 class="green">✓ Seguros</h4>
+      <div class="card-item safe">Pescado fresco a la plancha (puerto de Boulogne)</div>
+      <div class="card-item safe">Agneau de pré-salé a la brasa (Baie de Somme)</div>
+      <div class="card-item safe">Marisco cocido simple: cangrejo, bogavante, ostras, gambas grises</div>
+      <div class="card-item safe">Salicorne (salicornia), frites, quesos curados (maroilles, mimolette)</div>
+    </div>
+    <div class="info-card">
+      <h4 class="concrete">⚠ Con cuidado / a evitar</h4>
+      <div class="card-item avoid">Moules marinière (chalota/cebolla + vino) — pedir "nature, sans oignon ni échalote"</div>
+      <div class="card-item avoid">Carbonade flamande (mucha cebolla) · potjevleesch (aromáticos)</div>
+      <div class="card-item avoid">Welsh (pan + cerveza + a veces cebolla) · ficelle picarde (champiñón + bechamel)</div>
+      <div class="card-item avoid">Cidre (fructosa/sorbitol) — limita; mejor vino seco con moderación</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">🛒 Mercados</h4>
+      <div class="card-item">Boulogne: lonja y pescaderías del puerto (Capécure); mercado en Place Dalton (mié. y sáb.)</div>
+      <div class="card-item">Saint-Valery-sur-Somme: mercado el domingo por la mañana</div>
+      <div class="card-item safe">Pescado, marisco y queso curado = compra FODMAP-segura para picnic</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FOTOGRAFÍA ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1.5rem">
+    <div class="divider-line"></div>
+    <div class="divider-text">Spots fotográficos</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;">
+    <div class="photo-card">
+      <h4>📷 Cap Blanc-Nez</h4>
+      <div class="photo-detail">Acantilados de creta + obelisco del Dover Patrol. La curva de la costa hacia Wissant desde lo alto es el plano clásico; abajo, los estratos blancos. Luz de tarde para el mar; mañana para el monumento a contraluz suave.</div>
+      <div class="photo-meta">Tarde · gran angular + 50mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Cap Gris-Nez</h4>
+      <div class="photo-detail">Faro y búnkeres sobre el promontorio, mirando al oeste — el mejor sitio para puesta de sol con cielo dramático sobre el Canal. Teleobjetivo para comprimir faro y horizonte de Inglaterra en días claros.</div>
+      <div class="photo-meta">Puesta de sol · 35-135mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Búnkeres de Wissant</h4>
+      <div class="photo-detail">Blockhaus del Muro Atlántico semihundidos en la arena y la duna. Hormigón inclinado contra cielo cambiante: el contraste memoria/naturaleza que define el viaje. Mejor con marea baja y nubes.</div>
+      <div class="photo-meta">Marea baja · gran angular bajo</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Hormigón de guerra</h4>
+      <div class="photo-detail">La masa colosal de Éperlecques entre los árboles y las cuatro casamatas de la Batterie Todt sobre el acantilado. Volúmenes brutales, texturas de hormigón, escala. Luz lateral dura para marcar el relieve.</div>
+      <div class="photo-meta">Media mañana/tarde · 24-70mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Fort d'Ambleteuse</h4>
+      <div class="photo-detail">Fuerte de Vauban sobre las rocas a pie de mar. Con marea alta parece flotar; con marea baja, las rocas en primer plano. Hora dorada de tarde desde la playa al norte.</div>
+      <div class="photo-meta">Hora dorada · según marea</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Wimereux Belle Époque</h4>
+      <div class="photo-detail">Hilera de villas de colores del paseo marítimo, arquitectura balnearia de finales del s.XIX. Teleobjetivo medio para aislar fachadas; gran angular para la hilera con el mar.</div>
+      <div class="photo-meta">Hora dorada · 35-85mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Boulogne ville haute</h4>
+      <div class="photo-detail">Murallas medievales, la cúpula de la basílica y las calles empedradas del casco alto. Amanecer para calles vacías; la ronda de las murallas da vistas sobre los tejados y el puerto.</div>
+      <div class="photo-meta">Amanecer · 24-50mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Courtgain (Saint-Valery)</h4>
+      <div class="photo-detail">Casas de pescadores de colores en callejones empinados con la bahía al fondo. La ville haute amurallada y la Puerta Guillaume. Luz de última hora sobre el estuario.</div>
+      <div class="photo-meta">Hora dorada · 35-50mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Focas de Hourdel</h4>
+      <div class="photo-detail">Focas en los bancos de arena con marea baja. Teleobjetivo largo imprescindible (respeto a la distancia de 300 m). Luz rasante de mañana sobre el estuario plateado y el cordón de galets.</div>
+      <div class="photo-meta">Bajamar · 200-400mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Marquenterre</h4>
+      <div class="photo-detail">Aves en migración de otoño desde los observatorios: espátulas, limícolas, cigüeñas. Paciencia y teleobjetivo; los reflejos en las lagunas dan planos limpios.</div>
+      <div class="photo-meta">Tarde · 300mm+</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Le Crotoy &amp; Cayeux</h4>
+      <div class="photo-detail">El puerto de Le Crotoy y las cabinas de playa de colores de Cayeux sobre el paseo de tablas. Cielos amplios de la bahía y barcas varadas en marea baja.</div>
+      <div class="photo-meta">Tarde · 35-85mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Tren de vapor</h4>
+      <div class="photo-detail">La locomotora de vapor cruzando las marismas y prados salados, con penacho de humo. Busca un paso a nivel o un dique elevado para el plano lateral (si la temporada sigue activa).</div>
+      <div class="photo-meta">Según circulación · 70-200mm</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESERVAS ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1rem">
+    <div class="divider-line"></div>
+    <div class="divider-text">A reservar / verificar</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="booking-list">
+    <div class="booking-item">
+      <div class="booking-dot red"></div>
+      <div>
+        <div class="booking-name">Alojamiento — Boulogne-sur-Mer (3 noches, días 1-3)</div>
+        <div class="booking-when">Base de los cabos. Pendiente de investigación aparte con el connector de Booking · fines de semana de sep. se llenan</div>
+      </div>
+      <div class="booking-urgency">🔴 Investigar (Booking)</div>
+      <div class="booking-price">por definir</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot red"></div>
+      <div>
+        <div class="booking-name">Alojamiento — Saint-Valery-sur-Somme (2 noches, días 4-5)</div>
+        <div class="booking-when">Base de la Baie de Somme. Pendiente Booking · ojo si tus fechas tocan las Journées du Patrimoine (19-20 sep)</div>
+      </div>
+      <div class="booking-urgency">🔴 Investigar (Booking)</div>
+      <div class="booking-price">por definir</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot yellow"></div>
+      <div>
+        <div class="booking-name">Marea baja para focas — Día 5</div>
+        <div class="booking-when">Consulta horaires de marée (baliza de Cayeux) para tu día y ordena el día 5 alrededor de la bajamar</div>
+      </div>
+      <div class="booking-urgency">🟡 Planear</div>
+      <div class="booking-price">—</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot yellow"></div>
+      <div>
+        <div class="booking-name">Sortie guiada de focas — Día 5 (opcional)</div>
+        <div class="booking-when">Picardie Nature / guías Qualinat · RDV faro del Hourdel · ~2 h 30 · reservar según marea</div>
+      </div>
+      <div class="booking-urgency">🟡 Reservar</div>
+      <div class="booking-price">~16-20 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot yellow"></div>
+      <div>
+        <div class="booking-name">Tren de vapor Baie de Somme — Día 5 (opcional)</div>
+        <div class="booking-when">chemindefer-baiedesomme.fr · temporada acaba a mediados de sep. — VERIFICAR calendario para tu día</div>
+      </div>
+      <div class="booking-urgency">🟡 Verificar</div>
+      <div class="booking-price">desde ~12,30 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Parc du Marquenterre — Día 5</div>
+        <div class="booking-when">parcdumarquenterre.fr · a diario 10-19 h · comprar online recomendable · guía incluido 10:30/14:00</div>
+      </div>
+      <div class="booking-urgency">🟢 Online</div>
+      <div class="booking-price">11,50 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Blockhaus d'Éperlecques — Día 1</div>
+        <div class="booking-when">leblockhaus.com · a diario en sep. · sin reserva individual · audioguía ES</div>
+      </div>
+      <div class="booking-urgency">🟢 Sin reserva</div>
+      <div class="booking-price">~10 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Batterie Todt — Día 2</div>
+        <div class="booking-when">batterietodt.com · abierta en sep. 10-18 h · sin reserva</div>
+      </div>
+      <div class="booking-urgency">🟢 Sin reserva</div>
+      <div class="booking-price">~9 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Musée 39-45 Ambleteuse — Día 3</div>
+        <div class="booking-when">musee3945.com · a diario 10-18 h · sin reserva · combinado con Batterie Todt</div>
+      </div>
+      <div class="booking-urgency">🟢 Sin reserva</div>
+      <div class="booking-price">~8,90 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Crit'Air (opcional)</div>
+        <div class="booking-when">Solo si te desvías a Lille · certificat-air.gouv.fr (oficial) · pedir con semanas de antelación</div>
+      </div>
+      <div class="booking-urgency">🟢 Opcional</div>
+      <div class="booking-price">~3,81 €</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Côte d'Opale &amp; Baie de Somme · Acantilados, hormigón y marea · Septiembre 2026</p>
+</div>
+
+</body>
+</html>

@@ -13,10 +13,11 @@ public-pages/
 
 Self-contained HTML pages generated from trip planning. Each file is a full itinerary for a specific trip — shareable as a direct link.
 
-| File | Trip | Date | URL |
-|------|------|------|-----|
-| `rotterdam-plan.html` | Rotterdam | June 2026 | [🔗](https://igv92.github.io/public-pages/travel-plans/rotterdam-plan.html) |
-| `roma-napoles-plan.html` | Rome & Naples | April 2026 | [🔗](https://igv92.github.io/public-pages/travel-plans/roma-napoles-plan.html) |
+| File                            | Trip | Date           | URL |
+|---------------------------------|------|----------------|-----|
+| `costa-norte-francia-plan.html` | Rotterdam | September 2026 | [🔗](https://igv92.github.io/public-pages/travel-plans/costa-norte-francia-plan.html) |
+| `rotterdam-plan.html`           | Rotterdam | June 2026      | [🔗](https://igv92.github.io/public-pages/travel-plans/rotterdam-plan.html) |
+| `roma-napoles-plan.html`        | Rome & Naples | April 2026     | [🔗](https://igv92.github.io/public-pages/travel-plans/roma-napoles-plan.html) |
 
 ## URL pattern
 
