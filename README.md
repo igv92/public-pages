@@ -18,6 +18,7 @@ Self-contained HTML pages generated from trip planning. Each file is a full itin
 | `costa-norte-francia-plan.html` | Costa norte Francia | September 2026 | [🔗](https://igv92.github.io/public-pages/travel-plans/costa-norte-francia-plan.html) |
 | `rotterdam-plan.html`           | Rotterdam           | June 2026      | [🔗](https://igv92.github.io/public-pages/travel-plans/rotterdam-plan.html) |
 | `roma-napoles-plan.html`        | Rome & Naples       | April 2026     | [🔗](https://igv92.github.io/public-pages/travel-plans/roma-napoles-plan.html) |
+| `haarlem-bloemendaal-plan.html`        | Haarlem & Bloemendaal       | April 2026     | [🔗](https://igv92.github.io/public-pages/travel-plans/haarlem-bloemendaal-plan.html) |
 
 ## URL pattern
 
