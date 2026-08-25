@@ -1,471 +1,471 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Haarlem & Bloemendaal — Dunas y Mar del Norte</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --sand: #f2ebe0;
-      --dune: #e5d9c4;
-      --sea: #0b5e6e;
-      --sea-mid: #1a7a88;
-      --sea-light: #4a9aaa;
-      --ink: #1c2a2e;
-      --ink-mid: #3a5558;
-      --ink-light: #6a8890;
-      --gold: #a87830;
-      --gold-light: #cc9a40;
-      --reed: #7a5818;
-      --bloom: #2a6a50;
-      --night: #1a1e2e;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haarlem & Bloemendaal — Dunas y Mar del Norte</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #f2ebe0;
+    --dune: #e5d9c4;
+    --sea: #0b5e6e;
+    --sea-mid: #1a7a88;
+    --sea-light: #4a9aaa;
+    --ink: #1c2a2e;
+    --ink-mid: #3a5558;
+    --ink-light: #6a8890;
+    --gold: #a87830;
+    --gold-light: #cc9a40;
+    --reed: #7a5818;
+    --bloom: #2a6a50;
+    --night: #1a1e2e;
+  }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      background-color: var(--sand);
-      color: var(--ink);
-      font-family: 'Crimson Pro', Georgia, serif;
-      font-size: 16px;
-      line-height: 1.6;
-    }
+  body {
+    background-color: var(--sand);
+    color: var(--ink);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
 
-    /* ---- HEADER ---- */
-    .header {
-      background: var(--sea);
-      padding: 3rem 2rem 2.5rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .header::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-              radial-gradient(ellipse at 15% 60%, rgba(204,154,64,0.12) 0%, transparent 55%),
-              radial-gradient(ellipse at 85% 40%, rgba(74,154,170,0.12) 0%, transparent 55%);
-    }
-    .header-ornament {
-      font-family: 'Cinzel', serif;
-      color: var(--gold-light);
-      font-size: 0.7rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-      opacity: 0.8;
-      position: relative;
-    }
-    .header h1 {
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      font-size: clamp(1.8rem, 5vw, 3rem);
-      color: var(--sand);
-      letter-spacing: 0.05em;
-      line-height: 1.2;
-      position: relative;
-    }
-    .header h1 span { color: var(--gold-light); }
-    .header-sub {
-      font-family: 'Crimson Pro', serif;
-      font-style: italic;
-      color: rgba(226,219,205,0.65);
-      font-size: 1.1rem;
-      margin-top: 0.5rem;
-      position: relative;
-    }
-    .header-dates {
-      display: inline-block;
-      margin-top: 1.2rem;
-      padding: 0.4rem 1.5rem;
-      border: 1px solid rgba(204,154,64,0.45);
-      color: var(--gold-light);
-      font-family: 'Cinzel', serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.25em;
-      position: relative;
-    }
+  /* ---- HEADER ---- */
+  .header {
+    background: var(--sea);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 60%, rgba(204,154,64,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 40%, rgba(74,154,170,0.12) 0%, transparent 55%);
+  }
+  .header-ornament {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-light);
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+    position: relative;
+  }
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    color: var(--sand);
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    position: relative;
+  }
+  .header h1 span { color: var(--gold-light); }
+  .header-sub {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    color: rgba(226,219,205,0.65);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    position: relative;
+  }
+  .header-dates {
+    display: inline-block;
+    margin-top: 1.2rem;
+    padding: 0.4rem 1.5rem;
+    border: 1px solid rgba(204,154,64,0.45);
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    position: relative;
+  }
 
-    /* ---- DIVIDER ---- */
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0 2rem;
-      margin: 2rem 0 1rem;
-    }
-    .divider-line { flex: 1; height: 1px; background: var(--dune); }
-    .divider-text {
-      font-family: 'Cinzel', serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.35em;
-      color: var(--ink-light);
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
+  /* ---- DIVIDER ---- */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 2rem;
+    margin: 2rem 0 1rem;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--dune); }
+  .divider-text {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
 
-    /* ---- WARNINGS ---- */
-    .warnings {
-      margin: 0 2rem 2rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 0.75rem;
-    }
-    .warning-card {
-      background: var(--dune);
-      border-left: 3px solid var(--sea);
-      padding: 0.9rem 1.1rem;
-      border-radius: 0 4px 4px 0;
-    }
-    .warning-card.gold  { border-left-color: var(--gold); }
-    .warning-card.green { border-left-color: var(--bloom); }
-    .warning-card.reed  { border-left-color: var(--reed); }
-    .warning-label {
-      font-family: 'Cinzel', serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--sea);
-      margin-bottom: 0.25rem;
-    }
-    .warning-card.gold  .warning-label { color: var(--gold); }
-    .warning-card.green .warning-label { color: var(--bloom); }
-    .warning-card.reed  .warning-label { color: var(--reed); }
-    .warning-text { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.4; }
+  /* ---- WARNINGS ---- */
+  .warnings {
+    margin: 0 2rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.75rem;
+  }
+  .warning-card {
+    background: var(--dune);
+    border-left: 3px solid var(--sea);
+    padding: 0.9rem 1.1rem;
+    border-radius: 0 4px 4px 0;
+  }
+  .warning-card.gold  { border-left-color: var(--gold); }
+  .warning-card.green { border-left-color: var(--bloom); }
+  .warning-card.reed  { border-left-color: var(--reed); }
+  .warning-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sea);
+    margin-bottom: 0.25rem;
+  }
+  .warning-card.gold  .warning-label { color: var(--gold); }
+  .warning-card.green .warning-label { color: var(--bloom); }
+  .warning-card.reed  .warning-label { color: var(--reed); }
+  .warning-text { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.4; }
 
-    /* ---- LIGHT TABLE ---- */
-    .light-table {
-      margin: 0 2rem 2rem;
-      background: white;
-      border-radius: 6px;
-      padding: 1rem 1.3rem;
-      border: 1px solid rgba(11,62,72,0.07);
-      box-shadow: 0 2px 12px rgba(11,62,72,0.07);
-    }
-    .light-table table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    .light-table th {
-      font-family: 'Cinzel', serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      text-align: left;
-      padding: 0.4rem 0.6rem;
-      border-bottom: 1px solid var(--dune);
-    }
-    .light-table td {
-      padding: 0.4rem 0.6rem;
-      color: var(--ink-mid);
-      border-bottom: 1px solid rgba(229,217,196,0.5);
-    }
-    .light-table tr:last-child td { border-bottom: none; }
-    .light-table .highlight { color: var(--gold); font-weight: 600; }
+  /* ---- LIGHT TABLE ---- */
+  .light-table {
+    margin: 0 2rem 2rem;
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.3rem;
+    border: 1px solid rgba(11,62,72,0.07);
+    box-shadow: 0 2px 12px rgba(11,62,72,0.07);
+  }
+  .light-table table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .light-table th {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--dune);
+  }
+  .light-table td {
+    padding: 0.4rem 0.6rem;
+    color: var(--ink-mid);
+    border-bottom: 1px solid rgba(229,217,196,0.5);
+  }
+  .light-table tr:last-child td { border-bottom: none; }
+  .light-table .highlight { color: var(--gold); font-weight: 600; }
 
-    /* ---- DAY SECTION ---- */
-    .day-section { margin-bottom: 2.5rem; }
-    .day-header {
-      padding: 1.2rem 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .day-header.d0 { background: linear-gradient(135deg, #1a1e2e 0%, #2a3048 100%); }
-    .day-header.d1 { background: linear-gradient(135deg, #0b3d48 0%, #0b5e6e 100%); }
-    .day-header.d2 { background: linear-gradient(135deg, #1c3808 0%, #2a5c10 100%); }
-    .day-numeral {
-      font-family: 'Cinzel', serif;
-      font-size: 2.5rem;
-      font-weight: 700;
-      opacity: 0.22;
-      color: #fff;
-      line-height: 1;
-    }
-    .day-info h2 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--sand);
-      letter-spacing: 0.08em;
-    }
-    .day-info p { font-style: italic; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
-    .day-badge {
-      margin-left: auto;
-      font-family: 'Cinzel', serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      padding: 0.3rem 0.8rem;
-      border: 1px solid rgba(255,255,255,0.2);
-      color: rgba(255,255,255,0.5);
-      border-radius: 2px;
-      white-space: nowrap;
-    }
+  /* ---- DAY SECTION ---- */
+  .day-section { margin-bottom: 2.5rem; }
+  .day-header {
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .day-header.d0 { background: linear-gradient(135deg, #1a1e2e 0%, #2a3048 100%); }
+  .day-header.d1 { background: linear-gradient(135deg, #0b3d48 0%, #0b5e6e 100%); }
+  .day-header.d2 { background: linear-gradient(135deg, #1c3808 0%, #2a5c10 100%); }
+  .day-numeral {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    opacity: 0.22;
+    color: #fff;
+    line-height: 1;
+  }
+  .day-info h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--sand);
+    letter-spacing: 0.08em;
+  }
+  .day-info p { font-style: italic; color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+  .day-badge {
+    margin-left: auto;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.5);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
 
-    /* ---- CARDS GRID ---- */
-    .days-grid {
-      padding: 0 2rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1rem;
-    }
-    .day-card {
-      background: white;
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 2px 12px rgba(11,62,72,0.07);
-      border: 1px solid rgba(11,62,72,0.07);
-    }
-    .day-card-header {
-      padding: 0.9rem 1.2rem 0.7rem;
-      border-bottom: 1px solid var(--dune);
-      display: flex;
-      align-items: baseline;
-      gap: 0.75rem;
-    }
-    .day-card-header.d0 { background: rgba(26,30,46,0.06); }
-    .day-card-header.d1 { background: rgba(11,94,110,0.06); }
-    .day-card-header.d2 { background: rgba(42,90,16,0.06); }
-    .card-block { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-light); }
-    .card-date  { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600; color: var(--ink); }
-    .card-title { font-style: italic; font-size: 0.85rem; color: var(--ink-light); margin-left: auto; text-align: right; }
-    .day-card-body { padding: 1rem 1.2rem; }
+  /* ---- CARDS GRID ---- */
+  .days-grid {
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .day-card {
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(11,62,72,0.07);
+    border: 1px solid rgba(11,62,72,0.07);
+  }
+  .day-card-header {
+    padding: 0.9rem 1.2rem 0.7rem;
+    border-bottom: 1px solid var(--dune);
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .day-card-header.d0 { background: rgba(26,30,46,0.06); }
+  .day-card-header.d1 { background: rgba(11,94,110,0.06); }
+  .day-card-header.d2 { background: rgba(42,90,16,0.06); }
+  .card-block { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-light); }
+  .card-date  { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+  .card-title { font-style: italic; font-size: 0.85rem; color: var(--ink-light); margin-left: auto; text-align: right; }
+  .day-card-body { padding: 1rem 1.2rem; }
 
-    /* ---- TIME BLOCKS ---- */
-    .time-block {
-      display: flex;
-      gap: 0.8rem;
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--dune);
-    }
-    .time-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .time-tag {
-      flex-shrink: 0;
-      width: 2.2rem;
-      height: 2.2rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      margin-top: 0.1rem;
-    }
-    .time-tag.morning   { background: rgba(168,120,48,0.12); }
-    .time-tag.afternoon { background: rgba(11,94,110,0.10); }
-    .time-tag.evening   { background: rgba(28,42,46,0.08); }
-    .time-tag.transit   { background: rgba(74,154,170,0.12); }
-    .time-tag.golden    { background: rgba(204,154,64,0.15); }
-    .time-content { flex: 1; }
-    .time-label {
-      font-family: 'Cinzel', serif;
-      font-size: 0.58rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      margin-bottom: 0.15rem;
-      display: block;
-    }
-    .activity-name { font-size: 0.95rem; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 0.2rem; }
-    .activity-detail { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.4; }
-    .activity-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+  /* ---- TIME BLOCKS ---- */
+  .time-block {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--dune);
+  }
+  .time-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .time-tag {
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-top: 0.1rem;
+  }
+  .time-tag.morning   { background: rgba(168,120,48,0.12); }
+  .time-tag.afternoon { background: rgba(11,94,110,0.10); }
+  .time-tag.evening   { background: rgba(28,42,46,0.08); }
+  .time-tag.transit   { background: rgba(74,154,170,0.12); }
+  .time-tag.golden    { background: rgba(204,154,64,0.15); }
+  .time-content { flex: 1; }
+  .time-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 0.15rem;
+    display: block;
+  }
+  .activity-name { font-size: 0.95rem; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 0.2rem; }
+  .activity-detail { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.4; }
+  .activity-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
 
-    /* ---- TAGS ---- */
-    .tag {
-      font-family: 'Cinzel', serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.15em;
-      padding: 0.15rem 0.5rem;
-      border-radius: 2px;
-      text-transform: uppercase;
-      border: 1px solid;
-    }
-    .tag.reserve  { color: var(--sea);   border-color: var(--sea);   background: rgba(11,94,110,0.06); }
-    .tag.price    { color: var(--gold);  border-color: var(--gold);  background: rgba(168,120,48,0.06); }
-    .tag.tip      { color: var(--bloom); border-color: var(--bloom); background: rgba(42,106,80,0.06); }
-    .tag.transport{ color: #2a6090;      border-color: #2a6090;      background: rgba(42,96,144,0.05); }
-    .tag.fodmap   { color: var(--bloom); border-color: var(--bloom); background: rgba(42,106,80,0.08); font-weight:600; }
-    .tag.warning  { color: var(--reed);  border-color: var(--reed);  background: rgba(122,88,24,0.07); }
-    .tag.free     { color: #2a6040;      border-color: #2a6040;      background: rgba(42,96,64,0.06); }
-    .tag.photo    { color: #6a4a20;      border-color: #6a4a20;      background: rgba(106,74,32,0.06); }
+  /* ---- TAGS ---- */
+  .tag {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+  .tag.reserve  { color: var(--sea);   border-color: var(--sea);   background: rgba(11,94,110,0.06); }
+  .tag.price    { color: var(--gold);  border-color: var(--gold);  background: rgba(168,120,48,0.06); }
+  .tag.tip      { color: var(--bloom); border-color: var(--bloom); background: rgba(42,106,80,0.06); }
+  .tag.transport{ color: #2a6090;      border-color: #2a6090;      background: rgba(42,96,144,0.05); }
+  .tag.fodmap   { color: var(--bloom); border-color: var(--bloom); background: rgba(42,106,80,0.08); font-weight:600; }
+  .tag.warning  { color: var(--reed);  border-color: var(--reed);  background: rgba(122,88,24,0.07); }
+  .tag.free     { color: #2a6040;      border-color: #2a6040;      background: rgba(42,96,64,0.06); }
+  .tag.photo    { color: #6a4a20;      border-color: #6a4a20;      background: rgba(106,74,32,0.06); }
 
-    /* ---- FOOD HIGHLIGHT ---- */
-    .food-highlight {
-      background: rgba(42,106,80,0.06);
-      border: 1px solid rgba(42,106,80,0.18);
-      border-radius: 4px;
-      padding: 0.6rem 0.9rem;
-      margin-top: 0.5rem;
-    }
-    .food-highlight .resto { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
-    .food-highlight .dish  { font-style: italic; font-size: 0.82rem; color: var(--ink-mid); }
+  /* ---- FOOD HIGHLIGHT ---- */
+  .food-highlight {
+    background: rgba(42,106,80,0.06);
+    border: 1px solid rgba(42,106,80,0.18);
+    border-radius: 4px;
+    padding: 0.6rem 0.9rem;
+    margin-top: 0.5rem;
+  }
+  .food-highlight .resto { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
+  .food-highlight .dish  { font-style: italic; font-size: 0.82rem; color: var(--ink-mid); }
 
-    /* ---- BIKE ROUTE ---- */
-    .bike-route {
-      background: rgba(11,94,110,0.05);
-      border: 1px solid rgba(11,94,110,0.18);
-      border-radius: 4px;
-      padding: 0.7rem 0.9rem;
-      margin-top: 0.5rem;
-    }
-    .route-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
-      font-size: 0.82rem;
-      color: var(--ink-mid);
-      padding: 0.2rem 0;
-      line-height: 1.4;
-    }
-    .route-step .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--sea-light);
-      flex-shrink: 0;
-      margin-top: 0.45rem;
-    }
-    .route-arrow {
-      font-size: 0.75rem;
-      color: var(--sea-light);
-      text-align: center;
-      letter-spacing: 0.1em;
-      padding: 0.1rem 0;
-    }
+  /* ---- BIKE ROUTE ---- */
+  .bike-route {
+    background: rgba(11,94,110,0.05);
+    border: 1px solid rgba(11,94,110,0.18);
+    border-radius: 4px;
+    padding: 0.7rem 0.9rem;
+    margin-top: 0.5rem;
+  }
+  .route-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--ink-mid);
+    padding: 0.2rem 0;
+    line-height: 1.4;
+  }
+  .route-step .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sea-light);
+    flex-shrink: 0;
+    margin-top: 0.45rem;
+  }
+  .route-arrow {
+    font-size: 0.75rem;
+    color: var(--sea-light);
+    text-align: center;
+    letter-spacing: 0.1em;
+    padding: 0.1rem 0;
+  }
 
-    /* ---- BACKUP ---- */
-    .backup {
-      margin: 0 2rem 1.5rem;
-      background: var(--dune);
-      border-radius: 4px;
-      padding: 0.7rem 1rem;
-      display: flex;
-      gap: 0.6rem;
-      align-items: flex-start;
-    }
-    .backup-icon { font-size: 0.9rem; margin-top: 0.1rem; flex-shrink: 0; }
-    .backup-text { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.4; }
-    .backup-text strong { font-style: normal; color: var(--ink); }
+  /* ---- BACKUP ---- */
+  .backup {
+    margin: 0 2rem 1.5rem;
+    background: var(--dune);
+    border-radius: 4px;
+    padding: 0.7rem 1rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+  .backup-icon { font-size: 0.9rem; margin-top: 0.1rem; flex-shrink: 0; }
+  .backup-text { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.4; }
+  .backup-text strong { font-style: normal; color: var(--ink); }
 
-    /* ---- SECTION BLOCK ---- */
-    .section-block { margin: 0 2rem 2.5rem; }
+  /* ---- SECTION BLOCK ---- */
+  .section-block { margin: 0 2rem 2.5rem; }
 
-    /* ---- RESTAURANT CARDS ---- */
-    .resto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; }
-    .resto-card {
-      background: white;
-      border-radius: 6px;
-      padding: 1rem 1.1rem;
-      border: 1px solid rgba(11,62,72,0.07);
-      box-shadow: 0 1px 6px rgba(11,62,72,0.05);
-    }
-    .resto-card h4 {
-      font-family: 'Cinzel', serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--sea);
-      margin-bottom: 0.6rem;
-    }
-    .resto-item {
-      display: flex;
-      gap: 0.5rem;
-      align-items: flex-start;
-      font-size: 0.85rem;
-      color: var(--ink-mid);
-      margin-bottom: 0.35rem;
-      line-height: 1.4;
-    }
-    .resto-item::before { content: '—'; color: var(--sea-light); flex-shrink: 0; font-size: 0.7rem; margin-top: 0.15rem; }
-    .fodmap-safe {
-      display: inline-block;
-      font-family: 'Cinzel', serif;
-      font-size: 0.5rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.1rem 0.45rem;
-      background: rgba(42,106,80,0.10);
-      border: 1px solid rgba(42,106,80,0.3);
-      border-radius: 2px;
-      color: var(--bloom);
-      margin-left: 0.3rem;
-      vertical-align: middle;
-    }
+  /* ---- RESTAURANT CARDS ---- */
+  .resto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; }
+  .resto-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(11,62,72,0.07);
+    box-shadow: 0 1px 6px rgba(11,62,72,0.05);
+  }
+  .resto-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--sea);
+    margin-bottom: 0.6rem;
+  }
+  .resto-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    font-size: 0.85rem;
+    color: var(--ink-mid);
+    margin-bottom: 0.35rem;
+    line-height: 1.4;
+  }
+  .resto-item::before { content: '—'; color: var(--sea-light); flex-shrink: 0; font-size: 0.7rem; margin-top: 0.15rem; }
+  .fodmap-safe {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.5rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.45rem;
+    background: rgba(42,106,80,0.10);
+    border: 1px solid rgba(42,106,80,0.3);
+    border-radius: 2px;
+    color: var(--bloom);
+    margin-left: 0.3rem;
+    vertical-align: middle;
+  }
 
-    /* ---- BOOKING LIST ---- */
-    .booking-list { display: flex; flex-direction: column; gap: 0.5rem; }
-    .booking-item {
-      display: grid;
-      grid-template-columns: auto 1fr auto auto;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.7rem 1rem;
-      background: white;
-      border-radius: 4px;
-      border: 1px solid rgba(11,62,72,0.07);
-      box-shadow: 0 1px 4px rgba(11,62,72,0.04);
-    }
-    .booking-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-    .booking-dot.red    { background: #c0392b; }
-    .booking-dot.yellow { background: var(--gold); }
-    .booking-dot.green  { background: #27ae60; }
-    .booking-name { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
-    .booking-when { font-size: 0.78rem; font-style: italic; color: var(--ink-light); }
-    .booking-urgency {
-      font-family: 'Cinzel', serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      white-space: nowrap;
-      color: var(--ink-light);
-    }
-    .booking-price { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold); white-space: nowrap; }
+  /* ---- BOOKING LIST ---- */
+  .booking-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .booking-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid rgba(11,62,72,0.07);
+    box-shadow: 0 1px 4px rgba(11,62,72,0.04);
+  }
+  .booking-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .booking-dot.red    { background: #c0392b; }
+  .booking-dot.yellow { background: var(--gold); }
+  .booking-dot.green  { background: #27ae60; }
+  .booking-name { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+  .booking-when { font-size: 0.78rem; font-style: italic; color: var(--ink-light); }
+  .booking-urgency {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink-light);
+  }
+  .booking-price { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold); white-space: nowrap; }
 
-    /* ---- BUDGET ---- */
-    .budget-box {
-      background: white;
-      border-radius: 6px;
-      padding: 1.2rem 1.5rem;
-      border: 1px solid rgba(11,62,72,0.07);
-      box-shadow: 0 2px 8px rgba(11,62,72,0.05);
-    }
-    .budget-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid var(--dune);
-      font-size: 0.9rem;
-    }
-    .budget-row:last-child {
-      border-bottom: none;
-      font-weight: 600;
-      font-size: 1rem;
-      padding-top: 0.7rem;
-      margin-top: 0.3rem;
-      border-top: 2px solid var(--dune);
-    }
-    .budget-label { color: var(--ink-mid); }
-    .budget-value { font-family: 'Cinzel', serif; color: var(--gold); }
+  /* ---- BUDGET ---- */
+  .budget-box {
+    background: white;
+    border-radius: 6px;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid rgba(11,62,72,0.07);
+    box-shadow: 0 2px 8px rgba(11,62,72,0.05);
+  }
+  .budget-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--dune);
+    font-size: 0.9rem;
+  }
+  .budget-row:last-child {
+    border-bottom: none;
+    font-weight: 600;
+    font-size: 1rem;
+    padding-top: 0.7rem;
+    margin-top: 0.3rem;
+    border-top: 2px solid var(--dune);
+  }
+  .budget-label { color: var(--ink-mid); }
+  .budget-value { font-family: 'Cinzel', serif; color: var(--gold); }
 
-    /* ---- FOOTER ---- */
-    .footer { background: var(--sea); text-align: center; padding: 2rem; margin-top: 3rem; }
-    .footer p { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; color: rgba(226,219,205,0.5); text-transform: uppercase; }
+  /* ---- FOOTER ---- */
+  .footer { background: var(--sea); text-align: center; padding: 2rem; margin-top: 3rem; }
+  .footer p { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; color: rgba(226,219,205,0.5); text-transform: uppercase; }
 
-    /* ---- RESPONSIVE ---- */
-    @media (max-width: 600px) {
-      .days-grid, .resto-grid { grid-template-columns: 1fr; }
-      .booking-item { grid-template-columns: auto 1fr; }
-      .booking-price { display: none; }
-      .header, .day-header { padding-left: 1rem; padding-right: 1rem; }
-      .days-grid, .warnings, .section-block, .backup, .light-table { padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; }
-      .days-grid { padding: 0 1rem; }
-      .light-table { margin: 0 1rem 2rem; }
-      .warnings { margin: 0 1rem 2rem; }
-      .backup { margin: 0 1rem 1.5rem; }
-    }
-  </style>
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 600px) {
+    .days-grid, .resto-grid { grid-template-columns: 1fr; }
+    .booking-item { grid-template-columns: auto 1fr; }
+    .booking-price { display: none; }
+    .header, .day-header { padding-left: 1rem; padding-right: 1rem; }
+    .days-grid, .warnings, .section-block, .backup, .light-table { padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; }
+    .days-grid { padding: 0 1rem; }
+    .light-table { margin: 0 1rem 2rem; }
+    .warnings { margin: 0 1rem 2rem; }
+    .backup { margin: 0 1rem 1.5rem; }
+  }
+</style>
 </head>
 <body>
 
