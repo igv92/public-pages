@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Costa y Muro Atlántico — Côte d'Opale &amp; Baie de Somme</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --chalk: #eef1f1;
+    --mist: #dce5e5;
+    --channel: #16323b;
+    --channel-mid: #2c6478;
+    --channel-light: #5f93a6;
+    --ink: #1a2429;
+    --ink-mid: #3d545c;
+    --ink-light: #6f878f;
+    --opal: #c9852f;
+    --opal-light: #dda254;
+    --opal-dark: #8f5a17;
+    --gold: #a8792a;
+    --gold-light: #c49a3e;
+    --concrete: #6a6f6e;
+    --concrete-dark: #404443;
+    --green-acc: #35674e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--chalk);
+    color: var(--ink);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: var(--channel);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 18% 50%, rgba(201,133,47,0.16) 0%, transparent 60%),
+      radial-gradient(ellipse at 82% 50%, rgba(95,147,166,0.22) 0%, transparent 60%);
+  }
+  .header-ornament {
+    font-family: 'Cinzel', serif;
+    color: var(--opal-light);
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.85;
+    position: relative;
+  }
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    color: var(--chalk);
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    position: relative;
+  }
+  .header h1 span { color: var(--opal-light); }
+  .header-sub {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    color: var(--channel-light);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    position: relative;
+  }
+  .header-dates {
+    display: inline-block;
+    margin-top: 1.2rem;
+    padding: 0.4rem 1.5rem;
+    border: 1px solid rgba(196,154,62,0.4);
+    color: var(--opal-light);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    position: relative;
+  }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 2rem;
+    margin: 2rem 0 1rem;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--mist); }
+  .divider-text {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ---- WARNINGS ---- */
+  .warnings {
+    margin: 0 2rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.75rem;
+  }
+  .warning-card {
+    background: var(--mist);
+    border-left: 3px solid var(--opal);
+    padding: 0.9rem 1.1rem;
+    border-radius: 0 4px 4px 0;
+  }
+  .warning-card.blue     { border-left-color: var(--channel-mid); }
+  .warning-card.gold     { border-left-color: var(--gold); }
+  .warning-card.green    { border-left-color: var(--green-acc); }
+  .warning-card.concrete { border-left-color: var(--concrete); }
+  .warning-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--opal-dark);
+    margin-bottom: 0.25rem;
+  }
+  .warning-card.blue     .warning-label { color: var(--channel-mid); }
+  .warning-card.gold     .warning-label { color: var(--gold); }
+  .warning-card.green    .warning-label { color: var(--green-acc); }
+  .warning-card.concrete .warning-label { color: var(--concrete-dark); }
+  .warning-text { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.4; }
+  .warning-text strong { color: var(--ink); }
+
+  /* ---- DAY SECTION HEADER ---- */
+  .day-section { margin-bottom: 2.5rem; }
+  .day-header {
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .day-header.opale   { background: linear-gradient(135deg, #16323b 0%, #2c6478 100%); }
+  .day-header.somme   { background: linear-gradient(135deg, #123528 0%, #35674e 100%); }
+  .day-header.transit { background: linear-gradient(135deg, #3a3f3e 0%, #6a6f6e 100%); }
+  .day-numeral {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    opacity: 0.24;
+    color: #fff;
+    line-height: 1;
+    min-width: 1.8rem;
+  }
+  .day-info h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--chalk);
+    letter-spacing: 0.06em;
+  }
+  .day-info p { font-style: italic; color: rgba(255,255,255,0.5); font-size: 0.88rem; }
+  .day-badge {
+    margin-left: auto;
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(255,255,255,0.22);
+    color: rgba(255,255,255,0.55);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* ---- DAYS GRID ---- */
+  .days-grid {
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .day-card {
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(22,50,59,0.07);
+    border: 1px solid rgba(22,50,59,0.06);
+  }
+  .day-card-header {
+    padding: 0.9rem 1.2rem 0.7rem;
+    border-bottom: 1px solid var(--mist);
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .day-card-header.opale { background: rgba(44,100,120,0.06); }
+  .day-card-header.somme { background: rgba(53,103,78,0.06); }
+  .day-card-header.transit { background: rgba(106,111,110,0.06); }
+  .card-block { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-light); }
+  .card-date  { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+  .card-title { font-style: italic; font-size: 0.85rem; color: var(--ink-light); margin-left: auto; text-align: right; }
+  .day-card-body { padding: 1rem 1.2rem; }
+
+  /* ---- TIME BLOCKS ---- */
+  .time-block {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--mist);
+  }
+  .time-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .time-tag {
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-top: 0.1rem;
+  }
+  .time-tag.morning   { background: rgba(168,121,42,0.12); }
+  .time-tag.afternoon { background: rgba(201,133,47,0.12); }
+  .time-tag.evening   { background: rgba(22,50,59,0.08); }
+  .time-tag.transit   { background: rgba(44,100,120,0.10); }
+  .time-tag.wwii      { background: rgba(106,111,110,0.16); }
+  .time-content { flex: 1; }
+  .time-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 0.15rem;
+    display: block;
+  }
+  .activity-name { font-size: 0.95rem; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 0.2rem; }
+  .activity-detail { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.45; }
+  .activity-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+  .tag {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+  .tag.reserve  { color: var(--opal-dark);   border-color: var(--opal-dark);   background: rgba(201,133,47,0.06); }
+  .tag.wwii     { color: #fff;               border-color: var(--concrete-dark); background: var(--concrete); }
+  .tag.price    { color: var(--gold);        border-color: var(--gold);        background: rgba(168,121,42,0.05); }
+  .tag.tip      { color: var(--channel-mid); border-color: var(--channel-mid); background: rgba(44,100,120,0.05); }
+  .tag.free     { color: var(--green-acc);   border-color: var(--green-acc);   background: rgba(53,103,78,0.05); }
+  .tag.photo    { color: #3a7a4a;            border-color: #3a7a4a;            background: rgba(58,122,74,0.05); }
+  .tag.tide     { color: #2a6090;            border-color: #2a6090;            background: rgba(42,96,144,0.05); }
+  .tag.transport{ color: var(--channel-mid); border-color: var(--channel-mid); background: rgba(44,100,120,0.05); }
+  .tag.food     { color: #6b4c8a;            border-color: #6b4c8a;            background: rgba(107,76,138,0.05); }
+
+  /* ---- FOOD HIGHLIGHT ---- */
+  .food-highlight {
+    background: rgba(107,76,138,0.06);
+    border: 1px solid rgba(107,76,138,0.15);
+    border-radius: 4px;
+    padding: 0.6rem 0.9rem;
+    margin-top: 0.5rem;
+  }
+  .food-highlight .resto { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
+  .food-highlight .dish  { font-style: italic; font-size: 0.82rem; color: var(--ink-mid); }
+  .food-highlight .dish strong { font-style: normal; }
+
+  /* ---- BACKUP ---- */
+  .backup {
+    margin: 0 2rem 1.5rem;
+    background: var(--mist);
+    border-radius: 4px;
+    padding: 0.7rem 1rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+  .backup-icon { font-size: 0.9rem; margin-top: 0.1rem; flex-shrink: 0; }
+  .backup-text { font-size: 0.82rem; color: var(--ink-mid); font-style: italic; line-height: 1.4; }
+  .backup-text strong { font-style: normal; color: var(--ink); }
+
+  /* ---- SECTION BLOCK ---- */
+  .section-block { margin: 0 2rem 2.5rem; }
+
+  /* ---- CARDS GRID ---- */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; }
+  .info-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(22,50,59,0.06);
+    box-shadow: 0 1px 6px rgba(22,50,59,0.04);
+  }
+  .info-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+    color: var(--opal-dark);
+  }
+  .info-card h4.blue     { color: var(--channel-mid); }
+  .info-card h4.green    { color: var(--green-acc); }
+  .info-card h4.concrete { color: var(--concrete-dark); }
+  .card-item {
+    position: relative;
+    padding-left: 1.1rem;
+    font-size: 0.85rem;
+    color: var(--ink-mid);
+    margin-bottom: 0.4rem;
+    line-height: 1.45;
+  }
+  .card-item::before { content: '—'; position: absolute; left: 0; top: 0; color: var(--opal); font-size: 0.7rem; }
+  .info-card h4.blue     ~ .card-item::before { color: var(--channel-mid); }
+  .info-card h4.green    ~ .card-item::before { color: var(--green-acc); }
+  .info-card h4.concrete ~ .card-item::before { color: var(--concrete); }
+  .card-item.safe   { color: var(--green-acc); }
+  .card-item.safe::before { content: '✓'; color: var(--green-acc); }
+  .card-item.avoid  { color: var(--opal-dark); font-weight: 600; }
+  .card-item.avoid::before { content: '⚠'; color: var(--opal-dark); }
+
+  /* ---- PHOTO CARD ---- */
+  .photo-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(22,50,59,0.06);
+    border-left: 3px solid var(--green-acc);
+    box-shadow: 0 1px 4px rgba(22,50,59,0.04);
+  }
+  .photo-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green-acc);
+    margin-bottom: 0.5rem;
+  }
+  .photo-detail { font-size: 0.85rem; color: var(--ink-mid); line-height: 1.45; }
+  .photo-meta {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    margin-top: 0.45rem;
+  }
+
+  /* ---- BOOKING LIST ---- */
+  .booking-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .booking-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid rgba(22,50,59,0.06);
+    box-shadow: 0 1px 4px rgba(22,50,59,0.04);
+  }
+  .booking-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .booking-dot.red    { background: #c0392b; }
+  .booking-dot.yellow { background: var(--gold); }
+  .booking-dot.green  { background: #27ae60; }
+  .booking-name { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+  .booking-when { font-size: 0.78rem; font-style: italic; color: var(--ink-light); }
+  .booking-urgency {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink-light);
+  }
+  .booking-price { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold); white-space: nowrap; }
+
+  /* ---- CHECKLIST ---- */
+  .checklist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .checklist-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(22,50,59,0.06);
+    box-shadow: 0 1px 6px rgba(22,50,59,0.04);
+  }
+  .checklist-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--opal-dark);
+    margin-bottom: 0.7rem;
+  }
+  .checklist-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    font-size: 0.85rem;
+    color: var(--ink-mid);
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+  }
+  .checklist-item::before {
+    content: '—';
+    color: var(--opal);
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    margin-top: 0.15rem;
+  }
+
+  /* ---- BUDGET ---- */
+  .budget-box { background: white; border-radius: 6px; padding: 1.2rem 1.5rem; border: 1px solid rgba(22,50,59,0.06); box-shadow: 0 2px 8px rgba(22,50,59,0.05); }
+  .budget-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--mist);
+    font-size: 0.9rem;
+  }
+  .budget-row:last-child { border-bottom: none; font-weight: 600; font-size: 1rem; padding-top: 0.7rem; margin-top: 0.3rem; border-top: 2px solid var(--mist); }
+  .budget-label { color: var(--ink-mid); }
+  .budget-value { font-family: 'Cinzel', serif; color: var(--gold); }
+
+  /* ---- SUB LABEL ---- */
+  .sub-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  /* ---- FOOTER ---- */
+  .footer { background: var(--channel); text-align: center; padding: 2rem; margin-top: 3rem; }
+  .footer p { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--channel-light); text-transform: uppercase; }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 600px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .booking-item { grid-template-columns: auto 1fr; }
+    .booking-price { display: none; }
+    .header, .day-header { padding-left: 1rem; padding-right: 1rem; }
+    .warnings, .section-block, .backup { padding-left: 0; padding-right: 0; margin-left: 1rem; margin-right: 1rem; }
+    .days-grid { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-ornament">☁ Itinerario de viaje ☁</div>
+  <h1>Costa y <span>Muro Atlántico</span></h1>
+  <p class="header-sub">Côte d'Opale &amp; Baie de Somme — acantilados, búnkeres y marea</p>
+  <div class="header-dates">Lun 7 — Sáb 12 septiembre 2026 · 6 días · 1 viajero</div>
+</div>
+
+<!-- ============ ANTES DE SALIR ============ -->
+<div class="divider" style="margin-top:2rem">
+  <div class="divider-line"></div>
+  <div class="divider-text">Antes de salir</div>
+  <div class="divider-line"></div>
+</div>
+
+<div class="warnings">
+  <div class="warning-card blue" style="grid-column:1/-1;">
+    <div class="warning-label">🏨 Bases · dónde dormir</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:0.5rem;">
+      <span style="background:transparent;border:0px solid rgba(22,50,59,0.10);border-radius:6px;padding:0.5rem 0.9rem;text-align:center;line-height:1.3;">🏞️ <strong style="color:var(--ink);">Boulogne-sur-Mer</strong><br><span style="font-size:0.78rem;color:var(--ink-light);font-style:italic;">Première Classe · 3 noches · lun 7 → jue 10</span></span>
+      <span style="font-family:'Cinzel',serif;color:var(--channel-mid);font-size:1.15rem;white-space:nowrap;"> ⟶ </span>
+      <span style="background:transparent;border:0px solid rgba(22,50,59,0.10);border-radius:6px;padding:0.5rem 0.9rem;text-align:center;line-height:1.3;">🦭 <strong style="color:var(--ink);">Saint-Valery-sur-Somme</strong><br><span style="font-size:0.78rem;color:var(--ink-light);font-style:italic;">Edera (apartamento) · 2 noches · jue 10 → sáb 12</span></span>
+    </div>
+  </div>
+  <div class="warning-card blue">
+    <div class="warning-label">🚗 Conducción y peajes</div>
+    <div class="warning-text">Maastricht → Boulogne ~3 h 15 (~300 km) por Bélgica y Lille. El <strong>Blockhaus d'Éperlecques queda sobre la A26 de aproximación</strong>, sin desvío. Autopistas belgas gratuitas; A26/A16 francesas con peaje (~30-50 € ida y vuelta). Dentro del bucle conduces menos de 1 h al día.</div>
+  </div>
+  <div class="warning-card blue">
+    <div class="warning-label">🌊 Mareas — focas</div>
+    <div class="warning-text">Las focas de la <strong>Pointe du Hourdel</strong> se ven mejor con <strong>marea baja</strong> (bancos de arena expuestos; presencia ~3 h antes y hasta ~2 h 30 después de la bajamar). <strong>Vie 11 sep = marea viva, coef. 98-101</strong> (el mejor del mes): bajamares a las <strong>07h36</strong> y <strong>19h57</strong>. <strong>Usa solo la tabla oficial de la baliza de Cayeux</strong> — las webs agregadoras inflan los coeficientes (rivage-marées da 120 en media docena de días seguidos, que es imposible). Punto exacto de observación: <strong>al pie del blockhaus</strong>, sobre la digue de galets; las focas se instalan en la orilla derecha del canal. Con coef. alto la marea sube muy rápido.</div>
+  </div>
+  <div class="warning-card green">
+    <div class="warning-label">📷 Clima, viento y luz</div>
+    <div class="warning-text">Septiembre = temporada media: menos gente, luz cálida, cielos cambiantes (ideales). En los cabos, en Cayeux y en el Hourdel <strong>hace mucho viento</strong> — cortavientos y algo para fijar el trípode. Días aún largos.</div>
+  </div>
+  <div class="warning-card gold">
+    <div class="warning-label">🍽️ Reservar SIEMPRE</div>
+    <div class="warning-text">En esta costa <strong>"sin reserva" no existe</strong>, ni entre semana ni fuera de temporada. Le Châtillon, La Marie Galante, Le Bistronome, Les Frangins, l'Atlantic y Le Moulin rechazan gente a diario. Llama la víspera. Y verifica el día de cierre: <strong>muchos cierran lunes, martes o jueves</strong>, y bastantes pescaderías-restaurante solo abren a mediodía.</div>
+  </div>
+  <div class="warning-card concrete">
+    <div class="warning-label">🅿️ Aparcamiento — resumen</div>
+    <div class="warning-text"><strong>Calais:</strong> gratis desde jun. 2025 salvo <em>zone bleue</em> (1 h, disco obligatorio, control L-V 9-12h y 14-18h; discos gratis en el Hôtel de Ville). · <strong>Saint-Valery:</strong> centro de pago todo el año 9-12h30 y 14-19h, <strong>multa 25 €</strong> → usa el <strong>Parking du Canal (Boismont), gratis y sin límite</strong>, 20 min a pie. Hay tarifa de 12 €/día con código para alojados: pídelo al anfitrión. · <strong>Le Tréport:</strong> centro 25 €/día, parking del funicular arriba <strong>3 €/día</strong> y el funicular es gratis. · <strong>Le Hourdel:</strong> ~2 €/4 h en el puerto; Route Blanche ~2 €/h con barrera de 2,1 m. <strong>No es gratuito.</strong></div>
+  </div>
+  <div class="warning-card concrete">
+    <div class="warning-label">📅 Por qué esta semana</div>
+    <div class="warning-text">Ventana elegida a propósito: evita el <strong>cierre de la Batterie Todt (1-5 sep)</strong>; pone las focas del Hourdel en <strong>marea viva el vie 11</strong> (coef. 98-101); esquiva las <strong>Journées du Patrimoine (19-20 sep)</strong>, con más gente y hoteles al alza; y no incluye <strong>ninguna noche de sábado</strong> (la más cara).</div>
+  </div>
+</div>
+
+<!-- ============ CONTEXTO LOCAL ============ -->
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-text">Contexto local &amp; práctico</div>
+  <div class="divider-line"></div>
+</div>
+
+<div class="section-block">
+  <div class="cards-grid">
+    <div class="info-card">
+      <h4 class="blue">🚗 Cómo moverse</h4>
+      <div class="card-item">Todo el viaje es en coche. La <strong>D940</strong> es la carretera costera panorámica que enhebra los cabos, Ambleteuse, Wimereux y Boulogne — lenta y preciosa, tómala en vez de la autopista dentro de la zona.</div>
+      <div class="card-item">Aparcamiento gratuito en los cabos, Blanc-Nez, Cran d'Escalles, Wissant y Bois de Cise. <strong>De pago en Le Hourdel, Saint-Valery centro y Le Tréport centro</strong> — ver el resumen de arriba.</div>
+      <div class="card-item">En los cabos, los aparcamientos altos se llenan un poco en fin de semana con buen tiempo; llega temprano. El de Blanc-Nez tiene <strong>limitación de altura de 2,1 m</strong>.</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">⚠ Errores típicos a evitar</h4>
+      <div class="card-item">No mirar la <strong>marea</strong> antes del Hourdel (con marea alta casi no verás focas) ni antes de bajar a la playa de Blanc-Nez.</div>
+      <div class="card-item"><strong>Fotografiar un acantilado desde encima.</strong> Blanc-Nez, Gris-Nez y Ault miran al <strong>noroeste</strong>: para ver la pared hay que bajar al mar y ponerse al suroeste, y su luz frontal es la de <strong>última hora de la tarde</strong>, nunca la mañana. Es el error que más se repite.</div>
+      <div class="card-item">Dar por hecho que un restaurante abre. <strong>Comprueba día de cierre y si sirve solo a mediodía</strong> antes de contar con él para cenar.</div>
+      <div class="card-item">No aventurarse solo por los bancos de arena de la bahía: la marea sube rápido y es peligroso. En Wissant, <strong>no meterse en el sistema dunar</strong> — el acceso a los búnkeres está desaconsejado para proteger las dunas.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DÍA 1 ============ -->
+<div class="day-section">
+  <div class="day-header opale">
+    <div class="day-numeral">I</div>
+    <div class="day-info">
+      <h2>Llegada + Blockhaus d'Éperlecques</h2>
+      <p>Maastricht · Éperlecques · Calais · Boulogne · Le Portel</p>
+    </div>
+    <div class="day-badge">Memoria V2</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header opale">
+        <div class="card-block">Día 1</div>
+        <div class="card-date">Lun 7 sep</div>
+        <div class="card-title">Llegada · memoria de guerra</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag transit">🚗</div>
+          <div class="time-content">
+            <span class="time-label">Mañana — salida</span>
+            <div class="activity-name">Maastricht → Éperlecques</div>
+            <div class="activity-detail">Salida <strong>09h15</strong> — el blockhaus no abre hasta las 11h, así que llegar antes no sirve de nada. ~3 h directas por Lieja, Bruselas, Lille y la A26; está junto a Watten/Saint-Omer, prácticamente sobre la vía de aproximación. Saliendo a esa hora cruzas el <strong>ring de Bruselas (R0)</strong> sobre las 10h45, ya fuera de hora punta. <strong>Quédate en el R0:</strong> está fuera de la LEZ de Bruselas, pero los túneles hacia el centro exigen registro previo (multa 150 €) — no te fíes de un recálculo del GPS por atasco. Peajes de este día: mínimos (belgas gratis, A25/A16 del Nord gratis; solo el tramo A26 Calais–Saint-Omer, ~5 €).</div>
+            <div class="activity-meta"><span class="tag transport">~285 km · salida 09h15</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag wwii">🛰️</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — visita</span>
+            <div class="activity-name">Blockhaus d'Éperlecques</div>
+            <div class="activity-detail">El mayor búnker del norte de Francia. Construido en 1943 como base de ensamblaje y lanzamiento de cohetes V2 contra Londres; nunca llegó a operar por los bombardeos aliados. Se recorre como "parque de la historia" en un bosque, con puntos sonoros, una rampa de lanzamiento V1 y un V2. Impresiona por su masa de hormigón (~90.000 t) más que por la museografía. Audioguía en español. <strong>Visita real: 1 h 45.</strong> <strong>Horario de septiembre: 11h–17h30, última admisión 15h45.</strong> Aceptan efectivo y tarjeta, pero <strong>no devuelven cambio en efectivo</strong>.</div>
+            <div class="activity-meta"><span class="tag wwii">2ª Guerra Mundial</span><span class="tag price">11,50 €</span><span class="tag transport">11h–17h30 · últ. adm. 15h45</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🗿</div>
+          <div class="time-content">
+            <span class="time-label">Primera tarde — en ruta</span>
+            <div class="activity-name">Calais — Rodin y el Hôtel de Ville</div>
+            <div class="activity-detail">30 min al norte de Éperlecques, y Boulogne queda luego a 35 min por la A16 (gratis), con el hotel justo en la salida: el desvío entero cuesta ~30 min y es la única ocasión del viaje en que Calais queda a mano. En la <strong>Place du Soldat Inconnu</strong>, el Hôtel de Ville neoflamenco de ladrillo con su beffroi de 75 m, y delante <strong>Les Bourgeois de Calais</strong> de Rodin: los seis notables que salieron descalzos con la soga al cuello a entregar la ciudad a Eduardo III en 1347. Rodin los puso a ras de suelo, sin pedestal — la ruptura con toda la escultura monumental del XIX. Picnic en el <strong>Parc Saint-Pierre</strong> con la fachada delante. Si te sobra tiempo, el Fort Risban y el faro en el puerto. <strong>Subir al beffroi no se puede los lunes.</strong></div>
+            <div class="activity-meta"><span class="tag free">Gratuito · aparcar gratis fuera de zone bleue</span><span class="tag photo">📷 Bronce + ladrillo</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🚗</div>
+          <div class="time-content">
+            <span class="time-label">Tarde — traslado + check-in</span>
+            <div class="activity-name">A Boulogne-sur-Mer</div>
+            <div class="activity-detail">~1 h hasta la costa. Check-in en <strong>Première Classe Boulogne — Saint-Martin-les-Boulogne</strong> (11 rue de la Plaine, 62280 Saint-Martin-Boulogne), <strong>reservado</strong>: parking privado gratuito, entrada desde las 14h. Ojo, no estás en el casco antiguo sino a ~4 km al este, junto a la salida de la A16 — para la ville haute y el puerto baja en coche (~10 min) y aparca allí. Boulogne es la base de los tres primeros días: el mayor puerto pesquero de Francia, con casco histórico amurallado.</div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🏰</div>
+          <div class="time-content">
+            <span class="time-label">Atardecer</span>
+            <div class="activity-name">Boulogne — primer paseo por la ville haute</div>
+            <div class="activity-detail">Primer contacto con la ciudad alta amurallada: las murallas medievales (paseo de ronda), la Basílica de Notre-Dame con su cúpula y el ambiente del puerto al atardecer. Un aperitivo de lo que verás con calma el día 3. Aparca dentro del recinto.</div>
+            <div class="activity-meta"><span class="tag free">Murallas gratuitas</span><span class="tag photo">📷 Casco medieval + puerto</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🐟</div>
+          <div class="time-content">
+            <span class="time-label">Cena — 19h00</span>
+            <div class="food-highlight">
+              <div class="resto">Restaurant de la Haute Ville <span style="font-weight:300;font-size:0.78rem">(60 Rue de Lille · +33 3 21 80 54 10)</span></div>
+              <div class="dish">Dentro de las murallas, donde ya estás. Lun 12h–14h y <strong>19h–21h30</strong>. Vivero de marisco a la vista y patio interior. <strong>Reservar.</strong> Pide <strong>plateau de fruits de mer</strong> o pescado del día a la plancha, sin salsa. Evita los escargots (champiñón y mantequilla de ajo). <strong>Alternativa sin reserva:</strong> Brasserie Canaille, Place Dalton, servicio continuo 12h–22h.<br><strong>Ojo:</strong> <em>Chez Sandrine — La Poissonnerie du Port</em> y la <em>Brasserie du Port</em> <strong>cierran los lunes</strong> y solo sirven a mediodía el resto de la semana. No sirven para cenar ningún día.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🌅</div>
+          <div class="time-content">
+            <span class="time-label">Ocaso — 20h25</span>
+            <div class="activity-name">Le Portel — Fort de l'Heurt</div>
+            <div class="activity-detail">12 min al sur de Boulogne. Fuerte que Napoleón mandó construir en <strong>1804</strong> sobre unas rocas separadas de la playa, para proteger la flotilla de invasión de Inglaterra que concentró en Boulogne. Con marea baja se queda en seco y no dice nada; <strong>con el agua arriba es una isla</strong> recortada contra el sol poniéndose sobre el Canal. Comprueba la marea antes de bajar. Aparca en el paseo, a la altura del <strong>Quai du Calvaire</strong>, y camina <strong>150–200 m al sur</strong>: desde el acceso principal el fuerte queda en demora ~265° y el sol se pone a ~280°, así que hay que bajar para alinearlos. <strong>El fuerte está a ~700 m de la orilla</strong>: con un objetivo corto es una marina amplia con el fuerte como ancla, no una silueta grande. Aparcamiento gratuito.<br>Le Portel fue de los pueblos más bombardeados de Francia en 1943 por las baterías costeras alemanas de alrededor; se reconstruyó entero y el fuerte napoleónico sobrevivió a los dos episodios.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag tide">🌊 Mejor con marea alta</span><span class="tag photo">📷 Marina amplia · 18-24mm</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">☁️</div>
+    <div class="backup-text"><strong>Backup:</strong> si sales tarde o el museo estuviera cerrado ese día, Éperlecques también encaja en la vuelta (día 6), ya que queda hacia el noreste. En ese caso ve directo a Boulogne y aprovecha la tarde de luz en la ville haute.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 2 ============ -->
+<div class="day-section">
+  <div class="day-header opale">
+    <div class="day-numeral">II</div>
+    <div class="day-info">
+      <h2>Les Deux Caps + Batterie Todt</h2>
+      <p>Cap Blanc-Nez · Wissant · Audresselles · Cap Gris-Nez</p>
+    </div>
+    <div class="day-badge">Gran Sitio de Francia</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header opale">
+        <div class="card-block">Día 2</div>
+        <div class="card-date">Mar 8 sep</div>
+        <div class="card-title">Acantilados y Muro Atlántico</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag morning">🏔️</div>
+          <div class="time-content">
+            <span class="time-label">Mañana</span>
+            <div class="activity-name">Cap Blanc-Nez — acantilados de creta</div>
+            <div class="activity-detail">~35 min desde Boulogne. Los acantilados blancos gemelos de los de Dover (134 m), coronados por el obelisco del Dover Patrol — que está montado <strong>sobre un búnker</strong> de las defensas del norte. En día claro se ve Inglaterra. Subida a pie por la pradera batida por el viento. Aparcamiento gratuito, 24 h, <strong>limitación de altura 2,1 m</strong>.<br><strong>Desde arriba no ves el acantilado.</strong> Y con marea alta no hay playa a la que bajar. Lo de arriba es el obelisco, la pradera y la curva de la costa hacia Wissant — la pared blanca la consigues en la parada siguiente y, sobre todo, desde la playa de Wissant a última hora.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Obelisco + pradera</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🏖️</div>
+          <div class="time-content">
+            <span class="time-label">Media mañana</span>
+            <div class="activity-name">Cran d'Escalles — el acantilado desde abajo</div>
+            <div class="activity-detail">5 min al sur del Blanc-Nez por la D940 y luego la bajada a Escalles (50.9215 / 1.7025). <strong>Es la solución al problema de estar encima del cabo:</strong> bajas a nivel del mar y te pones al suroeste, mirando hacia atrás, y tienes la pared de creta de perfil. Aparcamiento gratuito con aseos limpios justo antes del descenso, playa de guijarros y <strong>un blockhaus nada más llegar frente a la playa</strong>. Aunque la marea haya comido la arena, desde el propio descenso ya tienes el acantilado.<br><em>Ojo con la marea: sube deprisa aquí.</em></div>
+            <div class="activity-meta"><span class="tag free">Gratuito · aseos</span><span class="tag photo">📷 Pared de creta + blockhaus</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🦀</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — comida</span>
+            <div class="food-highlight">
+              <div class="resto">La Marie Galante <span style="font-weight:300;font-size:0.78rem">(173 Rue Edouard Quenu, Audresselles · +33 3 21 83 02 32)</span></div>
+              <div class="dish">Aldea de pescadores diminuta y auténtica, famosa por el <strong>cangrejo (tourteau) y el bogavante</strong>. Misma familia durante generaciones; las reseñas hablan del mejor plateau de fruits de mer del Cap Gris-Nez y de los <strong>couteaux</strong> (navajas). Marisco cocido sin salsa = FODMAP-seguro. <strong>Reservar.</strong><br><strong>Alternativa:</strong> Le Loup de Mer, 1 Place du Détroit, +33 3 21 32 94 68 (solo hablan francés).<br><strong>⚠ Los miércoles cierran Chez Mimi, Le Retour des Flobards y Au P'tit Bonheur</strong> — si has intercambiado el día 2 con el 3, solo te quedan estos dos, y los dos piden reserva.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag wwii">🔫</div>
+          <div class="time-content">
+            <span class="time-label">Tarde — memoria de guerra</span>
+            <div class="activity-name">Batterie Todt · Musée du Mur de l'Atlantique (Audinghen)</div>
+            <div class="activity-detail">Enorme batería costera del Muro Atlántico, junto a Gris-Nez. <strong>Horario: 10h–17h, cerrada los lunes.</strong> Cuenta <strong>1 h 30 – 2 h</strong>, no una hora.<br><strong>Interior (~1 h 15):</strong> diez salas con miles de piezas — armamento, munición, uniformes — y reconstrucciones de las dependencias reales: chambrées de tropa, armería, cuarto del suboficial, despacho del médico y <strong>la sala de máquinas con su generador diésel original</strong>. <em>Puede estar prohibido fotografiar dentro: pregunta en taquilla.</em><br><strong>Exterior (~30 min):</strong> el <strong>K5 de 280 mm sobre vía férrea</strong>, uno de los dos que quedan en el mundo (el otro en EE.UU.), restaurado y apuntando a Inglaterra con 86 km de alcance — <strong>te puedes subir encima</strong>, y esa escala es la foto. Además un Flak de 88 mm y obstáculos de playa.<br><em>Dentro del búnker se está a 10-13 °C todo el año: chaqueta aunque fuera haga 19 °C.</em></div>
+            <div class="activity-meta"><span class="tag wwii">2ª Guerra Mundial</span><span class="tag price">8,90 €</span><span class="tag transport">10h–17h · cierra lunes</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag wwii">🌲</div>
+          <div class="time-content">
+            <span class="time-label">Tarde — gratis, junto al museo</span>
+            <div class="activity-name">Bois d'Haringzelles — las otras tres casamatas</div>
+            <div class="activity-detail">Justo al lado del museo arrancan <strong>senderos de acceso libre</strong> que llevan a los <strong>otros tres búnkeres</strong> de la Batterie Todt, medio abandonados y practicables: se entra y se pasa de uno a otro.<br>Lo bueno: esas <strong>12 hectáreas de bosque son completamente artificiales</strong>. Los alemanes lo plantaron para camuflar las cuatro casamatas desde el aire. Una red de camuflaje construida en forma de bosque que ochenta años después ya parece natural. Linterna del móvil, y cuidado con el hormigón mojado.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito · acceso libre</span><span class="tag photo">📷 Hormigón + bosque</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🏖️</div>
+          <div class="time-content">
+            <span class="time-label">Última tarde — según marea</span>
+            <div class="activity-name">Wissant — búnkeres y la pared del Blanc-Nez</div>
+            <div class="activity-detail">Pueblo pesquero entre los dos cabos, uno de los últimos con pesca tradicional en flobart. <strong>Va aquí y no por la mañana</strong>, por dos razones: necesita <strong>bajamar</strong> para que se abra la playa, y necesita el sol ya al oeste.<br><strong>Aparca al norte del pueblo</strong>, al final de la Rue Arlette Davids, junto al club náutico y la Place du Courgain (≈50.8875 / 1.6645). <strong>Los búnkeres están al norte, no al oeste:</strong> el Stp119 Preussen y sus vecinos (Wn118 Krefeld, Wn117 Lüdenscheid, Stp115 Wuppertal) están en el sistema dunar alto del lado del Blanc-Nez. Caminando al noreste tienes los dos sujetos en la misma dirección: <strong>búnkeres a la izquierda en la duna, acantilados blancos de frente a 5-6 km</strong>, y el sol del oeste iluminándolos a los dos. Es la vista de la pared de creta que no consigues desde el cabo.<br><strong>⚠ No te metas en las dunas.</strong> El acceso a los cuatro emplazamientos está desaconsejado o prohibido para proteger el ecosistema dunar, y el Preussen está inestable por la duna cediendo. <strong>El búnker legitimo está en la propia playa</strong>, ≈50.8993 / 1.6756, a <strong>1,5 km al noreste</strong> — 25 min sobre arena firme con marea baja.<br><em>Evita aparcar en la Place de la Mairie y la Place du Marché: los miércoles es día de mercado y se cierran.</em></div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag tide">🌊 Imprescindible bajamar</span><span class="tag photo">📷 Búnker + duna + creta</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🍽️</div>
+          <div class="time-content">
+            <span class="time-label">Cena — ANTES del ocaso, 18h45</span>
+            <div class="food-highlight">
+              <div class="resto">Les Frangins <span style="font-weight:300;font-size:0.78rem">(1 Rue du Muret, Wissant · +33 3 21 96 23 10)</span></div>
+              <div class="dish"><strong>Cenar antes del ocaso es lo que hace que el día funcione.</strong> El ocaso es a las 20h21 y las cocinas de Wissant cierran entre 20h30 y 21h30: si disparas primero, llegas con todo cerrado. Comiendo a las 18h45 llegas a Gris-Nez con la luz entera por delante.<br>Carta corta de tres platos más la sugerencia del día. Mié 18h–21h30. <strong>Reservar.</strong> Pide el <strong>dos de lieu noir</strong> — pero <em>sans beurre blanc</em>, que lleva chalota. La bavette Hereford es la opción limpia sin negociar.<br><strong>Alternativa:</strong> Gogaille (menú 30-39 €, reserva obligatoria) o La Table d'Augustine, más barata.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🌅</div>
+          <div class="time-content">
+            <span class="time-label">Atardecer — ocaso 20h21</span>
+            <div class="activity-name">Cap Gris-Nez — el punto más cercano a Inglaterra</div>
+            <div class="activity-detail">A ~28 km de Inglaterra, con faro, aves marinas y búnkeres alemanes en el promontorio. Mira al oeste: es el mejor sitio de la ruta para una puesta de sol con cielo dramático sobre el Canal. Sendero llano hasta la punta, 12 min desde Wissant.<br><strong>El mejor color llega después del ocaso, no antes</strong> — la última luz aguanta hasta las 20h56. No recojas cuando el sol desaparezca. Y no te acerques al filo: la creta se desprende.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Faro + puesta de sol</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">🔁</div>
+    <div class="backup-text"><strong>¿Intercambiar el día 2 y el día 3?</strong> Decidir el lunes por la noche con el pronóstico a 24 h. <strong>Lo que manda no es solo la lluvia, es la marea:</strong> Wissant necesita bajamar (mar 8: −2,6 m a las 17h16 · <strong>mié 9: −3,2 m a las 18h12</strong>) y el Fort d'Ambleteuse necesita pleamar (<strong>mar 8: 11h02, coef. 83</strong>). Cada día se queda con la marea que le conviene, así que el intercambio suele ser correcto aunque no llueva.<br>Si intercambias: el <strong>miércoles</strong> son los cabos, empezando por el mercado de Place Dalton (8h-12h30, mié y sáb) — ojo, en Audresselles solo abren La Marie Galante y Le Loup de Mer. El <strong>martes</strong> es Ambleteuse + Boulogne, y <strong>se pierde el Château-Musée, que cierra los martes</strong>.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 3 ============ -->
+<div class="day-section">
+  <div class="day-header opale">
+    <div class="day-numeral">III</div>
+    <div class="day-info">
+      <h2>Ambleteuse, Wimereux &amp; Boulogne</h2>
+      <p>Fort Vauban · Musée 39-45 · puerto pesquero</p>
+    </div>
+    <div class="day-badge">Costa + puerto</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header opale">
+        <div class="card-block">Día 3</div>
+        <div class="card-date">Mié 9 sep</div>
+        <div class="card-title">Fuerte, museo y ciudad alta</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag wwii">🧱</div>
+          <div class="time-content">
+            <span class="time-label">Primera hora — 09h50</span>
+            <div class="activity-name">Blockhaus de las Dunes de la Slack</div>
+            <div class="activity-detail">Antes del fuerte, dos búnkeres alemanes del Muro Atlántico libres y gratuitos, sin vallar ni gestionar — nada que ver con el fuerte, que es Vauban y de pago.<br>· <strong>Blockhaus des Dunes</strong> — ~450 m al sur del fuerte, en el borde de la duna. Es el bueno: grande, con las aberturas practicables, se entra y se sube encima. <strong>Parking propio en la Route de la Slack.</strong><br>· <strong>Blockhaus de Rue des Marins</strong> — a 150 m del parking del fuerte.<br><strong>Son dos aparcamientos distintos, 3 min en coche.</strong> No intentes unirlos andando por la playa: con marea alta el paso al sur está cortado. Hacia el sur arrancan las <strong>Dunes de la Slack</strong> y su sendero (bucle de 1-1h30), con más hormigón disperso hasta Wimereux. Linterna del móvil si entras, y no dejes nada visible en el coche en el parking de la duna.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito · 24 h</span><span class="tag photo">📷 Hormigón inclinado + mar</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag wwii">🎖️</div>
+          <div class="time-content">
+            <span class="time-label">Mañana — memoria de guerra</span>
+            <div class="activity-name">Ambleteuse — Fort d'Ambleteuse + Musée 39-45</div>
+            <div class="activity-detail">En la D940: el <strong>Fort d'Ambleteuse</strong> de Vauban se alza sobre las rocas a pie de mar. <strong>El interior solo abre sábados y domingos de 14h30 a 18h</strong> — entre semana vas por el exterior, que es lo fotogénico. <strong>Pónlo en pleamar</strong> (mar 8: 11h02, coef. 83) y déjalo para el final de la mañana: es lo único que necesita la marea exacta. Parking gratuito en 21 Rue du Fort, con aseos públicos. Con lluvia y mar arriba sale mejor que con sol plano.<br>Al lado, el <strong>Musée 39-45</strong> (2 Rue des Garennes, <strong>a diario 10h-18h</strong>), colección privada reunida durante 40 años: 120 maniquíes equipados en situación, miles de objetos y un tanque Sherman en la entrada. ~1 h 30. Parking gratuito.</div>
+            <div class="activity-meta"><span class="tag wwii">2ª Guerra Mundial</span><span class="tag price">8,90 €</span><span class="tag tide">🌊 Fuerte en pleamar</span><span class="tag photo">📷 Fuerte + marea</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🐟</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — comida</span>
+            <div class="food-highlight">
+              <div class="resto">Le Châtillon <span style="font-weight:300;font-size:0.78rem">(6 Rue Charles Tellier, Capécure · +33 3 21 31 43 95)</span></div>
+              <div class="dish">Institución desde 1950 en el mayor puerto pesquero de Francia, entre las naves frigoríficas, aún frecuentada por marineros y estibadores. Solo mediodía entre semana (y 1er domingo de mes).<br><strong>⚠ RESERVAR. No es opcional</strong> — sin reserva hay media hora de espera o directamente no hay mesa, y como solo abre a mediodía no tienes segunda oportunidad.<br><strong>Seguro:</strong> pescado del día a la plancha, ostras, crevettes grises, plateau sin salsa. <strong>Trampas:</strong> la <em>soupe de poisson</em> lleva cebolla y puerro casi siempre, y el <em>tartare de thon</em> suele llevar chalota.<br><strong>Si se llena:</strong> La Poissonnerie Gourmande, 19 Rue du Dr Duchenne, a 450 m andando, <strong>servicio continuo 9h30–19h30</strong> — pescadería-traiteur-restaurante, eliges de la vitrina. Ojo: el precio de plateau del cartel es para llevar; en sala sube.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🏰</div>
+          <div class="time-content">
+            <span class="time-label">Tarde</span>
+            <div class="activity-name">Boulogne-sur-Mer — ville haute con calma</div>
+            <div class="activity-detail">La ciudad alta medieval intacta: murallas por las que se pasea (<strong>paseo de ronda completo, ~1,5 km</strong>), la Basílica de Notre-Dame con su enorme cripta (una de las mayores de Francia), el castillo condal (Château-Musée). Casco histórico sin trampa turística.<br><strong>⚠ Horarios que mandan sobre el orden del día:</strong> la <strong>cripta abre mar–dom 9h30–12h30 y 14h–17h30 y cierra los lunes</strong>. <strong>Cierra a las 17h30</strong>, así que no cabe al final de la tarde — tiene que ir justo después de comer, sobre las 14h30. La basílica en sí abre 7h–19h y es gratis. El <strong>Château-Musée cierra los martes</strong>.</div>
+            <div class="activity-meta"><span class="tag free">Murallas gratuitas</span><span class="tag transport">Cripta: cierra 17h30</span><span class="tag photo">📷 Arquitectura medieval</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🏛️</div>
+          <div class="time-content">
+            <span class="time-label">Atardecer — cena</span>
+            <div class="activity-name">Wimereux — Belle Époque frente al mar</div>
+            <div class="activity-detail">A 10 min al norte: villas Belle Époque de colores en el paseo marítimo, arquitectura balnearia de finales del s.XIX. <strong>Va por la tarde-noche y no de paso por la mañana:</strong> las villas dan al oeste, así que de mañana las tienes planas y a contraluz. Su luz es esta.<br>Colócate en la <strong>digue nord (Quai Hazebrouck)</strong> para la hilera alineada con el mar. Si llegas con la marea subiendo y viento del oeste, tienes rompiente contra el dique al anochecer.</div>
+            <div class="activity-meta"><span class="tag photo">📷 Villas + hora dorada · 35-85mm</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🧈</div>
+          <div class="time-content">
+            <span class="time-label">Cena — 20h30</span>
+            <div class="food-highlight">
+              <div class="resto">l'Atlantic <span style="font-weight:300;font-size:0.78rem">(6 Rue Notre Dame, Wimereux · +33 3 21 32 41 01)</span></div>
+              <div class="dish">En el propio dique. <strong>Abierto 8h–22h45 sin interrupción</strong> — y ese horario continuo es la clave: disparas la hora dorada hasta las 20h30 y entras sin prisa. 4,6/5 con casi 3.000 reseñas. <strong>Reservar</strong>: rechazan gente aunque haya mesas libres para no saturar el servicio.<br><strong>Pide:</strong> pescado del día a la plancha, crevettes roses, plateau de fruits de mer. Las reseñas alaban las salsas — precisamente por eso, <em>sans sauce, sans ail, sans oignon ni échalote</em>.<br><strong>Más barato:</strong> Le Ranch, 116 Rue Carnot (parrilla, pero estilo americano con salsa en todo).</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">🌧️</div>
+    <div class="backup-text"><strong>Backup lluvia:</strong> el Musée 39-45 ya es de interior, así que la mañana no peligra, y el fuerte con lluvia y mar arriba sale <em>mejor</em> que con sol plano. Para la tarde, <strong>la cripta y el paseo de ronda de las murallas aguantan bien</strong> — calles empedradas vacías y niebla sobre el puerto son mejor material que un interior. El <strong>Château-Musée</strong> (9h30-18h) cubre una tarde entera pero <strong>cierra los martes</strong>, así que si has intercambiado los días no está disponible. <strong>Nausicaá</strong> existe (30 € en taquilla, ~25 € online, 9h30–18h30, <strong>última venta 17h30</strong>, visita media 2h30) pero es un acuario familiar oscuro: con cielo gris, las murallas mojadas dan mejores fotos. Déjalo para diluvio real.<br><strong>Philippe Olivier</strong> (12 Rue Adolphe Thiers, mar 9h–13h y 14h–19h) cógelo <strong>el jueves por la mañana antes de salir</strong>: abre a las 9h y el queso va directo al apartamento con cocina de Saint-Valery en vez de dos días en el coche.<br><strong>Si has intercambiado este día con el 2</strong>, hoy toca cabos — ver el detalle en el recuadro del día 2.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 4 ============ -->
+<div class="day-section">
+  <div class="day-header somme">
+    <div class="day-numeral">IV</div>
+    <div class="day-info">
+      <h2>Sur a la Baie de Somme</h2>
+      <p>Montreuil · Le Crotoy · Noyelles · Saint-Valery-sur-Somme</p>
+    </div>
+    <div class="day-badge">Cambio de base</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header somme">
+        <div class="card-block">Día 4</div>
+        <div class="card-date">Jue 10 sep</div>
+        <div class="card-title">Traslado + primera bahía</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag transit">🚗</div>
+          <div class="time-content">
+            <span class="time-label">09h00 — antes de salir</span>
+            <div class="activity-name">Philippe Olivier — quesos para el apartamento</div>
+            <div class="activity-detail">12 Rue Adolphe Thiers, Boulogne. Abre a las <strong>9h</strong>. Una de las mejores queserías de Francia. Cógelo hoy y no antes: en Saint-Valery tienes apartamento con cocina, y el queso viaja mejor comprado esta mañana que dos días en el coche. Quesos curados = FODMAP-seguros: maroilles afinado, mimolette vieja, comté.</div>
+            <div class="activity-meta"><span class="tag food">Abre 9h</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag transit">🚗</div>
+          <div class="time-content">
+            <span class="time-label">Mañana — en ruta</span>
+            <div class="activity-name">Montreuil-sur-Mer — ciudadela de Vauban</div>
+            <div class="activity-detail">A ~40 min de Boulogne, parada a mitad de camino: ciudad amurallada sobre una colina, ciudadela de Vauban, calles empedradas y escenario de <em>Los Miserables</em> de Victor Hugo. Paseo de ronda por las murallas (~3 km) ~1 h, gratuito. La <strong>Citadelle abre jue 10h-12h30 y 13h30-18h, cierra los martes, 7 €</strong> — las reseñas la dan por muy buena relación calidad-precio. Aparca en la plaza del mercado (Place du Général de Gaulle) y estás a 3 min andando. <em>A partir de aquí empieza el peaje de la A16 sur; el tramo norte era gratuito.</em></div>
+            <div class="activity-meta"><span class="tag price">Citadelle 7 €</span><span class="tag transport">Cierra martes</span><span class="tag photo">📷 Murallas + empedrado</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🍴</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — comida</span>
+            <div class="food-highlight">
+              <div class="resto">Le Bistronome <span style="font-weight:300;font-size:0.78rem">(26 Rue d'Hérambault, Montreuil · +33 3 21 06 04 23)</span></div>
+              <div class="dish">Ciudad de mesa (aquí cocina el chef con estrella Alexandre Gauthier). Menús de 19 a 30 €, jue 12h-14h; las reseñas destacan la <strong>bavette</strong> y el hígado de ternera. <strong>Reservar</strong>, se llena.<br><strong>Sin reserva:</strong> Aux Temps d'Em, 32 Place du Général de Gaulle, Maître Restaurateur de France, <strong>servicio continuo 7h30-22h</strong> — filete, abadejo y verdura de temporada. Raro y útil en Francia.<br><strong>⚠ Le Pot du Clape</strong> tiene la mejor nota del pueblo (4,7 con 1.657 reseñas) pero su especialidad son las quiches y la <strong>flamiche picarde, que es tarta de puerro</strong>. Sitio precioso, carta equivocada.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🚗</div>
+          <div class="time-content">
+            <span class="time-label">Primera tarde — la orilla norte</span>
+            <div class="activity-name">Le Crotoy — la bahía con agua</div>
+            <div class="activity-detail">Bajando por la <strong>D940 costera</strong> vía Rue en vez de por el interior. <strong>Cronométralo con la pleamar:</strong> la Baie de Somme solo tiene agua unas dos horas alrededor de la marea alta, y esta es la ocasión del viaje para verla llena — desde Saint-Valery, con las pleamares cayendo a mediodía esta semana, en hora dorada siempre tendrás limo y canales.<br>Casas de colores sobre el muelle, y <strong>la única playa del litoral francés del Canal orientada al sur</strong> — por eso se instalaron aquí los pintores: sol de frente todo el día. Seurat y Toulouse-Lautrec pasaron por aquí, y Julio Verne escribió en el pueblo parte de <em>Veinte mil leguas de viaje submarino</em>.<br><strong>Juana de Arco estuvo presa aquí:</strong> capturada en Compiègne en mayo de 1430, pasó unos tres meses en el castillo de Le Crotoy antes del traslado a Ruán. La estatua del <strong>Quai Courbet</strong> lo conmemora, con farolas Belle Époque y empedrado. Y la <strong>Gare de la Baie de Somme</strong>, con locomotoras de vapor, a 700 m al norte (taquilla cerrada 11h30-14h30).<br><strong>Comer:</strong> el muelle es trampa — el Restaurant du Port está en 3,7/5 con quejas explícitas de precios por la ubicación. <strong>Le Petit Moulier</strong> (Promenade Jules Noiret, 4,8/5, 11h30-14h30) es una caseta de madera a pie de playa con cubos de mejillones a 8,50 €; <strong>Le Commerce</strong> (7-9 Place Jeanne d'Arc, +33 3 22 24 47 06) está al pie de la calle principal y no en el muelle.</div>
+            <div class="activity-meta"><span class="tag tide">🌊 Mejor en pleamar</span><span class="tag photo">📷 Barcas a flote + casas de colores</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag wwii">⛪</div>
+          <div class="time-content">
+            <span class="time-label">Tarde — en ruta, cero caminata</span>
+            <div class="activity-name">Cimetière chinois de Noyelles-sur-Mer</div>
+            <div class="activity-detail">Entre Le Crotoy y Saint-Valery, rodeando el estuario como toca. <strong>842 tumbas del Chinese Labour Corps</strong>: Noyelles fue la base principal del cuerpo durante la Primera Guerra Mundial — unos <strong>140.000 obreros chinos</strong> reclutados para cavar trincheras, descargar barcos y recoger cadáveres en el frente occidental. Casi nadie sabe que existieron.<br>Las lápidas son las estándar de la Commonwealth War Graves Commission <strong>pero con ideogramas chinos</strong>, y la cruz del sacrificio está sustituida por un árbol. Entrada con puerta oriental, tres pinos dentro, y el cementerio en medio de campos de cereal. 4,7/5.<br><strong>Abierto 24 h, gratis, aparcas al lado.</strong> Media hora.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito · 24 h</span><span class="tag wwii">1ª Guerra Mundial</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🔑</div>
+          <div class="time-content">
+            <span class="time-label">Tarde — llegada</span>
+            <div class="activity-name">Saint-Valery-sur-Somme + check-in</div>
+            <div class="activity-detail">~1 h más hasta la Baie de Somme. Check-in en <strong>Edera</strong> (8 rue Jules Brûle), <strong>reservado</strong>: apartamento dentro del propio pueblo — recuerda que llevas <strong>sábanas, edredón y toallas</strong> de casa. Saint-Valery es la base de los dos últimos días: pueblo medieval y marítimo, uno de los más bonitos del norte. Aparca y olvídate del coche: todo se hace a pie, <strong>el atardecer incluido</strong> — el estuario se abre al oeste-noroeste y el sol se pone justo ahí, así que caminando el Quai Jeanne d'Arc hacia el oeste lo tienes de frente.<br><strong>⚠ Aparcamiento:</strong> el centro es de pago <strong>todo el año</strong>, 9h-12h30 y 14h-19h, con <strong>multa de 25 €</strong> y reseñas de máquinas que se tragan las monedas sin validar. Usa el <strong>Parking du Canal</strong> — búscalo en Maps como <em>"Parking du canal, Boismont"</em> (50.1736 / 1.6529), que Google lo ubica en el municipio vecino. <strong>Gratis y sin límite horario</strong>, a la derecha de la rotonda de entrada viniendo de la route d'Abbeville, 15-25 min a pie por el camino de sirga junto al río. Firme de tierra con baches: entra despacio. Hay tarifa de <strong>12 €/día en vez de 25 €</strong> para alojados en residencia turística mediante código promocional: pídeselo al anfitrión.</div>
+            <div class="activity-meta"><span class="tag transport">~1 h desde Montreuil</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🎨</div>
+          <div class="time-content">
+            <span class="time-label">Tarde</span>
+            <div class="activity-name">Quartier du Courtgain + ciudad alta</div>
+            <div class="activity-detail">El barrio de pescadores del Courtgain: casitas de colores en callejones empinados con vistas a la bahía. La ville haute medieval, las Torres/Puerta Guillaume (desde aquí zarpó Guillermo el Conquistador en 1066) y la capilla de los marineros. Hora dorada sobre el estuario.<br><strong>El Courtgain</strong> — <em>court gain</em>, "poca ganancia": era el barrio pobre de los pescadores, y contrasta con la ville haute amurallada de arriba, que era la de los burgueses.<br><strong>La ville haute no existe en Maps con ese nombre</strong> — se busca por sus dos puertas, y lo que hay entre ellas son ~500 m de calles: <strong>"Porte de Nevers"</strong> (este/baja, por donde subes) → el <strong>Cachot</strong>, antiguo cuerpo de guardia y prisión de las murallas → <strong>Église Saint-Martin</strong> (jue 9h30-19h; ex-votos de barcos dentro y un <strong>jardín de plantas medicinales encajado en el hueco de la muralla</strong>, el antiguo huerto de las monjas del hospital) → <strong>"Porte Jeanne d'Arc"</strong> (oeste/alta).<br><strong>Porte Guillaume y Porte Jeanne d'Arc son la misma puerta</strong> — Google duplica la ficha; usa "Jeanne d'Arc", que es la que tiene reseñas. Se llama Guillaume porque <strong>Guillermo el Conquistador atracó aquí en 1066</strong> antes de zarpar hacia Inglaterra, y Jeanne d'Arc porque <strong>Juana pasó por ella el 20 de diciembre de 1430, prisionera, viniendo de Le Crotoy</strong> camino de Ruán. Las dos torres redondas son del siglo XI.<br><strong>⚠ La Chapelle des Marins solo abre sábados y domingos, 15h-18h.</strong> Entre semana solo exterior — pero sube igual: el mirador sobre la bahía es el mejor del pueblo. Está 800 m al oeste de la Porte Jeanne d'Arc y varias reseñas se quejan de que está mal señalizada.<br><em>El tramo de vuelta pegado a la muralla alta es donde están las vistas, mejor que la ida.</em></div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag transport">Capilla: solo sáb-dom 15-18h</span><span class="tag photo">📷 Casas de colores + bahía</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🐑</div>
+          <div class="time-content">
+            <span class="time-label">Cena</span>
+            <div class="food-highlight">
+              <div class="resto">La Buvette du Mouton <span style="font-weight:300;font-size:0.78rem">(455 Quai Jeanne d'Arc)</span></div>
+              <div class="dish">Parrilla al aire libre sobre el muelle, al oeste del pueblo — <strong>en tu propio camino de vuelta del atardecer</strong>. <strong>Jue 10h-22h sin interrupción:</strong> disparas hasta las 20h30 y entras después, sin reloj. Carne y pescado a la brasa = limpio. Las reseñas hablan de vieiras y de "atardeceres fantásticos".<br><strong>Si prefieres mesa formal:</strong> L'Embarcadère, 3 Quai Perrée, jue 18h30-21h, +33 3 22 26 17 19 (vieiras muy alabadas). O <strong>Restaurant Le Jardin</strong>, 37 Rue de la Ferté, <strong>4,7/5 con 3.499 reseñas</strong> — la mejor nota del pueblo, y etiquetan gluten y lactosa y gestionan bien las restricciones dietéticas; cocina cierra a las 21h. +33 3 22 60 98 99<br><strong>Pide:</strong> <strong>agneau de pré-salé</strong> a la brasa, cordero de las praderas saladas de la bahía, con <strong>salicorne</strong> de guarnición. Evita la <em>ficelle picarde</em> (champiñón y bechamel).<br><strong>⚠ Cierres del jueves:</strong> <em>Le Jardin Italien</em> (4,7, el mejor valorado del pueblo) cierra los jueves, y <em>La Pêcherie</em> los jueves solo abre a mediodía.<br><strong>Y la mejor relación calidad-precio de la zona no está en el pueblo:</strong> <strong>Le Moulin</strong>, 8 Rue du Canal, Boismont — en el aparcamiento del Carrefour Market, 2 km al sur. <strong>Menú de 16 €</strong>, 4,6/5 con 797 reseñas, jue 9h-22h sin interrupción. Rechazan gente: <strong>reservar</strong>, +33 3 22 60 85 86.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">⏱️</div>
+    <div class="backup-text"><strong>Backup:</strong> si vas justo de tiempo o quieres cazar una marea/luz concreta, sáltate Montreuil y llega antes a la bahía (también encaja como parada en la vuelta). Con lluvia, el Herbarium y las callejuelas cubiertas de Saint-Valery aguantan bien una tarde suave.<br><strong>🌊 Y ajústate la expectativa del estuario:</strong> la bahía solo tiene agua unas <strong>dos horas alrededor de la pleamar</strong>, y esta semana la pleamar cae siempre a mediodía. En hora dorada desde Saint-Valery vas a tener <strong>limo, canales y barcas varadas</strong>, nunca espejo de agua. No es mala noticia — los canales serpenteando plateados sobre el fango con sol rasante son la Baie de Somme de verdad — pero compón para eso. Si quieres la bahía llena, es en Le Crotoy esta tarde y no hay otra ocasión.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 5 ============ -->
+<div class="day-section">
+  <div class="day-header somme">
+    <div class="day-numeral">V</div>
+    <div class="day-info">
+      <h2>Baie de Somme — focas, galets y creta</h2>
+      <p>Pointe du Hourdel · Cayeux · Ault · Bois de Cise · Le Tréport</p>
+    </div>
+    <div class="day-badge">Naturaleza</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header somme">
+        <div class="card-block">Día 5</div>
+        <div class="card-date">Vie 11 sep</div>
+        <div class="card-title">El día de la bahía</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag morning">🦭</div>
+          <div class="time-content">
+            <span class="time-label">Mañana — según marea</span>
+            <div class="activity-name">Pointe du Hourdel — la mayor colonia de focas de Francia</div>
+            <div class="activity-detail">~20 min desde Saint-Valery, pasando por Cayeux. Focas comunes (veaux-marins) y grises descansando en los bancos de arena — se ven mejor con marea baja (±2 h de la bajamar), desde la digue de galets. <strong>Hoy hay marea viva (coef. 98-101), la mejor del mes: bajamares a las 07h36 y 19h57.</strong> Con la de la mañana, sal de Saint-Valery sobre las 06h45. La marea es el único reloj del día.<br><strong>Dónde colocarse:</strong> en la <strong>digue de galets de la pointe du Hourdel, al pie del blockhaus</strong> — un búnker alemán volcado sobre los cantos rodados, a distancia de paseo desde el faro. Las focas se instalan casi siempre en la <strong>orilla derecha del canal de la Somme</strong> y se ven desde la izquierda. <em>No te metas en la bahía ni pises los bancos: con coeficiente alto las corrientes atrapan a paseantes y la marea vuelve a subir muy deprisa.</em><br><strong>⚠ El parking no es gratuito:</strong> ~2 € por 4 h en el puerto junto al faro (con café y dos tiendas), o el de la <strong>Route Blanche</strong> ~2 €/h con barrera de 2,1 m.<br><strong>⚠ Óptica:</strong> la distancia mínima de respeto son <strong>300 m</strong>, y a esa distancia con 50 mm en APS-C una foca ocupa el <strong>1 % del ancho del fotograma</strong> — unos 60 píxeles. <strong>Sin teleobjetivo largo no hay retrato de foca.</strong> Reencuadra el objetivo: tu foto es el paisaje — blockhaus tumbado, galets, canal plateado, y las focas como formas oscuras dentro de la escena. Y a simple vista no se ven: llevar prismáticos no es opcional.</div>
+            <div class="activity-meta"><span class="tag tide">🌊 bajamar 07h36 · coef. 98-101</span><span class="tag photo">📷 Teleobjetivo 200-400mm</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🧭</div>
+          <div class="time-content">
+            <span class="time-label">Opción — con guía</span>
+            <div class="activity-name">Sortie nature guiada de focas</div>
+            <div class="activity-detail">Guías locales organizan salidas de ~2 h 30 con longvista, RDV en el faro del Hourdel: <strong>+33 6 17 63 34 63</strong>. Mejor comprensión y observación sin molestar a la colonia. Reservar según la marea, aunque suelen responder bien a último minuto.<br><strong>Y la opción gratuita:</strong> los voluntarios de <strong>Picardie Nature</strong> montan puntos de observación <strong>en la propia playa, junto al blockhaus</strong>, con longavista. <strong>Paso libre, gratis, y prestan la longavista</strong>; te explican el seguimiento de las dos especies. Franjas habituales de mañana y de <strong>17h30 a 20h</strong>. Es vigilancia estival y septiembre está en el límite, y se cancela con muy mal tiempo: <strong>confirma por la mañana al 03 62 72 22 50</strong>.<br><em>Si no consigues ninguna de las dos, unos prismáticos 8x42 salen por 40-70 € en Abbeville, a 25 min, y te los quedas.</em></div>
+            <div class="activity-meta"><span class="tag reserve">reservar</span><span class="tag price">~16-20 €</span><span class="tag free">Picardie Nature: gratis</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🦐</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — comida</span>
+            <div class="food-highlight">
+              <div class="resto">La Pointe du Hourdel <span style="font-weight:300;font-size:0.78rem">(Quai Gavois, Le Hourdel)</span></div>
+              <div class="dish">Brasserie de marineros a pie del puerto, justo en el punto de las focas — cero desvío. Institución de la baja Somme (café de pescadores desde 1880), ambiente local y precios contenidos (16-25 €). Pide las <strong>crevettes grises</strong> (gamba gris cocida, la especialidad del muelle y FODMAP-segura) o <strong>pescado del día a la plancha / friture d'éperlan</strong>. Evita moules marinière y ficelle picarde.<br><strong>⚠ Cierra los jueves.</strong> El viernes abre <strong>10h-22h sin interrupción</strong>, y ese horario continuo es lo que resuelve la cena si disparas el Hourdel hasta la última luz: vuelves andando desde el faro y entras. Tel. +33 3 22 26 61 04.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🏖️</div>
+          <div class="time-content">
+            <span class="time-label">Tarde</span>
+            <div class="activity-name">Cayeux-sur-Mer — galets, cabinas y faro</div>
+            <div class="activity-detail">El <strong>chemin de planches</strong>, pasarela de tablas de ~2 km — la más larga de Europa — alineada con <strong>409 cabinas de playa de colores</strong>, cada una con su nombre pintado. Aparca en el Boulevard du Général Sizaire, a la altura de las cabinas: <strong>la entrada principal de la playa está en el medio del chemin</strong>, así que hay que elegir dirección.<br><strong>Camina hacia el sur.</strong> Al norte la vista es hacia el faro de Brighton, donde vas a ir en coche de todas formas. Al sur tienes la <strong>vista sobre los acantilados de Ault</strong> y, prolongando un poco, el <strong>Amer sud</strong>: una torre grande de hormigón coronada por una cruz que sirve de referencia a los marinos. 1 km por sentido, ~45 min.<br><strong>⚠ A mediodía las cabinas están a contraluz</strong> — miran al oeste-noroeste y su luz frontal es la del atardecer. Lo que sí funciona a cualquier hora es la línea de fuga de la pasarela. Explora hacia el sur y dispara de vuelta mirando al norte, con el sol a la espalda.<br>Detrás, la mayor extensión de <strong>galets</strong> de Europa, explotada industrialmente: el sílex de Cayeux es puro al 99 % y se usa para vidrio y cerámica. "Cayeux" no es más que <em>caillou</em> — piedra — en patois picardo.<br><strong>Phare de Brighton</strong> (5 min al norte): 31,85 m, el más alto de la costa picarda, elegido por La Poste para su serie de los faros más bonitos de Francia. <strong>Lo dinamitó el ejército alemán en 1944</strong> y se reconstruyó en 1951, sobre el emplazamiento de un faro de carbón de 1770. No se sube y el recinto está vallado: es foto de exterior. <strong>Parking pequeño y gratuito enfrente</strong>, y 15 min a pie hasta el mar por una playa salvaje.<br><em>Panadería:</em> Au Pain de Caractère, 52 Rue Léon Parmentier, 4,7/5, masa madre de espelta al 100 % — para el picnic de la tarde en la digue.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Cabinas + estacade + galets</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🌇</div>
+          <div class="time-content">
+            <span class="time-label">Tarde — donde nace la creta</span>
+            <div class="activity-name">Ault · Bois de Cise · Mers-les-Bains · Le Tréport</div>
+            <div class="activity-detail"><strong>En Ault nacen los acantilados de creta blanca.</strong> Al norte, costa baja de galets, dunas y bahía; al sur arranca la muralla de creta y sílex que sube a 100 m en Le Tréport, cruza el país de Caux y no para hasta Le Havre. Ault es la bisagra geológica exacta: ahí empieza la <strong>Côte d'Albâtre</strong>. Cierra el arco con Blanc-Nez y Gris-Nez. Victor Hugo pasó por aquí y lo describió en sus cuadernos de viaje.<br><strong>⚠ Invierte el orden: baja primero al sur.</strong> El consejo local es explícito — <em>"los acantilados están iluminados por el sol a última hora de la tarde"</em>. A mediodía están en sombra. Así que haz Mers y Le Tréport mientras el sol está alto y <strong>sube de vuelta a Bois de Cise y Ault para la luz buena</strong>. El rodeo son 15 min.<br><br><strong>🏘️ Mers-les-Bains</strong> — cientos de villas Belle Époque en sector protegido, el conjunto balneario mejor conservado del norte. <strong>Funciona mejor con cielo gris que con sol duro.</strong> Aparca aquí y <strong>cruza a pie al Tréport</strong>, 1,5 km por el frente marítimo y el puente sobre el Bresle.<br><strong>⛰️ Notre-Dame de la Falaise</strong> (50.0733 / 1.3914), sobre Mers a 92 m. La estatua está ahí desde 1878 como referencia para los pescadores. <strong>Los alemanes la retiraron en 1942</strong> por temor a que la aviación aliada la usara de referencia, y al reponerla la montaron <strong>encima de uno de sus propios búnkeres R671</strong>, la casamata de un cañón de 105 mm. Una Virgen marinera sobre hormigón alemán. Parking arriba (reseñas contradictorias: gratis o 1,40 €/h).<br><strong>🚡 Le Tréport</strong> — el <strong>funicular es gratis</strong>, abierto 7h45-00h45 hasta el 15 de septiembre, y cruza el acantilado <strong>por un túnel excavado en la creta</strong>: 1'55". Lo inauguraron en 1908 para que los clientes del Grand Hôtel Trianon bajaran a la playa; destruido tras la Segunda Guerra Mundial y reabierto en 2006 con cuatro cabinas que funcionan como ascensor inclinado. <strong>Y es la jugada de aparcamiento:</strong> el centro cuesta <strong>25 €/día</strong> y el parking del funicular arriba <strong>3 €/día</strong>. Se llena hacia las 19h.<br>Abajo, el puerto pesquero y el casco viejo. Es <strong>el único puerto de la zona que alcanza mar abierto con cualquier marea</strong> — Saint-Valery y Le Crotoy acabaron de puertos deportivos porque la bahía se colmata: la tierra gana unos <strong>80 m al mar cada año</strong>, y Abbeville tenía salida directa al mar en el Renacimiento. Arriba, el barrio des Terrasses, y a veces los <strong>maestros vidrieros del valle del Bresle</strong>, que llevan cinco siglos fabricando el <strong>80 % de los frascos de perfume de marca del mundo</strong>.<br><strong>🌲 Bois de Cise</strong> — <strong>aparca en 50.0903 / 1.4261</strong>, búscalo como <em>"Sentier du littoral par le Bois de Cise"</em> o el hotel Le Cise, al final de la Route de la Plage. <strong>Ojo: el "Parking Bois de Cise" que sale en Maps está 2,7 km al sur y tierra adentro — no es ese.</strong> Aparcamiento gratuito. Valleuse boscosa con villas anglo-normandas y la capilla de Sainte-Édith, y desde arriba <strong>la pared de Ault de perfil</strong> — la vista que no consigues estando encima. No bajes al mar: el sendero y las escaleras están en mal estado.<br><strong>🏔️ Ault</strong> — aparca <strong>en bordure de mer, 50.1025 / 1.4464</strong>. El "balcon sur la mer" pegado al agua, la <strong>table d'orientation</strong> (50.1039 / 1.4481, <em>está en Ault y no en Bois de Cise</em>) y la <strong>Église Saint-Pierre</strong> del siglo XIV, en damero de piedra blanca y sílex, con una torrecilla convertida en beffroi eclesiástico durante la Guerra de los Cien Años. Ideal para la hora azul con el pueblo encendido. <em>No te acerques al filo: la creta está en retroceso activo.</em></div>
+            <div class="activity-meta"><span class="tag free">Gratuito · funicular incluido</span><span class="tag photo">📷 Creta + villas · última hora</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🌇</div>
+          <div class="time-content">
+            <span class="time-label">Alternativa de atardecer</span>
+            <div class="activity-name">Vuelta a Saint-Valery — hora dorada en los quais</div>
+            <div class="activity-detail">Si prefieres no bajar al sur: ~20 min de regreso a la base y última luz sobre el estuario desde el paseo del dique hacia Cap Hornu. Sin prisa y sin coche.<br>El <strong>Parking face baie — Cap Hornu</strong> (Chemin de la Fossé, 50.1915 / 1.6133) es gratuito y 24 h, de frente al canal con las barcas pasando, y desde ahí se ven aves y a veces focas. <strong>⚠ Se llama "Submersible" por algo: se inunda en pleamar.</strong> Úsalo solo con la marea bajando o baja.</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Estuario · última luz</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🍷</div>
+          <div class="time-content">
+            <span class="time-label">Cena</span>
+            <div class="food-highlight">
+              <div class="resto">Le Rivat <span style="font-weight:300;font-size:0.78rem">(9 Rue de la Ferté, Saint-Valery · +33 3 22 60 00 94)</span></div>
+              <div class="dish">Vuelta a la base. <strong>Viernes 18h-23h30</strong> — el horario amplio es lo que te permite disparar hasta la última luz y cenar después. 4,4/5 con 863 reseñas. <strong>Ostras y tabla de charcutería</strong>, las dos cosas limpias. Otra vez <strong>agneau de pré-salé a la brasa</strong> o pescado del día con salicorne.<br><strong>Si te has quedado en el Hourdel:</strong> <em>La Pointe du Hourdel</em> abre hasta las 22h el viernes y te ahorra conducir de noche con todo cerrado.<br><strong>⚠ Descarta Le 1066</strong> (Place des Pilotes): 4,1 y una reseña reciente de carne poco hecha que acabó en problemas intestinales para todo el grupo. Y <em>Le Quai 5</em> está en 3,1.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">🌊</div>
+    <div class="backup-text"><strong>Variante recomendable (misma marea, mejor luz):</strong> hoy tienes <em>dos</em> bajamares aprovechables. Si no te apetece madrugar para la de 07h36, invierte el día — Cayeux (chemin de planches, cabinas, faro) por la mañana y Hourdel al final de la tarde, llegando sobre las 17h45-18h30 con el mar retirándose hacia la bajamar de 19h57 y la hora dorada de fondo. <strong>La alineación es excepcional: bajamar 19h57, ocaso 20h18, coeficiente 98-101 — veintiun minutos entre la marea más baja del viaje y la luz cálida</strong>, y no es casualidad, ese día es luna nueva. Y ese horario encaja además con el punto gratuito de <strong>Picardie Nature de 17h30 a 20h</strong>. Renuncias a la hora dorada en los quais, pero ganas las focas con luz cálida y cenas en La Pointe du Hourdel, abierta hasta las 22h.<br><strong>Tercera opción si prefieres los acantilados a las focas:</strong> Cayeux por la mañana y <strong>Ault / Bois de Cise / Mers / Le Tréport</strong> de 14h en adelante, con el ocaso en Bois de Cise. Es el bloque de más arriba, y da para la tarde entera.<br><strong>Backup lluvia:</strong> las cabinas de colores de Cayeux funcionan igual o mejor con gris, y las villas de Mers también. La <strong>Maison de la Baie de Somme</strong> (Lanchères, 10h-18h30, 4,4/5) queda entre Cayeux y Saint-Valery como refugio, aunque varias reseñas dicen que ya no hacen las exhibiciones de vuelo. Saint-Valery (Herbarium, callejuelas del Courtgain) aguanta una tarde suave.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 6 ============ -->
+<div class="day-section">
+  <div class="day-header transit">
+    <div class="day-numeral">VI</div>
+    <div class="day-info">
+      <h2>Última mañana + regreso</h2>
+      <p>Saint-Valery · Le Hourdel · Bergues · Maastricht</p>
+    </div>
+    <div class="day-badge">Regreso</div>
+  </div>
+
+  <div class="days-grid">
+    <div class="day-card">
+      <div class="day-card-header transit">
+        <div class="card-block">Día 6</div>
+        <div class="card-date">Sáb 12 sep</div>
+        <div class="card-title">Cierre y vuelta a casa</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag morning">🚶</div>
+          <div class="time-content">
+            <span class="time-label">08h00 — a pie, sin coche</span>
+            <div class="activity-name">Saint-Valery a primera luz</div>
+            <div class="activity-detail">Amanecer 07h22, así que a las 8h tienes el sol a unos 7°: luz baja y cálida sin madrugar de verdad. Y <strong>la bajamar de Saint-Valery cae sobre las 08h08</strong>: mismo limo y mismos canales que la tarde anterior, pero <strong>con el sol a tu espalda en vez de de frente</strong>. Mismo sitio, otra imagen. Y el Courtgain y la ville haute vacíos, que a las 19h no lo estaban.<br>(El mercado de Saint-Valery es el domingo por la mañana, así que no cae en tus fechas.)</div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Estuario iluminado de frente</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🦭</div>
+          <div class="time-content">
+            <span class="time-label">09h20 — la mejor marea de la semana</span>
+            <div class="activity-name">Pointe du Hourdel — última pasada</div>
+            <div class="activity-detail"><strong>Bajamar 08h17 con coeficiente 102</strong>: es la mayor de todo el viaje, mayor incluso que las del viernes. Ventana de focas hasta las <strong>10h50</strong>.<br>Y la luz cambia por completo respecto a la tarde: con el sol saliendo por detrás de ti, <strong>el estuario se ilumina de frente hacia el oeste</strong> — luz rasante sobre la arena mojada y el cordón de galets, que es exactamente lo que este sitio pide. 20 min desde Saint-Valery.<br><em>Con coef. 102 la marea vuelve a subir muy rápido: quédate en la digue de galets, junto al blockhaus.</em></div>
+            <div class="activity-meta"><span class="tag tide">🌊 bajamar 08h17 · coef. 102</span><span class="tag photo">📷 Luz rasante de mañana</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🚶</div>
+          <div class="time-content">
+            <span class="time-label">Alternativa — sin coche</span>
+            <div class="activity-name">Cap Hornu / paseo por los diques</div>
+            <div class="activity-detail">Si prefieres no conducir: el paseo del dique de Saint-Valery hacia Cap Hornu, 30 min por sentido a pie desde el apartamento. Café y salida sin prisa.<br><em>Ojo: con bajamar de coef. 102 el estuario está completamente vacío, así que repite lo que ya viste. El Hourdel añade las focas por el mismo tiempo.</em></div>
+            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Bahía · primera luz</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag transit">🚗</div>
+          <div class="time-content">
+            <span class="time-label">Mediodía — regreso</span>
+            <div class="activity-name">Saint-Valery-sur-Somme → Maastricht</div>
+            <div class="activity-detail">~3 h 45 - 4 h 15 directas (~330 km). Si no hiciste Éperlecques el día 1, encaja aquí con un pequeño desvío hacia el noreste.<br><strong>Última parada recomendada: Bergues.</strong> Queda prácticamente sobre la A16 junto a Dunkerque, a unas 2 h 15 de Saint-Valery. Ciudad flamenca amurallada, con recinto de Vauban que se recorre entero y un <strong>beffroi Patrimonio de la Humanidad</strong>; canales y ladrillo. Y el argumento sencillo: <strong>vas a parar a comer de todas formas</strong>, así que el desvío real son ~45 min. Llegas sobre las 13h15, comes, andas las murallas y sales a las 14h30 con 2 h 15 más hasta casa.<br><strong>Cassel</strong> está 20 min más adentro, sobre la A25: la <strong>única colina de todo el Flandes francés</strong>, 176 m, con molino y panorámica sobre cuatro departamentos y Bélgica. Mejor opción si prefieres altura y paisaje a más murallas — llevas seis días de recinto amurallado.<br><em>Antes de cerrar la puerta: las sábanas, el edredón y las toallas vuelven contigo, y descarga las tarjetas de la cámara antes de conducir, no después.</em></div>
+            <div class="activity-meta"><span class="tag transport">~330 km · peaje</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">🚗</div>
+    <div class="backup-text"><strong>Backup:</strong> si sobra mañana y buen tiempo, una última vuelta por el Courtgain con otra luz, o parada en Montreuil-sur-Mer en la vuelta si te lo saltaste el día 4.</div>
+  </div>
+</div>
+
+<!-- ============ GASTRONOMÍA ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1.5rem">
+    <div class="divider-line"></div>
+    <div class="divider-text">Guía gastronómica · FODMAP</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="sub-label" style="color:var(--channel-mid);">🐟 Côte d'Opale (días 1-3)</div>
+  <div class="cards-grid" style="margin-bottom:2rem;">
+    <div class="info-card">
+      <h4 class="blue">🐟 Le Châtillon ⭐</h4>
+      <div class="card-item">Capécure (puerto), Boulogne-sur-Mer</div>
+      <div class="card-item">Institución de pescadores desde 1950, en el mayor puerto pesquero de Francia. Pescado del barco al plato, ambiente de trabajadores del muelle.</div>
+      <div class="card-item">Pedir: pescado del día a la plancha</div>
+      <div class="card-item">6 Rue Charles Tellier · +33 3 21 31 43 95</div>
+      <div class="card-item avoid">RESERVAR. Solo mediodía entre semana + 1er dom. de mes: sin reserva no hay segunda oportunidad</div>
+      <div class="card-item avoid">Trampas: soupe de poisson (cebolla y puerro), tartare de thon (chalota)</div>
+      <div class="card-item safe">Si se llena: La Poissonnerie Gourmande, 19 Rue du Dr Duchenne, continuo 9h30-19h30</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">🦪 Restaurant de la Haute Ville</h4>
+      <div class="card-item">60 Rue de Lille, dentro de las murallas · +33 3 21 80 54 10</div>
+      <div class="card-item">Vivero de marisco a la vista y patio interior. Lun-sáb 12h-14h y 19h-21h30. La cena del día 1, a dos pasos del paseo de ronda.</div>
+      <div class="card-item">Pedir: plateau de fruits de mer · pescado del día a la plancha</div>
+      <div class="card-item avoid">Los escargots van con champiñón y mantequilla de ajo</div>
+      <div class="card-item avoid">Chez Sandrine y la Brasserie du Port CIERRAN LOS LUNES y solo sirven a mediodía: no valen para cenar</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">🦀 La Marie Galante · Audresselles</h4>
+      <div class="card-item">173 Rue Edouard Quenu · +33 3 21 83 02 32</div>
+      <div class="card-item">Misma familia durante generaciones. Cangrejo (tourteau), bogavante, plateaux. Los <strong>couteaux</strong> (navajas) son lo que destacan las reseñas.</div>
+      <div class="card-item safe">Marisco cocido sin salsa = FODMAP-seguro · RESERVAR</div>
+      <div class="card-item avoid">Miércoles cierran Chez Mimi, Le Retour des Flobards y Au P'tit Bonheur. Alternativa: Le Loup de Mer, +33 3 21 32 94 68</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">🧈 l'Atlantic · Wimereux</h4>
+      <div class="card-item">6 Rue Notre Dame, en el dique · +33 3 21 32 41 01</div>
+      <div class="card-item"><strong>8h-22h45 sin interrupción</strong> — el horario continuo es lo que permite disparar la hora dorada y cenar después. 4,6/5 con casi 3.000 reseñas.</div>
+      <div class="card-item safe">Pescado a la plancha, crevettes roses, plateau · RESERVAR</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">🍽️ Les Frangins · Wissant</h4>
+      <div class="card-item">1 Rue du Muret · +33 3 21 96 23 10</div>
+      <div class="card-item">Carta corta de tres platos más sugerencia del día. 18h-21h30: <strong>la cena va ANTES del ocaso de Gris-Nez</strong>, o llegas con todo cerrado.</div>
+      <div class="card-item avoid">El dos de lieu noir va con beurre blanc = chalota. Pedirlo solo a la plancha</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">🧀 Philippe Olivier</h4>
+      <div class="card-item">12 Rue Adolphe Thiers, Boulogne · abre 9h</div>
+      <div class="card-item">Una de las mejores queserías de Francia. <strong>Cógelo el jueves por la mañana al salir</strong>: va directo al apartamento con cocina de Saint-Valery en vez de dos días en el coche.</div>
+      <div class="card-item safe">Quesos curados (mimolette, maroilles afinado, comté) = FODMAP-seguros con moderación</div>
+    </div>
+  </div>
+
+  <div class="sub-label" style="color:var(--green-acc);">🐑 Baie de Somme (días 4-6)</div>
+  <div class="cards-grid" style="margin-bottom:2rem;">
+    <div class="info-card">
+      <h4 class="green">🐑 Saint-Valery — las que abren</h4>
+      <div class="card-item"><strong>La Buvette du Mouton</strong>, 455 Quai Jeanne d'Arc — parrilla sobre el muelle, <strong>10h-22h sin interrupción</strong>. En el camino de vuelta del atardecer.</div>
+      <div class="card-item"><strong>Le Jardin</strong>, 37 Rue de la Ferté — 4,7/5 con 3.499 reseñas, la mejor nota del pueblo. <strong>Etiquetan gluten y lactosa</strong> y gestionan bien las restricciones. Cierra cocina a 21h. +33 3 22 60 98 99</div>
+      <div class="card-item"><strong>Le Rivat</strong>, 9 Rue de la Ferté — <strong>hasta 23h30</strong>, ostras y charcutería. +33 3 22 60 00 94</div>
+      <div class="card-item avoid">Le Jardin Italien cierra jueves · La Pêcherie, jueves solo mediodía · Le 1066 (4,1) y Le Quai 5 (3,1): descartar</div>
+    </div>
+    <div class="info-card">
+      <h4 class="green">⭐ Le Moulin · Boismont</h4>
+      <div class="card-item">8 Rue du Canal, en el parking del Carrefour Market · 2 km al sur de Saint-Valery · +33 3 22 60 85 86</div>
+      <div class="card-item">La dirección lo dice todo: ningún turista entra ahí por casualidad. <strong>Menú de 16 €</strong>, 4,6/5 con 797 reseñas, servicio continuo 9h-22h. Costillar estofado, raya, pescado del día.</div>
+      <div class="card-item safe">La mejor relación calidad-precio de la bahía · RESERVAR, rechazan gente</div>
+      <div class="card-item avoid">Menú fijo = menos margen: pregunta por la cebolla en el estofado y pide raya o pescado a la plancha</div>
+    </div>
+    <div class="info-card">
+      <h4 class="green">🦐 La Pointe du Hourdel</h4>
+      <div class="card-item">Quai Gavois, Le Hourdel (Cayeux-sur-Mer)</div>
+      <div class="card-item">Brasserie de marineros a pie de muelle, justo en el punto de las focas. Café de pescadores desde 1880, precios contenidos (16-25 €). Para la comida del día 5.</div>
+      <div class="card-item safe">Crevettes grises, pescado a la plancha, friture d'éperlan, ostras = FODMAP-seguros</div>
+      <div class="card-item avoid">CIERRA LOS JUEVES. Viernes 10h-22h sin interrupción: resuelve la cena después del ocaso. +33 3 22 26 61 04</div>
+      <div class="card-item avoid">Evita moules marinière y ficelle picarde</div>
+    </div>
+  </div>
+
+  <div class="sub-label" style="color:var(--opal-dark);">✓ Refugios FODMAP &amp; ✕ a evitar</div>
+  <div class="cards-grid">
+    <div class="info-card">
+      <h4 class="green">✓ Seguros</h4>
+      <div class="card-item safe">Pescado fresco a la plancha (puerto de Boulogne)</div>
+      <div class="card-item safe">Agneau de pré-salé a la brasa (Baie de Somme)</div>
+      <div class="card-item safe">Marisco cocido simple: cangrejo, bogavante, ostras, gambas grises</div>
+      <div class="card-item safe">Salicorne (salicornia), frites, quesos curados (maroilles, mimolette)</div>
+    </div>
+    <div class="info-card">
+      <h4 class="concrete">⚠ Con cuidado / a evitar</h4>
+      <div class="card-item avoid"><strong>Beurre blanc</strong> — chalota reducida. Acompaña a casi todo el pescado del norte y es la trampa más fácil de comer sin darte cuenta</div>
+      <div class="card-item avoid">Moules marinière (chalota/cebolla + vino) y moules à la crème — pedir "nature, sans oignon ni échalote"</div>
+      <div class="card-item avoid"><strong>Soupe de poisson</strong> (cebolla) · <strong>flamiche picarde</strong> (tarta de puerro) · <strong>caqhuse</strong> (cerdo con cebolla) — las tres son especialidades locales y las tres son minas</div>
+      <div class="card-item avoid">Tartare de thon (suele llevar chalota) · terrine de campagne (cebolla) · daubes y estofados (fondo de cebolla)</div>
+      <div class="card-item avoid">Carbonade flamande (mucha cebolla) · potjevleesch · Welsh · ficelle picarde (champiñón + bechamel)</div>
+      <div class="card-item avoid">Cidre (fructosa/sorbitol) — limita; mejor vino seco con moderación</div>
+      <div class="card-item"><em>Frase útil:</em> "Sans sauce, sans ail, sans oignon ni échalote."</div>
+    </div>
+    <div class="info-card">
+      <h4 class="blue">🛒 Mercados</h4>
+      <div class="card-item">Boulogne: <strong>Place Dalton, miércoles y sábado de 8h a 12h30</strong>. Mercado alimentario de terroir, con la iglesia de Saint-Nicolas dominando la plaza. <strong>El mié 9 cae en día de mercado: es tu única oportunidad del viaje.</strong> Quesos del norte (maroilles, mimolette vieja, boulette d'Avesnes), charcutería, fruta y pan para el traslado del jueves.</div>
+      <div class="card-item">Boulogne: la <strong>halle à marée del Quai Gambetta</strong>, venta directa de los pescadores, <strong>a diario 6h30-12h30</strong>. A 700 m de Place Dalton y más interesante que el mercado.</div>
+      <div class="card-item">Cayeux: <strong>Au Pain de Caractère</strong>, 52 Rue Léon Parmentier, 4,7/5 — masa madre de espelta al 100 %, desde las 7h. La masa madre sienta mejor que la baguette industrial.</div>
+      <div class="card-item">Saint-Valery-sur-Somme: mercado el domingo por la mañana — no coincide con tus fechas (sales el sáb 12)</div>
+      <div class="card-item safe">Pescado, marisco y queso curado = compra FODMAP-segura para picnic</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FOTOGRAFÍA ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1.5rem">
+    <div class="divider-line"></div>
+    <div class="divider-text">Spots fotográficos</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;">
+    <div class="photo-card" style="grid-column:1/-1;border-left-color:var(--opal);">
+      <h4 style="color:var(--opal-dark);">⚠ La regla que gobierna toda la costa</h4>
+      <div class="photo-detail"><strong>Blanc-Nez, Gris-Nez y Ault miran al noroeste.</strong> Dos consecuencias que se olvidan cada vez:<br><strong>1. Desde encima del cabo no ves el acantilado.</strong> Hay que bajar a nivel del mar y ponerse al <strong>suroeste</strong>, mirando hacia atrás — Cran d'Escalles para el Blanc-Nez, la playa de Wissant para la línea entera, Bois de Cise para Ault.<br><strong>2. Su luz frontal es la de última hora de la tarde, nunca la mañana.</strong> A media mañana la pared está en sombra o con luz rasante mala. Lo mismo vale para las villas de Wimereux y las cabinas de Cayeux, que también miran al oeste.<br><strong>3.</strong> Y el mejor color de un ocaso aquí llega <strong>después</strong> de que el sol desaparezca, no antes: la última luz aguanta unos 35 min más.</div>
+      <div class="photo-meta">Aplica a todos los acantilados y fachadas del viaje</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Cap Blanc-Nez</h4>
+      <div class="photo-detail">Desde arriba: el obelisco del Dover Patrol (montado sobre un búnker), la pradera y la curva de la costa hacia Wissant. <strong>La pared blanca no se ve desde el cabo</strong> — baja al <strong>Cran d'Escalles</strong>, 5 min al sur, o guárdala para la playa de Wissant a última hora, donde tienes la línea entera a 5-6 km iluminada de frente.</div>
+      <div class="photo-meta">Tarde · gran angular + 50mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Fort de l'Heurt · Le Portel</h4>
+      <div class="photo-detail">Fuerte napoleónico de 1804 sobre rocas, <strong>a ~700 m de la orilla</strong>. Con marea alta es una isla; con marea baja, un pedrusco sobre la arena. A esa distancia con un objetivo corto ocupa ~12 % del ancho: compón <strong>marina amplia</strong> con la curva de la playa y arena mojada en primer término, no silueta apretada. Desde el Quai du Calvaire hay que bajar 150-200 m al sur para alinearlo con el ocaso.</div>
+      <div class="photo-meta">Ocaso · marea alta · 18-24mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Cap Gris-Nez</h4>
+      <div class="photo-detail">Faro y búnkeres sobre el promontorio, mirando al oeste — el mejor sitio para puesta de sol con cielo dramático sobre el Canal. Teleobjetivo para comprimir faro y horizonte de Inglaterra en días claros.</div>
+      <div class="photo-meta">Puesta de sol · 35-135mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Búnkeres de Wissant</h4>
+      <div class="photo-detail">Blockhaus del Muro Atlántico semihundidos en la arena. <strong>Están al NORTE del pueblo</strong>, no al oeste: aparca al final de la Rue Arlette Davids y camina al noreste. Así tienes los dos sujetos en la misma dirección — hormigón a la izquierda y la pared del Blanc-Nez de frente — con el sol del oeste iluminándolos. El búnker accesible está <strong>en la playa</strong>, 1,5 km al noreste; los de la duna están protegidos y no se pisan.</div>
+      <div class="photo-meta">Marea baja · gran angular bajo</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Hormigón de guerra</h4>
+      <div class="photo-detail">La masa colosal de Éperlecques entre los árboles y las cuatro casamatas de la Batterie Todt sobre el acantilado. Volúmenes brutales, texturas de hormigón, escala. Luz lateral dura para marcar el relieve.</div>
+      <div class="photo-meta">Media mañana/tarde · 24-70mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Fort d'Ambleteuse</h4>
+      <div class="photo-detail">Fuerte de Vauban sobre las rocas a pie de mar. Con marea alta parece flotar; con marea baja, las rocas en primer plano. Hora dorada de tarde desde la playa al norte.</div>
+      <div class="photo-meta">Hora dorada · según marea</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Wimereux Belle Époque</h4>
+      <div class="photo-detail">Hilera de villas de colores del paseo marítimo, arquitectura balnearia de finales del s.XIX. Teleobjetivo medio para aislar fachadas; gran angular para la hilera con el mar.</div>
+      <div class="photo-meta">Hora dorada · 35-85mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Boulogne ville haute</h4>
+      <div class="photo-detail">Murallas medievales, la cúpula de la basílica y las calles empedradas del casco alto. Amanecer para calles vacías; la ronda de las murallas da vistas sobre los tejados y el puerto.</div>
+      <div class="photo-meta">Amanecer · 24-50mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Courtgain (Saint-Valery)</h4>
+      <div class="photo-detail">Casas de pescadores de colores en callejones empinados con la bahía al fondo. La ville haute amurallada y la Puerta Guillaume. Luz de última hora sobre el estuario.</div>
+      <div class="photo-meta">Hora dorada · 35-50mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Focas de Hourdel</h4>
+      <div class="photo-detail"><strong>Sin 300 mm o más no hay retrato de foca:</strong> a la distancia mínima de respeto (300 m) y con 50 mm en APS-C, una foca ocupa el 1 % del ancho del fotograma. <strong>La foto es el paisaje</strong> — el blockhaus volcado sobre los galets, los canales plateados sobre el limo, y las focas como formas oscuras dentro de la escena. Luz rasante de mañana sobre el estuario, o la hora dorada con la bajamar de la tarde.</div>
+      <div class="photo-meta">Bajamar · 200-400mm · o gran angular</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Cayeux-sur-Mer</h4>
+      <div class="photo-detail">409 cabinas de colores alineadas sobre el chemin de planches más largo de Europa. <strong>Miran al oeste-noroeste: a mediodía están a contraluz</strong> y su luz frontal es la del atardecer. Lo que funciona a cualquier hora es <strong>la línea de fuga de la pasarela</strong>: explora hacia el sur y dispara de vuelta mirando al norte, con el sol a la espalda. Con cielo gris el color de las cabinas se separa mejor que con sol duro.</div>
+      <div class="photo-meta">Atardecer para las fachadas · 24-85mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Ault y Bois de Cise</h4>
+      <div class="photo-detail">Donde nace la creta de la Côte d'Albâtre. Desde Ault estás <em>encima</em> — la pared de perfil la tienes desde la <strong>table d'orientation de Bois de Cise</strong>, mirando al norte, y ahí es donde los acantilados se encienden a última hora. Al sur, la enfilada entera perdiéndose hacia Le Tréport. Hora azul en el balcon sur la mer de Ault con el pueblo encendido.</div>
+      <div class="photo-meta">Última hora de la tarde · 24-85mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Mers-les-Bains y Le Tréport</h4>
+      <div class="photo-detail">Cientos de villas Belle Époque en sector protegido, ninguna igual a la otra. <strong>Es el sujeto que mejor funciona con cielo gris</strong> de todo el viaje: fachadas de color sin sombras duras. Y desde Notre-Dame de la Falaise, a 92 m, la panorámica sobre la enfilada de acantilados — con la Virgen de pie sobre un búnker alemán R671.</div>
+      <div class="photo-meta">Cualquier luz · 35-85mm</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESERVAS ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1rem">
+    <div class="divider-line"></div>
+    <div class="divider-text">A reservar / verificar</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="booking-list">
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Alojamiento — Boulogne-sur-Mer (3 noches: lun 7 → jue 10)</div>
+        <div class="booking-when"><strong>Première Classe Boulogne — Saint-Martin-les-Boulogne</strong> · 11 rue de la Plaine, 62280 Saint-Martin-Boulogne · parking privado gratuito · check-in desde 14h · a ~4 km del centro (bajas en coche a la ville haute y al puerto)</div>
+      </div>
+      <div class="booking-urgency">🟢 Reservado</div>
+      <div class="booking-price">—</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Alojamiento — Saint-Valery-sur-Somme (2 noches: jue 10 → sáb 12)</div>
+        <div class="booking-when"><strong>Edera</strong> · 8 rue Jules Brûle, 80230 Saint-Valery-sur-Somme · apartamento en el pueblo, todo a pie · <strong>llevar sábanas, edredón y toallas</strong></div>
+      </div>
+      <div class="booking-urgency">🟢 Reservado</div>
+      <div class="booking-price">—</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Marea baja para focas — Vie 11 sep</div>
+        <div class="booking-when"><strong>Confirmado</strong> (tabla oficial de Cayeux): coef. 98/101 · bajamares <strong>07h36</strong> y <strong>19h57</strong> · pleamar 12h48. <strong>La de 19h57 cae 21 min antes del ocaso (20h18) y ese día es luna nueva</strong> — la alineación del viaje. Sáb 12: <strong>bajamar 08h17, coef. 102</strong>, la mayor de todas, para una última pasada antes de volver.<br><strong>⚠ Usa solo la tabla de Cayeux.</strong> Las webs agregadoras inflan los coeficientes — rivage-marées llega a dar 120 en media docena de días seguidos, que es físicamente imposible</div>
+      </div>
+      <div class="booking-urgency">🟢 Confirmado</div>
+      <div class="booking-price">—</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot yellow"></div>
+      <div>
+        <div class="booking-name">Sortie guiada de focas — Vie 11 sep (opcional)</div>
+        <div class="booking-when">Guías locales · RDV faro del Hourdel · ~2 h 30 · <strong>+33 6 17 63 34 63</strong> · reservar según la bajamar elegida (07h36 o 19h57)</div>
+      </div>
+      <div class="booking-urgency">🟡 Reservar</div>
+      <div class="booking-price">~16-20 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Picardie Nature — punto de observación gratuito (alternativa a la guía)</div>
+        <div class="booking-when">Voluntarios en la playa del Hourdel, junto al blockhaus, <strong>con longavista prestada</strong>. Paso libre. Franjas de mañana y <strong>17h30-20h</strong>. Es vigilancia estival y septiembre está en el límite: <strong>confirmar al 03 62 72 22 50</strong> la misma mañana</div>
+      </div>
+      <div class="booking-urgency">🟢 Gratis</div>
+      <div class="booking-price">0 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot red"></div>
+      <div>
+        <div class="booking-name">🍽️ Restaurantes — reservar la víspera, TODOS</div>
+        <div class="booking-when"><strong>Día 1</strong> Restaurant de la Haute Ville +33 3 21 80 54 10 · <strong>Día 2</strong> La Marie Galante +33 3 21 83 02 32 y Les Frangins +33 3 21 96 23 10 · <strong>Día 3</strong> Le Châtillon +33 3 21 31 43 95 y l'Atlantic +33 3 21 32 41 01 · <strong>Día 4</strong> Le Bistronome +33 3 21 06 04 23 y Le Moulin +33 3 22 60 85 86 · <strong>Día 5</strong> Le Rivat +33 3 22 60 00 94<br>Ninguno de estos es "sin reserva", por mucho que lo parezca por el tamaño o el día de la semana</div>
+      </div>
+      <div class="booking-urgency">🔴 Obligatorio</div>
+      <div class="booking-price">—</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Cripta de Notre-Dame — Boulogne</div>
+        <div class="booking-when"><strong>Mar-dom 9h30-12h30 y 14h-17h30 · cierra lunes</strong> · sin reserva · una de las mayores de Francia. <strong>Cierra a las 17h30</strong>: va justo después de comer, no al final de la tarde. Basílica 7h-19h, gratis. El Château-Musée <strong>cierra los martes</strong></div>
+      </div>
+      <div class="booking-urgency">🟢 Sin reserva</div>
+      <div class="booking-price">~7 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Citadelle de Montreuil-sur-Mer — Jue 10 sep</div>
+        <div class="booking-when"><strong>10h-12h30 y 13h30-18h · cierra los martes</strong> · sin reserva · murallas (~3 km) gratuitas</div>
+      </div>
+      <div class="booking-urgency">🟢 Sin reserva</div>
+      <div class="booking-price">7 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Blockhaus d'Éperlecques — Lun 7 sep</div>
+        <div class="booking-when">leblockhaus.com · <strong>sep: 11h-17h30, última admisión 15h45</strong> · visita 1 h 45 · sin reserva individual · audioguía ES · <strong>no devuelven cambio en efectivo</strong></div>
+      </div>
+      <div class="booking-urgency">🟢 Sin reserva</div>
+      <div class="booking-price">11,50 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Batterie Todt — Mar 8 sep</div>
+        <div class="booking-when">batterietodt.com · <strong>10h-17h · cierra los lunes</strong> · cuenta <strong>1 h 30 - 2 h</strong>, no una hora · sin reserva · <strong>cierra 1-5 sep: tus fechas lo evitan</strong> · puede estar prohibido fotografiar en el interior</div>
+      </div>
+      <div class="booking-urgency">🟢 Sin reserva</div>
+      <div class="booking-price">8,90 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Musée 39-45 Ambleteuse — Mié 9 sep</div>
+        <div class="booking-when">musee3945.com · a diario 10-18 h · sin reserva · combinado con Batterie Todt</div>
+      </div>
+      <div class="booking-urgency">🟢 Sin reserva</div>
+      <div class="booking-price">~8,90 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Crit'Air (opcional)</div>
+        <div class="booking-when">Solo si te desvías a Lille · certificat-air.gouv.fr (oficial) · pedir con semanas de antelación. <strong>La ruta normal no lo necesita</strong>, pero en Bélgica quédate en el ring R0 de Bruselas: los túneles hacia el centro entran en la LEZ y exigen registro previo (multa 150 €)</div>
+      </div>
+      <div class="booking-urgency">🟢 Opcional</div>
+      <div class="booking-price">~3,81 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Gratis y sin reserva — lo que no hace falta gestionar</div>
+        <div class="booking-when">Cimetière chinois de Noyelles (24 h) · búnkeres de las Dunes de la Slack · bois d'Haringzelles · Cran d'Escalles · funicular de Le Tréport (7h45-00h45 hasta el 15 sep) · Notre-Dame de la Falaise · Bois de Cise · murallas de Boulogne, Montreuil y Saint-Valery · Les Bourgeois de Calais</div>
+      </div>
+      <div class="booking-urgency">🟢 Libre</div>
+      <div class="booking-price">0 €</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Costa y Muro Atlántico · Côte d'Opale &amp; Baie de Somme · 7-12 septiembre 2026</p>
+</div>
+
+</body>
+</html>
