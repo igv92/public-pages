@@ -13,13 +13,14 @@ public-pages/
 
 Self-contained HTML pages generated from trip planning. Each file is a full itinerary for a specific trip — shareable as a direct link.
 
-| File                             | Trip                   | Date           | URL                                                                                   |
-|----------------------------------|------------------------|----------------|---------------------------------------------------------------------------------------|
-| `roma-napoles-plan.html`         | Rome & Naples          | April 2026     | [🔗](https://igv92.github.io/public-pages/travel-plans/roma-napoles-plan.html)         |
-| `rotterdam-plan.html`            | Rotterdam              | June 2026      | [🔗](https://igv92.github.io/public-pages/travel-plans/rotterdam-plan.html)            |
-| `mosela-rin-plan.html`           | Mosela & Rin           | August 2026    | [🔗](https://igv92.github.io/public-pages/travel-plans/mosela-rin-plan.html)           |
+| File                             | Trip                   | Date          | URL                                                                                    |
+|----------------------------------|------------------------|---------------|----------------------------------------------------------------------------------------|
+| `roma-napoles-plan.html`         | Rome & Naples          | April 2026    | [🔗](https://igv92.github.io/public-pages/travel-plans/roma-napoles-plan.html)         |
+| `rotterdam-plan.html`            | Rotterdam              | June 2026     | [🔗](https://igv92.github.io/public-pages/travel-plans/rotterdam-plan.html)            |
+| `mosela-rin-plan.html`           | Mosela & Rin           | August 2026   | [🔗](https://igv92.github.io/public-pages/travel-plans/mosela-rin-plan.html)           |
 | `costa-muro-atlantico-plan.html` | Costa y Muro Atlántico | September 2026 | [🔗](https://igv92.github.io/public-pages/travel-plans/costa-muro-atlantico-plan.html) |
-| `haarlem-bloemendaal-plan.html`  | Haarlem & Bloemendaal  | Oct 2026       | [🔗](https://igv92.github.io/public-pages/travel-plans/haarlem-bloemendaal-plan.html)  |
+| `haarlem-bloemendaal-plan.html`  | Haarlem & Bloemendaal  | Oct 2026      | [🔗](https://igv92.github.io/public-pages/travel-plans/haarlem-bloemendaal-plan.html)  |
+| `oporto-plan.html`               | Oporto, Portugal       | Nov 2026      | [🔗](https://igv92.github.io/public-pages/travel-plans/oporto-plan.html)               |
 
 ## URL pattern
 

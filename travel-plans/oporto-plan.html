@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oporto — Azulejo, Douro y Atlántico</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Paleta "Azulejo & Rubí" — loza blanca, cobalto de azulejo, rubí de oporto, tejado de terracota, verde Douro y oro de talha */
+    --porcelain: #f5f2ec;
+    --glaze: #e2e7ef;
+    --cobalt: #1d3d78;
+    --cobalt-mid: #2d5ba3;
+    --cobalt-light: #6d92c8;
+    --ink: #1a2133;
+    --ink-mid: #3c4962;
+    --ink-light: #6c7890;
+    --ruby: #7a1d2d;
+    --ruby-light: #a53a4b;
+    --terracotta: #b5552d;
+    --douro: #2b6a5f;
+    --atlantic: #1d4a5a;
+    --gold: #a8823a;
+    --gold-light: #cfa95a;
+    --granite: #5c6066;
+    --azulejo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='white' stroke-width='1.1'%3E%3Crect x='.5' y='.5' width='63' height='63'/%3E%3Ccircle cx='32' cy='32' r='11'/%3E%3Ccircle cx='32' cy='32' r='4'/%3E%3Cpath d='M32 4Q39 18 32 32Q25 18 32 4ZM32 60Q39 46 32 32Q25 46 32 60ZM4 32Q18 25 32 32Q18 39 4 32ZM60 32Q46 25 32 32Q46 39 60 32Z'/%3E%3Cpath d='M0 0Q14 3 16 16Q3 14 0 0ZM64 0Q50 3 48 16Q61 14 64 0ZM0 64Q14 61 16 48Q3 50 0 64ZM64 64Q50 61 48 48Q61 50 64 64Z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--porcelain);
+    color: var(--ink);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  strong { font-weight: 600; }
+  a { color: var(--cobalt-mid); }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: var(--cobalt);
+    padding: 3.2rem 2rem 2.6rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--azulejo);
+    background-size: 64px 64px;
+    opacity: 0.10;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 120%, rgba(122,29,45,0.55) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 40%, rgba(29,61,120,0.0) 0%, rgba(14,30,60,0.55) 100%);
+  }
+  .header > * { position: relative; z-index: 1; }
+  .header-ornament {
+    font-family: 'Cinzel', serif;
+    color: var(--gold-light);
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.85;
+  }
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 5vw, 3.1rem);
+    color: var(--porcelain);
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+  }
+  .header h1 span { color: var(--gold-light); }
+  .header-sub {
+    font-style: italic;
+    color: rgba(245,242,236,0.7);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+  .header-dates {
+    display: inline-block;
+    margin-top: 1.2rem;
+    padding: 0.4rem 1.5rem;
+    border: 1px solid rgba(207,169,90,0.5);
+    color: var(--gold-light);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    background: rgba(14,30,60,0.35);
+  }
+  .tile-strip {
+    height: 14px;
+    background-color: var(--cobalt-mid);
+    background-image: var(--azulejo);
+    background-size: 14px 14px;
+    opacity: 0.9;
+  }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 2rem;
+    margin: 2.2rem 0 1rem;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--glaze); }
+  .divider-tile {
+    width: 14px; height: 14px; flex-shrink: 0;
+    background-color: var(--cobalt-mid);
+    background-image: var(--azulejo);
+    background-size: 14px 14px;
+    transform: rotate(45deg);
+    opacity: 0.8;
+  }
+  .divider-text {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ---- WARNINGS ---- */
+  .warnings {
+    margin: 0 2rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 0.75rem;
+  }
+  .warning-card {
+    background: var(--glaze);
+    border-left: 3px solid var(--cobalt);
+    padding: 0.9rem 1.1rem;
+    border-radius: 0 4px 4px 0;
+  }
+  .warning-card.ruby  { border-left-color: var(--ruby); }
+  .warning-card.gold  { border-left-color: var(--gold); }
+  .warning-card.douro { border-left-color: var(--douro); }
+  .warning-card.terra { border-left-color: var(--terracotta); }
+  .warning-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--cobalt);
+    margin-bottom: 0.25rem;
+  }
+  .warning-card.ruby  .warning-label { color: var(--ruby); }
+  .warning-card.gold  .warning-label { color: var(--gold); }
+  .warning-card.douro .warning-label { color: var(--douro); }
+  .warning-card.terra .warning-label { color: var(--terracotta); }
+  .warning-text { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.45; }
+
+  /* ---- LIGHT TABLE ---- */
+  .light-table {
+    margin: 0 2rem 2rem;
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.3rem;
+    border: 1px solid rgba(29,61,120,0.08);
+    box-shadow: 0 2px 12px rgba(29,61,120,0.07);
+    overflow-x: auto;
+  }
+  .light-table table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 480px; }
+  .light-table th {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--glaze);
+  }
+  .light-table td { padding: 0.4rem 0.6rem; color: var(--ink-mid); border-bottom: 1px solid rgba(226,231,239,0.6); }
+  .light-table tr:last-child td { border-bottom: none; }
+  .light-table .highlight { color: var(--gold); font-weight: 600; }
+  .light-table .blue { color: var(--cobalt-mid); font-weight: 600; }
+  .light-note { font-size: 0.8rem; font-style: italic; color: var(--ink-light); margin-top: 0.6rem; }
+
+  /* ---- INFO CARDS ---- */
+  .section-block { margin: 0 2rem 2.5rem; }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+  .info-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(29,61,120,0.08);
+    box-shadow: 0 1px 6px rgba(29,61,120,0.05);
+    border-top: 3px solid var(--cobalt);
+  }
+  .info-card.ruby  { border-top-color: var(--ruby); }
+  .info-card.douro { border-top-color: var(--douro); }
+  .info-card.terra { border-top-color: var(--terracotta); }
+  .info-card.gold  { border-top-color: var(--gold); }
+  .info-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--cobalt);
+    margin-bottom: 0.6rem;
+  }
+  .info-card.ruby h4  { color: var(--ruby); }
+  .info-card.douro h4 { color: var(--douro); }
+  .info-card.terra h4 { color: var(--terracotta); }
+  .info-card.gold h4  { color: var(--gold); }
+  .card-item {
+    position: relative;
+    padding-left: 1rem;
+    font-size: 0.86rem;
+    color: var(--ink-mid);
+    margin-bottom: 0.45rem;
+    line-height: 1.42;
+  }
+  .card-item::before { content: '—'; position: absolute; left: 0; top: 0; color: var(--cobalt-light); font-size: 0.7rem; }
+  .card-item.safe { color: var(--douro); }
+  .card-item.safe::before { content: '✓'; color: var(--douro); }
+  .card-item.avoid { color: var(--ruby); }
+  .card-item.avoid::before { content: '⚠'; color: var(--ruby); }
+  .phrase { font-style: italic; color: var(--cobalt); font-weight: 600; }
+
+  /* ---- DAY SECTION ---- */
+  .day-section { margin-bottom: 2.5rem; }
+  .day-header {
+    padding: 1.3rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .day-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: var(--azulejo);
+    background-size: 48px 48px;
+    opacity: 0.07;
+  }
+  .day-header > * { position: relative; }
+  .day-header.ribeira  { background: linear-gradient(135deg, #5a1522 0%, #8a2f2a 55%, #b5552d 100%); }
+  .day-header.atlantic { background: linear-gradient(135deg, #10303d 0%, #1d4a5a 55%, #2b6a5f 100%); }
+  .day-header.azulejo  { background: linear-gradient(135deg, #12295a 0%, #1d3d78 55%, #2d5ba3 100%); }
+  .day-numeral {
+    font-family: 'Cinzel', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #fff;
+    width: 3.2rem; height: 3.2rem;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(255,255,255,0.35);
+    background: rgba(255,255,255,0.07);
+    flex-shrink: 0;
+  }
+  .day-info h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--porcelain);
+    letter-spacing: 0.07em;
+  }
+  .day-info p { font-style: italic; color: rgba(255,255,255,0.62); font-size: 0.92rem; }
+  .day-badge {
+    margin-left: auto;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.7);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* ---- CARDS GRID ---- */
+  .days-grid {
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 1rem;
+  }
+  .day-card {
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(29,61,120,0.07);
+    border: 1px solid rgba(29,61,120,0.08);
+  }
+  .day-card-header {
+    padding: 0.9rem 1.2rem 0.7rem;
+    border-bottom: 1px solid var(--glaze);
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .day-card-header.ribeira  { background: rgba(122,29,45,0.06); }
+  .day-card-header.atlantic { background: rgba(29,74,90,0.07); }
+  .day-card-header.azulejo  { background: rgba(29,61,120,0.06); }
+  .card-block { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-light); }
+  .card-date  { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .card-title { font-style: italic; font-size: 0.85rem; color: var(--ink-light); margin-left: auto; text-align: right; }
+  .day-card-body { padding: 1rem 1.2rem; }
+
+  /* ---- TIME BLOCKS ---- */
+  .time-block {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--glaze);
+  }
+  .time-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .time-tag {
+    flex-shrink: 0;
+    width: 2.2rem; height: 2.2rem;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    margin-top: 0.1rem;
+  }
+  .time-tag.morning   { background: rgba(168,130,58,0.13); }
+  .time-tag.afternoon { background: rgba(29,61,120,0.09); }
+  .time-tag.evening   { background: rgba(26,33,51,0.08); }
+  .time-tag.transit   { background: rgba(109,146,200,0.15); }
+  .time-tag.golden    { background: rgba(207,169,90,0.2); }
+  .time-tag.food      { background: rgba(43,106,95,0.11); }
+  .time-tag.rest      { background: rgba(92,96,102,0.1); }
+  .time-content { flex: 1; min-width: 0; }
+  .time-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 0.15rem;
+    display: block;
+  }
+  .activity-name { font-size: 0.97rem; font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 0.2rem; }
+  .activity-detail { font-size: 0.84rem; color: var(--ink-mid); font-style: italic; line-height: 1.45; }
+  .activity-detail strong { font-style: normal; color: var(--ink); }
+  .activity-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.45rem; }
+
+  /* ---- TAGS ---- */
+  .tag {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.13em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+  .tag.reserve   { color: var(--ruby);       border-color: var(--ruby);       background: rgba(122,29,45,0.06); }
+  .tag.price     { color: var(--gold);       border-color: var(--gold);       background: rgba(168,130,58,0.07); }
+  .tag.tip       { color: var(--cobalt-mid); border-color: var(--cobalt-mid); background: rgba(45,91,163,0.06); }
+  .tag.transport { color: var(--atlantic);   border-color: var(--atlantic);   background: rgba(29,74,90,0.06); }
+  .tag.fodmap    { color: var(--douro);      border-color: var(--douro);      background: rgba(43,106,95,0.08); font-weight: 600; }
+  .tag.warning   { color: var(--terracotta); border-color: var(--terracotta); background: rgba(181,85,45,0.07); }
+  .tag.free      { color: #2f6a45;           border-color: #2f6a45;           background: rgba(47,106,69,0.06); }
+  .tag.photo     { color: #5b4a7a;           border-color: #5b4a7a;           background: rgba(91,74,122,0.06); }
+  .tag.rain      { color: var(--granite);    border-color: var(--granite);    background: rgba(92,96,102,0.07); }
+
+  /* ---- FOOD HIGHLIGHT ---- */
+  .food-highlight {
+    background: rgba(43,106,95,0.06);
+    border: 1px solid rgba(43,106,95,0.2);
+    border-radius: 4px;
+    padding: 0.6rem 0.9rem;
+    margin-top: 0.3rem;
+  }
+  .food-highlight .resto { font-weight: 600; font-size: 0.92rem; color: var(--ink); }
+  .food-highlight .resto span { font-weight: 300; font-size: 0.78rem; }
+  .food-highlight .dish  { font-style: italic; font-size: 0.83rem; color: var(--ink-mid); line-height: 1.45; }
+  .food-highlight .dish strong { font-style: normal; color: var(--ink); }
+
+  /* ---- ROUTE ---- */
+  .route {
+    background: rgba(29,74,90,0.05);
+    border: 1px solid rgba(29,74,90,0.18);
+    border-radius: 4px;
+    padding: 0.7rem 0.9rem;
+    margin-top: 0.5rem;
+  }
+  .route-step { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.82rem; color: var(--ink-mid); padding: 0.18rem 0; line-height: 1.4; }
+  .route-step .dot { width: 7px; height: 7px; background: var(--cobalt-light); flex-shrink: 0; margin-top: 0.45rem; transform: rotate(45deg); }
+  .route-arrow { font-size: 0.75rem; color: var(--cobalt-light); padding-left: 0.1rem; }
+
+  /* ---- BACKUP ---- */
+  .backup {
+    margin: 1rem 2rem 1.5rem;
+    background: var(--glaze);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    border-left: 3px solid var(--granite);
+  }
+  .backup-icon { font-size: 0.95rem; margin-top: 0.1rem; flex-shrink: 0; }
+  .backup-text { font-size: 0.84rem; color: var(--ink-mid); font-style: italic; line-height: 1.45; }
+  .backup-text strong { font-style: normal; color: var(--ink); }
+
+  /* ---- FODMAP SEMÁFORO ---- */
+  .dish-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.6rem; margin-bottom: 1.2rem; }
+  .dish-card {
+    background: white;
+    border-radius: 4px;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid rgba(29,61,120,0.08);
+    border-left: 4px solid var(--douro);
+  }
+  .dish-card.amber { border-left-color: var(--gold); }
+  .dish-card.red   { border-left-color: var(--ruby); }
+  .dish-card .dname { font-weight: 600; font-size: 0.92rem; color: var(--ink); }
+  .dish-card .dname small { font-weight: 400; font-size: 0.75rem; color: var(--ink-light); font-style: italic; }
+  .dish-card .ddesc { font-size: 0.82rem; color: var(--ink-mid); line-height: 1.4; }
+  .dish-card .dkcal { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--gold); margin-top: 0.25rem; }
+
+  /* ---- RESTAURANT CARDS ---- */
+  .resto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.75rem; }
+  .resto-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(29,61,120,0.08);
+    box-shadow: 0 1px 6px rgba(29,61,120,0.05);
+  }
+  .resto-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ruby);
+    margin-bottom: 0.25rem;
+  }
+  .resto-card .where { font-size: 0.78rem; font-style: italic; color: var(--ink-light); margin-bottom: 0.45rem; }
+  .resto-card p { font-size: 0.85rem; color: var(--ink-mid); line-height: 1.42; }
+  .resto-card .meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
+  .sub-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin: 1.3rem 0 0.6rem;
+  }
+
+  /* ---- PHOTO CARDS ---- */
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.75rem; }
+  .photo-card {
+    background: white;
+    border-radius: 4px;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(29,61,120,0.08);
+    border-left: 3px solid #5b4a7a;
+  }
+  .photo-card.wide { grid-column: 1 / -1; border-left-color: var(--gold); }
+  .photo-card h4 { font-family: 'Cinzel', serif; font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: #5b4a7a; margin-bottom: 0.4rem; }
+  .photo-card.wide h4 { color: var(--gold); }
+  .photo-detail { font-size: 0.85rem; color: var(--ink-mid); line-height: 1.45; }
+  .photo-meta { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-light); margin-top: 0.5rem; }
+
+  /* ---- BOOKING LIST ---- */
+  .booking-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .booking-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid rgba(29,61,120,0.08);
+    box-shadow: 0 1px 4px rgba(29,61,120,0.04);
+  }
+  .booking-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .booking-dot.red    { background: #c0392b; }
+  .booking-dot.yellow { background: var(--gold); }
+  .booking-dot.green  { background: #2f8a55; }
+  .booking-dot.done   { background: var(--cobalt-mid); }
+  .booking-name { font-size: 0.92rem; font-weight: 600; color: var(--ink); }
+  .booking-when { font-size: 0.8rem; font-style: italic; color: var(--ink-light); line-height: 1.4; }
+  .booking-urgency { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap; color: var(--ink-light); }
+  .booking-price { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold); white-space: nowrap; }
+
+  /* ---- BUDGET ---- */
+  .budget-box {
+    background: white;
+    border-radius: 6px;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid rgba(29,61,120,0.08);
+    box-shadow: 0 2px 8px rgba(29,61,120,0.05);
+  }
+  .budget-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--glaze);
+    font-size: 0.9rem;
+  }
+  .budget-row.total {
+    border-bottom: none;
+    font-weight: 600;
+    font-size: 1rem;
+    padding-top: 0.7rem;
+    margin-top: 0.3rem;
+    border-top: 2px solid var(--glaze);
+  }
+  .budget-row.optional { font-style: italic; color: var(--ink-light); }
+  .budget-label { color: var(--ink-mid); }
+  .budget-label small { display: block; font-size: 0.76rem; font-style: italic; color: var(--ink-light); }
+  .budget-value { font-family: 'Cinzel', serif; color: var(--gold); white-space: nowrap; }
+
+  /* ---- CHECKLIST ---- */
+  .check-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; }
+  .check-card { background: white; border-radius: 6px; padding: 0.9rem 1.1rem; border: 1px solid rgba(29,61,120,0.08); }
+  .check-card h4 { font-family: 'Cinzel', serif; font-size: 0.64rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--cobalt); margin-bottom: 0.5rem; }
+  .check-item { display: flex; gap: 0.5rem; font-size: 0.86rem; color: var(--ink-mid); line-height: 1.4; margin-bottom: 0.35rem; }
+  .check-item::before { content: '☐'; color: var(--cobalt-light); flex-shrink: 0; }
+
+  /* ---- FOOTER ---- */
+  .footer { background: var(--cobalt); text-align: center; padding: 2rem; margin-top: 3rem; position: relative; overflow: hidden; }
+  .footer::before { content: ''; position: absolute; inset: 0; background-image: var(--azulejo); background-size: 48px 48px; opacity: 0.08; }
+  .footer p { position: relative; font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; color: rgba(245,242,236,0.6); text-transform: uppercase; }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 600px) {
+    .header, .day-header { padding-left: 1rem; padding-right: 1rem; }
+    .day-header { flex-wrap: wrap; }
+    .day-badge { margin-left: 0; }
+    .divider { padding: 0 1rem; }
+    .days-grid { padding: 0 1rem; grid-template-columns: 1fr; }
+    .warnings, .light-table, .section-block { margin-left: 1rem; margin-right: 1rem; }
+    .backup { margin-left: 1rem; margin-right: 1rem; }
+    .booking-item { grid-template-columns: auto 1fr; }
+    .booking-urgency, .booking-price { grid-column: 2; }
+    .card-title { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-ornament">◆ Itinerario de viaje ◆</div>
+  <h1>Oporto · <span>Azulejo</span> & Atlántico</h1>
+  <p class="header-sub">Granito, cobalto y río · Siza y Gehry en Serralves · pescado a la brasa en Matosinhos · ocaso en el faro de Foz</p>
+  <div class="header-dates">Mar 17 – Jue 19 Noviembre 2026 · Solo · BCN ⇄ OPO · 2 noches</div>
+</div>
+<div class="tile-strip"></div>
+
+<!-- ============ ANTES DE SALIR ============ -->
+<div class="divider" style="margin-top:2rem">
+  <div class="divider-line"></div><div class="divider-tile"></div>
+  <div class="divider-text">Antes de salir</div>
+  <div class="divider-tile"></div><div class="divider-line"></div>
+</div>
+
+<div class="warnings">
+  <div class="warning-card gold">
+    <div class="warning-label">🛏️ Alojamiento — pendiente</div>
+    <div class="warning-text">Zona ideal: <strong>Baixa / Aliados – Trindade – Bolhão</strong>: el metro E del aeropuerto termina en Trindade y todo el plan se hace a pie desde ahí. Dos requisitos por el horario: <strong>dejar la mochila a las 09:30 del martes</strong> (o early check-in) y <strong>guardarla el jueves hasta las 18:15</strong>. <strong>Tasa turística: 3 €/noche</strong> en el alojamiento, no incluida en Booking (la Câmara está valorando subirla a 4 €).</div>
+  </div>
+  <div class="warning-card terra">
+    <div class="warning-label">🌧️ Noviembre — mes de lluvia</div>
+    <div class="warning-text">Es el mes más lluvioso del norte: 14-16 °C de máxima, 8-10 °C de mínima. Cada día tiene su <strong>plan lluvia</strong> y los interiores fuertes (Serralves, Bolsa, bodegas) se pueden mover. El granito mojado <strong>resbala muchísimo en cuesta</strong>: suela con agarre. La parte buena: reflejos en el empedrado y cielos atlánticos dramáticos.</div>
+  </div>
+  <div class="warning-card douro">
+    <div class="warning-label">🥗 FODMAP — frases clave</div>
+    <div class="warning-text"><span class="phrase">"Sem alho e sem cebola, por favor"</span> · <span class="phrase">"Sem molho"</span> (sin salsa) · <span class="phrase">"Grelhado simples, só com azeite e limão"</span>. El pescado a la brasa con patata cocida es la base segura del viaje. El <strong>oporto</strong> es vino dulce fortificado: solo sorbos en la cata.</div>
+  </div>
+</div>
+
+<!-- LIGHT TABLE -->
+<div class="light-table">
+  <table>
+    <tr><th></th><th>Alba</th><th>Amanecer</th><th>Golden hour</th><th>Atardecer</th><th>Hora azul</th></tr>
+    <tr><td><strong>Mar 17</strong></td><td>06:54</td><td>07:24</td><td class="highlight">16:33 – 17:13</td><td class="highlight">17:13</td><td class="blue">17:32 – 17:43</td></tr>
+    <tr><td><strong>Mié 18</strong></td><td>06:55</td><td>07:25</td><td class="highlight">16:32 – 17:12</td><td class="highlight">17:12</td><td class="blue">17:31 – 17:43</td></tr>
+    <tr><td><strong>Jue 19</strong></td><td>06:56</td><td>07:27</td><td class="highlight">16:31 – 17:12</td><td class="highlight">17:12</td><td class="blue">17:31 – 17:42</td></tr>
+  </table>
+  <div class="light-note">Hora local de Portugal (UTC+0), calculado para Oporto. ~9 h 50 min de luz. Regla del viaje: <strong>en el mirador a las 16:30</strong>, y no te vayas al ponerse el sol — la hora azul sobre la Ribeira iluminada es la mejor foto de la ciudad.</div>
+</div>
+
+<!-- ============ CONTEXTO LOCAL ============ -->
+<div class="divider">
+  <div class="divider-line"></div><div class="divider-tile"></div>
+  <div class="divider-text">Contexto local &amp; práctico</div>
+  <div class="divider-tile"></div><div class="divider-line"></div>
+</div>
+
+<div class="section-block">
+  <div class="cards-grid">
+    <div class="info-card">
+      <h4>🚇 Cómo se mueve la gente</h4>
+      <div class="card-item"><strong>A pie + metro.</strong> El centro es compacto pero en cuesta fuerte: Ribeira está ~70 m por debajo de Aliados. Baja andando y sube en metro, funicular o tranvía.</div>
+      <div class="card-item"><strong>Tarjeta Andante</strong> (0,60 €, recargable) en las máquinas del aeropuerto. Aeropuerto ⇄ centro = <strong>Z4, 2,30 €</strong>; centro y Gaia = <strong>Z2, 1,40 €</strong>. Validar cada vez, también en los transbordos.</div>
+      <div class="card-item"><strong>Metro D</strong> cruza el tablero superior del Ponte Luís I (Aliados ⇄ Jardim do Morro): la forma rápida de volver de Gaia.</div>
+      <div class="card-item"><strong>Tranvía histórico 1</strong> (Infante ⇄ Passeio Alegre, Foz): 6 € el trayecto, solo a bordo. Es transporte con encanto, no el más rápido; el bus 500 hace la costa más barato.</div>
+      <div class="card-item"><strong>Bolt / Uber</strong> funcionan bien y son baratos: los saltos Serralves → Matosinhos y Leça → Foz salen a ~7-12 €.</div>
+    </div>
+    <div class="info-card gold">
+      <h4>💶 Pagos y propinas</h4>
+      <div class="card-item">Contactless casi en todas partes, pero <strong>las tascas pequeñas suelen ser solo efectivo</strong> (Taberna Santo António lo es). Llevar ~40 € en billetes pequeños.</div>
+      <div class="card-item">Propina: <strong>no obligatoria</strong>. Redondear en cafés; ~5-10 % en restaurante si el servicio lo merece.</div>
+      <div class="card-item">Ojo al <strong>couvert</strong>: pan, aceitunas, mantequilla o paté que ponen en la mesa <strong>se cobran si los tocas</strong>. Si no los quieres, dilo y que los retiren — además, el pan y el paté no son FODMAP-seguros.</div>
+      <div class="card-item">El café se pide como <strong>"um cimbalino"</strong> (expreso, palabra de Oporto) o "um galão" (con leche, en vaso — 🟠 lactosa).</div>
+    </div>
+    <div class="info-card douro">
+      <h4>🗣️ Frases útiles</h4>
+      <div class="card-item"><span class="phrase">Bom dia / Boa tarde / Boa noite</span> — saludar siempre al entrar</div>
+      <div class="card-item"><span class="phrase">Obrigado</span> — gracias (lo dice un hombre; las mujeres, "obrigada")</div>
+      <div class="card-item"><span class="phrase">Uma mesa para um, por favor</span> — mesa para uno</div>
+      <div class="card-item"><span class="phrase">Qual é o peixe do dia?</span> — ¿cuál es el pescado del día?</div>
+      <div class="card-item"><span class="phrase">A conta, por favor</span> — la cuenta</div>
+      <div class="card-item">Hablar en español funciona y se entiende, pero empezar con un "bom dia" cambia el trato. No asumir que el portugués "es casi español": se agradece el esfuerzo.</div>
+    </div>
+    <div class="info-card terra">
+      <h4>🏘️ Barrios que conviene conocer</h4>
+      <div class="card-item"><strong>Baixa / Aliados</strong> — base. Bolhão, Santa Catarina, São Bento, Clérigos.</div>
+      <div class="card-item"><strong>Ribeira / Barredo</strong> — casas de colores sobre el Douro, UNESCO. El Barredo son las callejas empinadas detrás: más auténtico que el muelle.</div>
+      <div class="card-item"><strong>Vila Nova de Gaia</strong> — otra ciudad, enfrente: bodegas de oporto y los miradores con la Ribeira de frente.</div>
+      <div class="card-item"><strong>Miragaia</strong> — barrio ribereño al oeste, soportales, ropa tendida, cero turismo de masas.</div>
+      <div class="card-item"><strong>Boavista</strong> — la Oporto moderna: Casa da Música, y al oeste Serralves.</div>
+      <div class="card-item"><strong>Foz do Douro / Matosinhos / Leça</strong> — desembocadura, faros, parrillas de pescado y la obra temprana de Siza.</div>
+    </div>
+    <div class="info-card ruby">
+      <h4>⚠ Errores típicos a evitar</h4>
+      <div class="card-item avoid">Comer en la primera línea del Cais da Ribeira: captadores en la puerta, menú con fotos y un 30-40 % más caro. Una calle hacia dentro.</div>
+      <div class="card-item avoid">Ir a Livraria Lello a media mañana sin franja reservada.</div>
+      <div class="card-item avoid">Subestimar las cuestas y el granito mojado con mochila de foto.</div>
+      <div class="card-item avoid">Tratar el oporto como bebida segura: es dulce y fortificado.</div>
+      <div class="card-item avoid">Pedir francesinha "porque toca": pan de trigo + embutidos + salsa con cerveza, cebolla y ajo, 1.200-1.500 kcal.</div>
+      <div class="card-item avoid">Caminar por el espigón de Felgueiras con oleaje fuerte: las olas de invierno barren el muelle.</div>
+    </div>
+    <div class="info-card">
+      <h4>🛡️ Seguridad y avisos</h4>
+      <div class="card-item">Ciudad tranquila. El riesgo real son los <strong>carteristas</strong> en Ribeira, Santa Catarina, São Bento, tranvía 1 y metro del aeropuerto.</div>
+      <div class="card-item">Sin avisos especiales para noviembre de 2026. Revisa el <strong>IPMA</strong> por si hay aviso amarillo o naranja de oleaje antes de ir a Foz.</div>
+      <div class="card-item">Emergencias: <strong>112</strong>. TSE válida en el sistema público (SNS).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DÍA 1 — MARTES ============ -->
+<div class="day-section">
+  <div class="day-header ribeira">
+    <div class="day-numeral">I</div>
+    <div class="day-info">
+      <h2>Martes 17 — Azulejo, granito y río</h2>
+      <p>Bolhão · Capela das Almas · São Bento · Sé · Ponte Luís I · Ocaso en Gaia · Ribeira de noche</p>
+    </div>
+    <div class="day-badge">Madrugón · ritmo suave</div>
+  </div>
+
+  <div class="days-grid">
+    <!-- MAÑANA -->
+    <div class="day-card">
+      <div class="day-card-header ribeira">
+        <div class="card-block">Mañana</div>
+        <div class="card-date">05:15 — Llegada</div>
+        <div class="card-title">Vuelo · Metro E · Bolhão</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag transit">✈️</div>
+          <div class="time-content">
+            <span class="time-label">05:15 — Hacia El Prat T1 (hora española)</span>
+            <div class="activity-name">VY1170 · 07:10 BCN → 08:10 OPO</div>
+            <div class="activity-detail">Solo equipaje de mano: estar en el aeropuerto <strong>~06:10</strong> basta. Desde Plaça Catalunya, el Aerobús A1 empieza sobre las 05:00 (comprobar primer horario según desde dónde salgas); si duermes fuera de Barcelona, el taxi a esa hora es la opción segura. Duerme en el avión: el día empieza en cuanto aterrizas.</div>
+            <div class="activity-meta"><span class="tag transport">~1 h 50 min de vuelo</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag transit">🚇</div>
+          <div class="time-content">
+            <span class="time-label">08:40 — Aeropuerto → Trindade</span>
+            <div class="activity-name">Tarjeta Andante + Z4 · metro E (violeta)</div>
+            <div class="activity-detail">Máquinas en el vestíbulo del metro, junto a llegadas. Comprar la tarjeta (0,60 €) y cargar <strong>1 viaje Z4 (2,30 €)</strong> + varios Z2 para los días siguientes. Directo a <strong>Trindade en ~30-35 min</strong>, sin transbordo.</div>
+            <div class="activity-meta"><span class="tag price">2,90 € con la tarjeta</span><span class="tag transport">Metro E · ~35 min</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag rest">🛏️</div>
+          <div class="time-content">
+            <span class="time-label">09:30 — Dejar la mochila</span>
+            <div class="activity-name">Alojamiento en la Baixa</div>
+            <div class="activity-detail">Dejas la ropa y sales solo con la cámara. Si te dan early check-in, mejor: ducha rápida y fuera.</div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag food">☕</div>
+          <div class="time-content">
+            <span class="time-label">09:45 — Desayuno en el mercado</span>
+            <div class="activity-name">Mercado do Bolhão — el mercado de hierro de 1914, restaurado en 2022</div>
+            <div class="activity-detail">Abre lu-vi 08:00-20:00. Es el corazón de abastos de la ciudad y la mejor primera foto de calle: pescaderas en el lado norte, fruta en el sur, las galerías de hierro y cristal desde el piso superior. Un <strong>cimbalino</strong> y algo sencillo en la planta alta. Para fotografiar a los vendedores, <strong>pide permiso</strong> y compra algo pequeño.</div>
+            <div class="food-highlight">
+              <div class="resto">Capricho opcional · Manteigaria <span>(Rua de Alexandre Braga, a 2 min del Bolhão)</span></div>
+              <div class="dish">Un <strong>pastel de nata</strong> recién salido, con canela. 🟠 Trigo + lactosa: uno, no dos. ~220-250 kcal · 3 g P · 12 g G · 27 g C.</div>
+            </div>
+            <div class="activity-meta"><span class="tag free">Entrada libre</span><span class="tag photo">📷 Calle · mercado · hierro y cristal</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🟦</div>
+          <div class="time-content">
+            <span class="time-label">10:45 — Ruta de los azulejos</span>
+            <div class="activity-name">Capela das Almas → Igreja de Santo Ildefonso</div>
+            <div class="activity-detail"><strong>Capela das Almas</strong> (Rua de Santa Catarina, 3 min del Bolhão): toda la fachada forrada de azulejo azul y blanco, ~16.000 piezas de Eduardo Leite (1929) con escenas de San Francisco y Santa Catalina. Se fotografía desde fuera — busca la esquina con la calle de fondo. Luego, 5 min al sur, <strong>Santo Ildefonso</strong> en la Praça da Batalha: fachada barroca con ~11.000 azulejos de Jorge Colaço (1932). Son dos ejemplos de cómo el azulejo, que nació como decoración interior, acabó vistiendo la calle.</div>
+            <div class="activity-meta"><span class="tag free">Exteriores gratis</span><span class="tag photo">📷 Sigma 18 mm · líneas verticales</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🚉</div>
+          <div class="time-content">
+            <span class="time-label">11:45 — Estación de São Bento</span>
+            <div class="activity-name">El vestíbulo de los ~20.000 azulejos</div>
+            <div class="activity-detail">Jorge Colaço, 1905-1916: batallas, la conquista de Ceuta y escenas rurales del norte, en azul cobalto, con un friso superior a color sobre la historia del transporte. Sigue siendo una estación en uso — fotografía el vestíbulo con gente cruzando, a velocidad lenta (1/15-1/30) para dar movimiento.</div>
+            <div class="activity-meta"><span class="tag free">Gratis</span><span class="tag photo">📷 f/2.8 · ISO alto · movimiento</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MEDIODÍA -->
+    <div class="day-card">
+      <div class="day-card-header ribeira">
+        <div class="card-block">Mediodía</div>
+        <div class="card-date">12:30 — Comer y descansar</div>
+        <div class="card-title">Taxca · check-in</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag food">🥪</div>
+          <div class="time-content">
+            <span class="time-label">12:30 — Comida rápida y local</span>
+            <div class="food-highlight">
+              <div class="resto">Taxca "A Badalhoca" <span>(Rua da Picaria 26 · lu-sá 12:00-22:30 · cierra domingo)</span></div>
+              <div class="dish">Tasca de barra de toda la vida, 8 min a pie de São Bento. Pedir: <strong>sandes de presunto</strong> (jamón curado portugués) y una <strong>malga de vinho</strong> (cuenco de vino de la casa). Barato y honesto: 5-12 €. 🟠 Pan de trigo, una pieza normal es tolerable; el presunto es seguro. ~420 kcal · 24 g P · 14 g G · 48 g C.</div>
+            </div>
+            <div class="activity-meta"><span class="tag fodmap">🟠 Pan · presunto ✓</span><span class="tag price">5-12 €</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag rest">😴</div>
+          <div class="time-content">
+            <span class="time-label">13:45 — Pausa (madrugón de las 04:30)</span>
+            <div class="activity-name">Check-in y descanso hasta las 15:30</div>
+            <div class="activity-detail">El check-in habitual es a las 15:00: pide entrada temprana al reservar. Si no hay forma, alarga el paseo con calma por la <strong>Rua das Flores</strong> (calle peatonal de casas burguesas del s.XVI) y un café sentado. Lo que importa es llegar entero a la luz de la tarde, que es lo mejor del día.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TARDE + NOCHE -->
+    <div class="day-card">
+      <div class="day-card-header ribeira">
+        <div class="card-block">Tarde · Noche</div>
+        <div class="card-date">15:45 — Al río</div>
+        <div class="card-title">Sé · Ponte · Gaia · Ribeira</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag afternoon">⛪</div>
+          <div class="time-content">
+            <span class="time-label">15:45 — Sé do Porto</span>
+            <div class="activity-name">La catedral-fortaleza sobre el Barredo</div>
+            <div class="activity-detail">Románica del s.XII con aspecto de castillo (almenas incluidas), porque Oporto nació justo aquí, en lo alto del Penaventosa. El <strong>terreiro</strong> de delante es gratis y da la primera panorámica de tejados de teja hacia el río; el <strong>claustro gótico</strong>, con azulejos barrocos, es de pago (~3-5 €, verificar). Bajando por las escaleras del Barredo hacia la Ribeira tienes la Oporto vertical de ropa tendida y fachadas descascarilladas.</div>
+            <div class="activity-meta"><span class="tag price">Claustro ~3-5 €</span><span class="tag photo">📷 Tejados · callejas del Barredo</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag golden">🌉</div>
+          <div class="time-content">
+            <span class="time-label">16:25 — Tablero superior del Ponte Luís I</span>
+            <div class="activity-name">Cruzar a Gaia por arriba, con el metro pasando</div>
+            <div class="activity-detail">Puente de hierro de 1886 de Théophile Seyrig, que había trabajado con Eiffel en el cercano Ponte Maria Pia. 45 m sobre el río: la Ribeira a tus pies a un lado, las bodegas de Gaia al otro. Por arriba solo pasan peatones y el metro D — espera uno para meterlo en encuadre.</div>
+            <div class="activity-meta"><span class="tag free">Gratis</span><span class="tag photo">📷 Ribeira desde arriba · metro en movimiento</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag golden">🌅</div>
+          <div class="time-content">
+            <span class="time-label">16:35 — Golden hour y ocaso (17:13)</span>
+            <div class="activity-name">Mosteiro da Serra do Pilar · Jardim do Morro</div>
+            <div class="activity-detail">El mirador clásico, y lo es por algo: desde la terraza del monasterio (planta circular, s.XVII, Patrimonio de la Humanidad) tienes la Ribeira, el puente y la Sé de frente. El sol baja hacia el OSO y <strong>pinta de lado las fachadas de la Ribeira</strong>, que miran al sur. Jardim do Morro, justo debajo, está más lleno: la terraza de Serra do Pilar es más tranquila.</div>
+            <div class="activity-meta"><span class="tag free">Gratis</span><span class="tag photo">📷 Trípode · 18-50 completo</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag evening">🌃</div>
+          <div class="time-content">
+            <span class="time-label">17:30 — Hora azul desde el Cais de Gaia</span>
+            <div class="activity-name">Bajar al muelle y fotografiar la Ribeira encendida</div>
+            <div class="activity-detail">Baja por las escaleras junto al puente (o el Teleférico de Gaia si llueve) hasta el muelle. <strong>17:32-17:43</strong>: cielo azul profundo, fachadas iluminadas y su reflejo en el Douro. Larga exposición de 5-15 s con trípode para alisar el río. Después cruza por el <strong>tablero inferior</strong> del puente a la Ribeira.</div>
+            <div class="activity-meta"><span class="tag photo">📷 Trípode · f/8 · 5-15 s</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag food">🐙</div>
+          <div class="time-content">
+            <span class="time-label">19:00 — Cena (reservar)</span>
+            <div class="food-highlight">
+              <div class="resto">Adega São Nicolau <span>(Rua de São Nicolau 1, Ribeira · lu-sá 12:00-15:00 y 19:00-22:30)</span></div>
+              <div class="dish">Casa de comida de siempre en la segunda línea de la Ribeira, pequeña y llena. Su plato famoso son los <strong>filetes de polvo con arroz de polvo</strong> — 🟠 el pulpo va rebozado y el arroz suele llevar cebolla. Opción segura: <strong>pescado del día a la brasa</strong> con patata cocida, "sem alho". 20-35 € con vino.</div>
+            </div>
+            <div class="activity-meta"><span class="tag reserve">Reservar con días de antelación</span><span class="tag fodmap">✓ Brasa · 🟠 filetes de polvo</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">☔</div>
+    <div class="backup-text"><strong>Plan lluvia:</strong> la mañana ya es casi toda bajo techo (Bolhão, São Bento). Por la tarde, cambia el mirador de Gaia por el <strong>Palácio da Bolsa</strong> (Salón Árabe, ~14 €) y un oporto seco en la bodega más cercana al puente, y sal a la Ribeira solo para la hora azul: con el suelo mojado los reflejos son aún mejores. Si se nubla del todo, el ocaso desde Serra do Pilar se puede intentar de nuevo el jueves desde Gaia.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 2 — MIÉRCOLES ============ -->
+<div class="day-section">
+  <div class="day-header atlantic">
+    <div class="day-numeral">II</div>
+    <div class="day-info">
+      <h2>Miércoles 18 — Arquitectura y Atlántico</h2>
+      <p>Casa da Música · Serralves (Siza + Gehry) · Matosinhos · Piscina das Marés · Faro de Felgueiras</p>
+    </div>
+    <div class="day-badge">El día del viaje</div>
+  </div>
+
+  <div class="days-grid">
+    <!-- MAÑANA -->
+    <div class="day-card">
+      <div class="day-card-header atlantic">
+        <div class="card-block">Mañana</div>
+        <div class="card-date">09:15 — Boavista</div>
+        <div class="card-title">Koolhaas · Siza · Gehry</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag transit">🚇</div>
+          <div class="time-content">
+            <span class="time-label">09:15 — Trindade → Casa da Música</span>
+            <div class="activity-name">Metro (líneas A/B/C/E/F) · ~6 min · Z2</div>
+            <div class="activity-detail">Desayuno antes cerca del alojamiento. Cualquier línea hacia el oeste para en Casa da Música.</div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🎼</div>
+          <div class="time-content">
+            <span class="time-label">09:25 — Casa da Música</span>
+            <div class="activity-name">El poliedro de hormigón blanco de Rem Koolhaas (2005)</div>
+            <div class="activity-detail">Pensado para Oporto Capital Europea de la Cultura 2001 y acabado cuatro años tarde: un meteorito facetado sobre una plaza de piedra ondulada donde patinan los chavales. Con luz de mañana las caras del edificio cambian de tono una a una. 20 min de exterior; dentro, la sala principal tiene paredes de cristal ondulado (visitas guiadas, horario por verificar).</div>
+            <div class="activity-meta"><span class="tag free">Exterior gratis</span><span class="tag photo">📷 Gran angular · geometría · gente en escala</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag transit">🚶</div>
+          <div class="time-content">
+            <span class="time-label">09:45 — Hacia Serralves</span>
+            <div class="activity-name">Bolt (~6 €, 10 min) o a pie por la Av. da Boavista (~35 min)</div>
+            <div class="activity-detail">La avenida es recta y larga, sin mucho interés: si hace bueno, andando te despejas; si llueve, Bolt directo.</div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🏛️</div>
+          <div class="time-content">
+            <span class="time-label">10:00 — Fundação de Serralves (2 h 30)</span>
+            <div class="activity-name">Museo de Siza · villa art déco · parque en otoño</div>
+            <div class="activity-detail"><strong>El museo</strong> (Álvaro Siza, 1999): blanco, luz cenital y huecos que encuadran el parque como cuadros — el edificio es la obra. <strong>Este noviembre coincide con "The Century of Gehry"</strong> (Ala Álvaro Siza, hasta el 10 ene 2027): Frank Gehry dentro de un edificio de Siza, imprescindible para un viaje de arquitectura. También Alice Neel y Jenny Holzer. <strong>Casa de Serralves</strong>: villa art déco rosa de los años 30, ahora con <strong>Miró</strong> y <strong>Lee Ufan</strong>. <strong>Parque</strong> de 18 ha en plena caída de hoja: la avenida de liquidámbares y el jardín formal son de lo mejor del año.</div>
+            <div class="activity-meta">
+              <span class="tag price">24 € museo + casa + parque</span>
+              <span class="tag reserve">Entrada online días antes</span>
+              <span class="tag photo">📷 Siza: líneas blancas · encuadres</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MEDIODÍA -->
+    <div class="day-card">
+      <div class="day-card-header atlantic">
+        <div class="card-block">Mediodía</div>
+        <div class="card-date">12:45 — Matosinhos</div>
+        <div class="card-title">Brasa · Leça · Siza temprano</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag transit">🚕</div>
+          <div class="time-content">
+            <span class="time-label">12:45 — Serralves → Matosinhos</span>
+            <div class="activity-name">Bolt ~7 € · 10-12 min</div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag food">🐟</div>
+          <div class="time-content">
+            <span class="time-label">13:00 — Pescado a la brasa (el plato del viaje)</span>
+            <div class="food-highlight">
+              <div class="resto">Opción A · Mercado Municipal de Matosinhos <span>(Rua França Júnior · ma-vi 06:30-18:00)</span></div>
+              <div class="dish">La experiencia más local: comprar el pescado en el puesto y que <strong>te lo hagan a la brasa arriba</strong> (~7 € por cabeza, no todos los puestos lo ofrecen — pregunta). Ves la lonja del día de la ciudad pesquera.</div>
+            </div>
+            <div class="food-highlight" style="margin-top:0.5rem">
+              <div class="resto">Opción B · Lage Senhor do Padrão <span>(Rua Heróis de França 516)</span></div>
+              <div class="dish">Parrilla de calle de las de siempre, raciones grandes. Pedir <strong>lulas grelhadas</strong> o el pescado del día (dourada, robalo o pargo; la sardina es de verano) con <strong>batatas cozidas</strong>. "Sem alho". 15-25 €. ~450-600 kcal · 45-55 g P · 15-25 g G · 30-40 g C.</div>
+            </div>
+            <div class="activity-meta">
+              <span class="tag fodmap">✓ Brasa + patata cocida</span>
+              <span class="tag warning">⚠ Tito 2 cierra los miércoles</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🌊</div>
+          <div class="time-content">
+            <span class="time-label">14:30 — A pie a Leça da Palmeira (~35 min)</span>
+            <div class="activity-name">Ponte móvel de Leixões → Piscina das Marés</div>
+            <div class="activity-detail">Cruzas el puerto de Leixões por el puente basculante y sigues la Av. da Liberdade junto al mar. La <strong>Piscina das Marés</strong> (Siza, 1966, Monumento Nacional) son muros de hormigón metidos entre las rocas para que el agua del mar llene las piscinas: arquitectura que casi desaparece en el paisaje. <strong>Fuera de temporada está cerrada</strong>, pero se lee perfectamente desde el paseo. El contraste de Siza a los 33 años con el Serralves de la mañana es el hilo del día.</div>
+            <div class="activity-meta"><span class="tag free">Exterior gratis</span><span class="tag photo">📷 Hormigón · roca · oleaje</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🍵</div>
+          <div class="time-content">
+            <span class="time-label">15:30 — Opcional · Casa de Chá da Boa Nova</span>
+            <div class="activity-name">El primer Siza, sobre las rocas (1,3 km al norte)</div>
+            <div class="activity-detail">Salón de té de 1963 tendido sobre las rocas, tejado bajo de teja y madera. Hoy es restaurante con 2 estrellas Michelin (menú desde ~110 €), así que es <strong>foto de exterior</strong>. Si vas justo de tiempo o llueve, sáltatelo y ve directo a Foz.</div>
+            <div class="activity-meta"><span class="tag tip">Solo si vas bien de hora</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TARDE + NOCHE -->
+    <div class="day-card">
+      <div class="day-card-header atlantic">
+        <div class="card-block">Tarde · Noche</div>
+        <div class="card-date">16:00 — Foz do Douro</div>
+        <div class="card-title">Faro · ocaso · tranvía 1</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag transit">🚕</div>
+          <div class="time-content">
+            <span class="time-label">15:50 — Leça → Foz</span>
+            <div class="activity-name">Bolt ~10-12 € · ~15 min</div>
+            <div class="activity-detail">Deja que te deje en el Castelo do Queijo y baja paseando por la costa, o directamente en la Pérgola da Foz si vas tarde.</div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag golden">🌅</div>
+          <div class="time-content">
+            <span class="time-label">16:10 — Paseo de Foz hasta el faro · ocaso 17:12</span>
+            <div class="activity-name">Pérgola da Foz → Farol de Felgueiras</div>
+            <div class="activity-detail">La <strong>Pérgola da Foz</strong> (años 30, la columnata amarilla de las fotos) y luego el espigón con el <strong>faro de Felgueiras</strong> (1886), donde el Douro se encuentra con el Atlántico. En noviembre, con mar de fondo, <strong>las olas rompen por encima del espigón</strong>: la foto del viaje. Ponte de lado, desde la playa o el paseo, nunca sobre el muelle. Sol sobre el océano a las 17:12; quédate hasta la hora azul.</div>
+            <div class="activity-meta"><span class="tag photo">📷 1/1000 congela · 1/4 + trípode sedosa</span><span class="tag warning">⚠ No pisar el espigón con oleaje</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag transit">🚋</div>
+          <div class="time-content">
+            <span class="time-label">17:50 — Tranvía 1 de vuelta al centro</span>
+            <div class="activity-name">Passeio Alegre → Infante, junto al río (~25 min)</div>
+            <div class="activity-detail">El tranvía histórico de madera sigue la orilla del Douro con la ciudad encendiéndose. 6 €, se paga al conductor. <strong>Verificar el último del horario de invierno</strong> en stcp.pt antes de salir: si ya no hay, el <strong>bus 500</strong> hace la misma ruta hasta el centro con la Andante.</div>
+            <div class="activity-meta"><span class="tag price">6 €</span><span class="tag tip">Ventanilla del lado del río</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag food">🧂</div>
+          <div class="time-content">
+            <span class="time-label">18:45 — Cena (sin reserva, llegar antes de abrir)</span>
+            <div class="food-highlight">
+              <div class="resto">Taberna dos Mercadores <span>(Rua dos Mercadores 36, Ribeira · cena desde ~18:30-19:00)</span></div>
+              <div class="dish">Diminuta y muy querida, a 3 min de la parada de Infante. Pedir el <strong>peixe ao sal</strong> (pescado entero a la sal): sin ajo ni salsa, perfecto FODMAP. Lo famoso es el chorizo flambeado en la mesa (🔴 embutido, ajo). Para uno es más fácil entrar: ve directo al bajar del tranvía. 25-40 €.</div>
+            </div>
+            <div class="activity-meta"><span class="tag fodmap">✓ Peixe ao sal</span><span class="tag warning">Sin reservas para pocos · cola</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">☔</div>
+    <div class="backup-text"><strong>Plan lluvia:</strong> alarga Serralves (Gehry y la Casa dan para 3-4 h), come en Matosinhos y <strong>sáltate Leça</strong>. Foz con temporal es espectacular desde un sitio a cubierto: un café con cristalera frente al mar en la Av. Brasil. Si el IPMA da aviso naranja de oleaje, cambia el faro por el <strong>Mercado Bom Sucesso</strong> (Boavista, mercado de mediados del s.XX reconvertido en food hall) y la Casa da Música por dentro.</div>
+  </div>
+</div>
+
+<!-- ============ DÍA 3 — JUEVES ============ -->
+<div class="day-section">
+  <div class="day-header azulejo">
+    <div class="day-numeral">III</div>
+    <div class="day-info">
+      <h2>Jueves 19 — Libros, Miragaia y bodega</h2>
+      <p>Lello · Clérigos · Carmo · Miragaia · Virtudes · Palácio da Bolsa · Taylor's · Vuelo 21:55</p>
+    </div>
+    <div class="day-badge">Último día · salir 19:30</div>
+  </div>
+
+  <div class="days-grid">
+    <!-- MAÑANA -->
+    <div class="day-card">
+      <div class="day-card-header azulejo">
+        <div class="card-block">Mañana</div>
+        <div class="card-date">08:30 — Check-out</div>
+        <div class="card-title">Lello · Clérigos · Carmo</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag rest">🎒</div>
+          <div class="time-content">
+            <span class="time-label">08:30 — Check-out</span>
+            <div class="activity-name">Mochila en consigna del alojamiento hasta las 18:15</div>
+            <div class="activity-detail">Si no la guardan, hay consignas de pago junto a São Bento y Aliados. Desayuno rápido de camino.</div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">📚</div>
+          <div class="time-content">
+            <span class="time-label">09:00 — Primera franja · Livraria Lello</span>
+            <div class="activity-name">La librería neogótica de 1906 y su escalera roja</div>
+            <div class="activity-detail">A primera hora hay pocos minutos antes de que se llene, y es la mejor luz de la claraboya. <strong>La entrada se descuenta de cualquier libro</strong>: compra aquí el <strong>libro de cocina portuguesa</strong> del viaje (busca uno de tapa dura y muchas fotos, en español o inglés) y la visita sale gratis. Precio de la entrada a confirmar en la web oficial al reservar (~8-10 €).</div>
+            <div class="activity-meta"><span class="tag reserve">Reservar franja 09:00</span><span class="tag price">~8-10 € descontables</span><span class="tag photo">📷 Escalera desde abajo · f/2.8</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🗼</div>
+          <div class="time-content">
+            <span class="time-label">09:45 — Torre dos Clérigos</span>
+            <div class="activity-name">240 escalones de Nasoni (1763) · la vista de 360°</div>
+            <div class="activity-detail">La torre barroca fue durante siglos lo primero que veían los barcos al entrar por el Douro. Antes de las 10:00 llegas antes que los grupos (pico 11-12 h). Arriba: tejados de la Baixa, la Sé, el río y Gaia con luz de mañana. ~8-10 €, verificar.</div>
+            <div class="activity-meta"><span class="tag price">~8-10 €</span><span class="tag tip">Antes de las 10:00</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🟦</div>
+          <div class="time-content">
+            <span class="time-label">10:40 — Igreja do Carmo + Cordoaria</span>
+            <div class="activity-name">El gran lateral de azulejo y la casa de un metro</div>
+            <div class="activity-detail">La fachada lateral de la <strong>Igreja do Carmo</strong> es un muro entero de azulejo (1912) — el contrapunto en tamaño de la Capela das Almas. Pegada a ella está la <strong>Igreja dos Carmelitas</strong>, y entre ambas una casa de ~1 m de ancho que existía para que las dos órdenes no compartieran pared. Después, el <strong>Jardim da Cordoaria</strong>.</div>
+            <div class="activity-meta"><span class="tag free">Gratis</span><span class="tag photo">📷 Azulejo con tranvía 18 pasando</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MEDIODÍA -->
+    <div class="day-card">
+      <div class="day-card-header azulejo">
+        <div class="card-block">Mediodía</div>
+        <div class="card-date">11:15 — Miragaia</div>
+        <div class="card-title">Barrio ribereño · Virtudes</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🧺</div>
+          <div class="time-content">
+            <span class="time-label">11:15 — Bajar a Miragaia</span>
+            <div class="activity-name">Rua das Taipas → Rua de Miragaia · soportales y ropa tendida</div>
+            <div class="activity-detail">El barrio de pescadores y comerciantes al oeste de la Ribeira, con la misma arquitectura y una fracción de la gente: soportales de granito, fachadas de azulejo verde y amarillo, la Igreja de São Pedro de Miragaia. Calle pura: vecinos, gatos, ventanas. Junto al río, el edificio de la Alfândega (aduana del s.XIX).</div>
+            <div class="activity-meta"><span class="tag photo">📷 Calle · 35-50 mm · discreción</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag morning">🌿</div>
+          <div class="time-content">
+            <span class="time-label">12:10 — Jardim das Virtudes</span>
+            <div class="activity-name">Jardín en terrazas sobre Miragaia</div>
+            <div class="activity-detail">El mirador de los de aquí: bancales verdes que caen hacia los tejados de Miragaia, con el Douro y Gaia detrás. Tranquilo a mediodía; al ocaso se llena de gente joven del barrio.</div>
+            <div class="activity-meta"><span class="tag free">Gratis</span><span class="tag tip">Alternativa tranquila a los miradores famosos</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag food">🍽️</div>
+          <div class="time-content">
+            <span class="time-label">12:30 — Comida</span>
+            <div class="food-highlight">
+              <div class="resto">Taberna Santo António <span>(Rua das Virtudes 32 · ma-sá 12:00-15:00 · solo efectivo)</span></div>
+              <div class="dish">Tasca de barrio a 1 min del jardín. Pide el <strong>prato do dia</strong> si es pescado a la brasa o guisado sin cebolla. Lo famoso son las <strong>pataniscas de bacalhau</strong> (buñuelos planos — 🟠 rebozado de trigo, mejor 1-2 piezas compartiendo plato con ensalada) con vino blanco frío. 10-20 €.</div>
+            </div>
+            <div class="activity-meta"><span class="tag fodmap">✓ Pescado del día · 🟠 pataniscas</span><span class="tag warning">💶 Solo efectivo</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TARDE + NOCHE -->
+    <div class="day-card">
+      <div class="day-card-header azulejo">
+        <div class="card-block">Tarde · Salida</div>
+        <div class="card-date">14:00 — Bolsa y Gaia</div>
+        <div class="card-title">Salón Árabe · Taylor's · aeropuerto</div>
+      </div>
+      <div class="day-card-body">
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🕌</div>
+          <div class="time-content">
+            <span class="time-label">14:00 — Palácio da Bolsa</span>
+            <div class="activity-name">La antigua bolsa de comercio y su Salón Árabe</div>
+            <div class="activity-detail">Construido por la Asociación Comercial sobre el convento quemado de São Francisco (s.XIX). Solo con visita guiada (~30-45 min, el primero que compra en cada pase elige el idioma — llega pronto y pide español). El final es el <strong>Salão Árabe</strong>: neoárabe inspirado en la Alhambra, todo oro y estuco. Al lado, la <strong>Igreja de São Francisco</strong> (gótica por fuera, talha dorada barroca por dentro) si te queda energía.</div>
+            <div class="activity-meta"><span class="tag price">14 €</span><span class="tag rain">☔ A cubierto</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag afternoon">🍷</div>
+          <div class="time-content">
+            <span class="time-label">15:15 — Tablero inferior → Taylor's (Gaia)</span>
+            <div class="activity-name">Bodega de 1692 · audioguía a tu ritmo · terraza sobre la ciudad</div>
+            <div class="activity-detail">Cruzas por abajo y subes 10 min de cuesta por Rua do Choupelo. Taylor's es la mejor para ir solo: <strong>visita autoguiada con audio (~90 min)</strong>, la mayor bodega visitable, y la cata es un <strong>blanco seco + un oporto reserva</strong>. El vino de oporto es la razón histórica de que exista Gaia: los ingleses envejecían aquí lo que bajaba en rabelos del Douro. <strong>FODMAP: el blanco seco en ≤150 ml está bien; el oporto, solo un sorbo.</strong></div>
+            <div class="activity-meta"><span class="tag price">~25 €</span><span class="tag reserve">Reservar franja</span><span class="tag fodmap">🔴 Oporto: sorbo · ✓ blanco seco</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag golden">🌇</div>
+          <div class="time-content">
+            <span class="time-label">16:45 — Último ocaso (17:12) y hora azul</span>
+            <div class="activity-name">Cais de Gaia, frente a la Ribeira</div>
+            <div class="activity-detail">Segunda oportunidad de la foto del martes si llovió, o la versión a pie de agua: los rabelos amarrados en primer plano con la Ribeira detrás. Hora azul 17:31-17:42. Luego <strong>Teleférico de Gaia</strong> o escaleras hasta Jardim do Morro y <strong>metro D</strong> a Aliados (~5 min).</div>
+            <div class="activity-meta"><span class="tag photo">📷 Rabelos en primer término</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag food">🥖</div>
+          <div class="time-content">
+            <span class="time-label">18:15 — Recoger la mochila y cena temprana</span>
+            <div class="food-highlight">
+              <div class="resto">Casa Guedes Tradicional <span>(Praça dos Poveiros 130 · a diario 11:00-23:00)</span></div>
+              <div class="dish">El capricho final: <strong>sandes de pernil com queijo da serra</strong>, cerdo asado lento con queso de oveja fundido. 🔴 Pan de trigo y adobo que probablemente lleva ajo — es el único "pecado" del viaje, plenamente consciente. ~650-750 kcal · 38 g P · 30 g G · 60 g C. <em>Alternativa segura:</em> la planta alta del Bolhão (abierta hasta medianoche lu-sá) con algo a la plancha.</div>
+            </div>
+            <div class="activity-meta"><span class="tag fodmap">🔴 Capricho · alternativa ✓ Bolhão</span><span class="tag price">5-15 €</span></div>
+          </div>
+        </div>
+
+        <div class="time-block">
+          <div class="time-tag transit">✈️</div>
+          <div class="time-content">
+            <span class="time-label">19:30 — Trindade → Aeropuerto · VY1183 21:55</span>
+            <div class="activity-name">Metro E (Z4, 2,30 €) · ~35 min · llegada 00:35 a BCN</div>
+            <div class="activity-detail">En el aeropuerto a las ~20:10, de sobra con equipaje de mano. Llegas a El Prat a las <strong>00:35 del viernes</strong>: a esa hora ya no hay metro ni Rodalies; el <strong>Aerobús</strong> funciona hasta ~01:00 (verificar) o taxi. Tenlo resuelto antes de salir.</div>
+            <div class="activity-meta"><span class="tag transport">Metro E · Z4</span><span class="tag warning">⚠ Llegada 00:35 — transporte a BCN</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="backup">
+    <div class="backup-icon">☔</div>
+    <div class="backup-text"><strong>Plan lluvia:</strong> el jueves es el día más resistente al mal tiempo — Lello, Clérigos, Bolsa, São Francisco y Taylor's son interiores. Recorta Miragaia a lo esencial (Rua de Miragaia bajo los soportales) y come igual en Virtudes. Si sobra tiempo antes del aeropuerto, el <strong>Museu Nacional Soares dos Reis</strong> (escultura portuguesa del s.XIX, en el Palácio dos Carrancas, a 5 min de la Cordoaria) es la alternativa.</div>
+  </div>
+</div>
+
+<!-- ============ GASTRONOMÍA ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1.3rem">
+    <div class="divider-line"></div><div class="divider-tile"></div>
+    <div class="divider-text">Guía gastronómica · FODMAP</div>
+    <div class="divider-tile"></div><div class="divider-line"></div>
+  </div>
+
+  <div class="sub-label">Semáforo de platos del norte</div>
+  <div class="dish-grid">
+    <div class="dish-card">
+      <div class="dname">Peixe grelhado <small>· pescado a la brasa</small></div>
+      <div class="ddesc">Dourada, robalo, pargo, carapau, sobre carbón, con patata cocida y aceite. <strong>El plato del viaje.</strong> Pedir "sem alho".</div>
+      <div class="dkcal">~450-600 kcal · 45-55 g P · 15-25 g G · 30-40 g C</div>
+    </div>
+    <div class="dish-card">
+      <div class="dname">Peixe ao sal <small>· pescado a la sal</small></div>
+      <div class="ddesc">Entero, en costra de sal. Sin salsa ni ajo: FODMAP perfecto. Taberna dos Mercadores.</div>
+      <div class="dkcal">~400-500 kcal · 50 g P · 15 g G · 25 g C (con patata)</div>
+    </div>
+    <div class="dish-card">
+      <div class="dname">Lulas / polvo grelhado <small>· calamar o pulpo a la brasa</small></div>
+      <div class="ddesc">Seguro si es a la brasa con aceite y limón. El <em>polvo à lagareiro</em> lleva láminas de ajo: pedirlo sin, o apartarlas.</div>
+      <div class="dkcal">~400-550 kcal · 40 g P · 20 g G · 30 g C</div>
+    </div>
+    <div class="dish-card">
+      <div class="dname">Bacalhau assado com batatas a murro</div>
+      <div class="ddesc">Bacalao asado con patatas "a puñetazo" y aceite. ✅ Mejor que el Gomes de Sá (cebolla) o el à Brás (cebolla + patata frita).</div>
+      <div class="dkcal">~550-700 kcal · 45 g P · 25-35 g G · 40 g C</div>
+    </div>
+    <div class="dish-card amber">
+      <div class="dname">Pastel de nata</div>
+      <div class="ddesc">🟠 Hojaldre de trigo + crema con leche. Uno de capricho, mejor recién hecho y templado.</div>
+      <div class="dkcal">~220-250 kcal · 3 g P · 12 g G · 27 g C</div>
+    </div>
+    <div class="dish-card amber">
+      <div class="dname">Caldo verde</div>
+      <div class="ddesc">🟠 La col rizada es segura, pero la base de patata suele llevar cebolla y ajo. Preguntar.</div>
+      <div class="dkcal">~150-200 kcal el bol</div>
+    </div>
+    <div class="dish-card amber">
+      <div class="dname">Pataniscas / filetes de polvo</div>
+      <div class="ddesc">🟠 Rebozados de trigo. 1-2 piezas compartiendo plato con ensalada o patata, no como plato entero.</div>
+      <div class="dkcal">~90-120 kcal por patanisca</div>
+    </div>
+    <div class="dish-card red">
+      <div class="dname">Francesinha</div>
+      <div class="ddesc">🔴 Pan de trigo, embutidos, filete, queso, huevo y salsa de cerveza con cebolla y ajo. Saltarla o probar un trozo de la de otro.</div>
+      <div class="dkcal">~1.200-1.500 kcal</div>
+    </div>
+    <div class="dish-card red">
+      <div class="dname">Tripas à moda do Porto · bifana · cachorrinho</div>
+      <div class="ddesc">🔴 Las tripas llevan alubia blanca; bifana y cachorrinho, adobo con mucho ajo y pan de trigo.</div>
+      <div class="dkcal">Bifana ~450 kcal · tripas ~700 kcal</div>
+    </div>
+    <div class="dish-card red">
+      <div class="dname">Vino de oporto</div>
+      <div class="ddesc">🔴 Vino dulce fortificado, rico en fructosa: solo un sorbo en la cata. Para beber, <strong>vino seco del Douro o vinho verde ≤150 ml</strong>.</div>
+      <div class="dkcal">Oporto ~75 kcal / 50 ml · blanco seco ~120 kcal / 150 ml</div>
+    </div>
+  </div>
+
+  <div class="sub-label">Dónde comer, por día</div>
+  <div class="resto-grid">
+    <div class="resto-card">
+      <h4>Mercado do Bolhão</h4>
+      <div class="where">Baixa · lu-vi 08:00-20:00, sá 08:00-18:00 · cierra domingo · planta alta hasta 00:00</div>
+      <p>Desayuno del martes y plan B de la cena del jueves. Abajo, conservas (Minerva tiene tienda propia) para traer a casa: sardinas, caballa, pulpo — todo FODMAP-seguro.</p>
+      <div class="meta"><span class="tag fodmap">✓ Conservas</span><span class="tag tip">Mar desayuno · jue plan B</span></div>
+    </div>
+    <div class="resto-card">
+      <h4>Taxca "A Badalhoca"</h4>
+      <div class="where">Rua da Picaria 26 · lu-sá 12:00-22:30</div>
+      <p>Tasca de barra: sandes de presunto y vino en malga. Comida del martes, rápida antes de la siesta.</p>
+      <div class="meta"><span class="tag price">5-12 €</span><span class="tag fodmap">🟠 Pan</span></div>
+    </div>
+    <div class="resto-card">
+      <h4>Adega São Nicolau</h4>
+      <div class="where">Rua de São Nicolau 1, Ribeira · lu-sá · cierra domingo</div>
+      <p>Cena del martes. Filetes de polvo (🟠) o pescado del día a la brasa (✓). Reservar.</p>
+      <div class="meta"><span class="tag price">20-35 €</span><span class="tag reserve">Reservar</span></div>
+    </div>
+    <div class="resto-card">
+      <h4>Mercado de Matosinhos · Lage Senhor do Padrão</h4>
+      <div class="where">Rua França Júnior · Rua Heróis de França 516</div>
+      <p>Comida del miércoles. Pescado del puesto a la brasa en el mercado, o parrilla clásica de la calle de las parrillas. O Gaveto (Rua Roberto Ivens 826) es la referencia de marisco de los portuenses si quieres darte un homenaje — más caro.</p>
+      <div class="meta"><span class="tag price">7-25 €</span><span class="tag fodmap">✓ Brasa</span></div>
+    </div>
+    <div class="resto-card">
+      <h4>Taberna dos Mercadores</h4>
+      <div class="where">Rua dos Mercadores 36, Ribeira · ma-sá (algunas fuentes: también domingo)</div>
+      <p>Cena del miércoles. Peixe ao sal. Sin reservas para pocos comensales: llegar antes de abrir.</p>
+      <div class="meta"><span class="tag price">25-40 €</span><span class="tag fodmap">✓ Peixe ao sal</span></div>
+    </div>
+    <div class="resto-card">
+      <h4>Taberna Santo António</h4>
+      <div class="where">Rua das Virtudes 32 · ma-sá 12:00-15:00 y 19:00-22:00 · solo efectivo</div>
+      <p>Comida del jueves. Prato do dia y pataniscas con blanco frío. Barrio puro.</p>
+      <div class="meta"><span class="tag price">10-20 €</span><span class="tag warning">💶 Efectivo</span></div>
+    </div>
+    <div class="resto-card">
+      <h4>Casa Guedes Tradicional</h4>
+      <div class="where">Praça dos Poveiros 130 · a diario 11:00-23:00 (la original, no la de al lado)</div>
+      <p>El bocadillo de pernil con queso da serra. Capricho de despedida, plenamente asumido.</p>
+      <div class="meta"><span class="tag price">5-15 €</span><span class="tag fodmap">🔴 Capricho</span></div>
+    </div>
+    <div class="resto-card">
+      <h4>Para no comer (o solo mirar)</h4>
+      <div class="where">Cais da Ribeira, primera línea</div>
+      <p>Bien para un café con vistas o un vino al ocaso; mal para cenar. Señales: captador en la puerta, menú plastificado con fotos, "tourist menu".</p>
+      <div class="meta"><span class="tag warning">⚠ Trampa</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SPOTS FOTOGRÁFICOS ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1.3rem">
+    <div class="divider-line"></div><div class="divider-tile"></div>
+    <div class="divider-text">Spots fotográficos</div>
+    <div class="divider-tile"></div><div class="divider-line"></div>
+  </div>
+
+  <div class="photo-grid">
+    <div class="photo-card wide">
+      <h4>⚙ Equipo y la regla de la ciudad</h4>
+      <div class="photo-detail"><strong>Sigma 18-50 f/2.8 todo el viaje</strong>: interiores de São Bento y Lello sin flash, calle en callejas oscuras y hora azul. El 16-50 de kit, solo de respaldo. <strong>Trípode ligero sí</strong>: hay tres horas azules sobre el río y son la foto de Oporto. <strong>La regla:</strong> la ciudad es una ladera mirando al sur sobre el Douro, así que la Ribeira se fotografía <strong>desde Gaia</strong> y Gaia desde la Ribeira — y la luz buena sobre las fachadas de la Ribeira es la de última hora, cuando el sol baja por el OSO. Con lluvia, baja al suelo: el granito mojado es un espejo.</div>
+      <div class="photo-meta">Aplica a todos los días</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Serra do Pilar</h4>
+      <div class="photo-detail">La panorámica de la Ribeira, el Ponte Luís I y la Sé. Golden hour lateral sobre las fachadas, después hora azul con la ciudad encendida.</div>
+      <div class="photo-meta">Mar 16:35-17:45 · 18-50 · trípode</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Cais de Gaia a ras de agua</h4>
+      <div class="photo-detail">Rabelos amarrados en primer término, Ribeira iluminada detrás, río alisado con 10 s. La foto de postal hecha bien.</div>
+      <div class="photo-meta">Mar y jue · hora azul · f/8 · 5-15 s</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Vestíbulo de São Bento</h4>
+      <div class="photo-detail">Azulejos de pared a techo con viajeros cruzando. Velocidad lenta para fantasmas de movimiento, o encuadre vertical de un panel con una persona para escala.</div>
+      <div class="photo-meta">Mar mañana · f/2.8 · 1/15-1/30</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Ponte Luís I, tablero superior</h4>
+      <div class="photo-detail">Mirando río abajo hacia la Ribeira, con la estructura de hierro en primer plano y el metro D cruzando. Alternativa: desde abajo, el arco contra el cielo.</div>
+      <div class="photo-meta">Mar 16:25 · 18 mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Serralves</h4>
+      <div class="photo-detail">Siza en blanco: busca las ventanas que encuadran el parque, rampas y pasillos con luz cenital. El parque en otoño, con hojas rojas contra los muros blancos. Verifica en taquilla si hay restricciones de foto en salas de exposición.</div>
+      <div class="photo-meta">Mié mañana · 18-35 mm</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Piscina das Marés</h4>
+      <div class="photo-detail">Muros de hormigón horizontales contra roca negra y espuma. Composición minimalista; con mar movido, exposición de 1/2 s para que el agua rodee las rocas.</div>
+      <div class="photo-meta">Mié 14:45 · 18-50 · ND si tienes</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Farol de Felgueiras</h4>
+      <div class="photo-detail">El faro con una ola rompiendo por encima del espigón. Ráfaga a 1/1000 con el 50 mm desde la playa del Molhe o el paseo. Con el sol cayendo detrás del mar, silueta.</div>
+      <div class="photo-meta">Mié 16:30-17:40 · 50 mm · ráfaga</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Escalera de Lello</h4>
+      <div class="photo-detail">Desde el pie de la escalera hacia arriba, con la vidriera del techo. Tendrás segundos sin gente: ten el encuadre decidido antes de entrar.</div>
+      <div class="photo-meta">Jue 09:00 · 18 mm · f/2.8</div>
+    </div>
+    <div class="photo-card">
+      <h4>📷 Miragaia</h4>
+      <div class="photo-detail">Soportales de granito, ropa tendida, azulejo verde en fachadas estrechas. Calle discreta con 35-50 mm. Es barrio vivo: nada de apuntar a ventanas.</div>
+      <div class="photo-meta">Jue 11:15 · 35-50 mm</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESERVAS ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1.3rem">
+    <div class="divider-line"></div><div class="divider-tile"></div>
+    <div class="divider-text">A reservar / verificar</div>
+    <div class="divider-tile"></div><div class="divider-line"></div>
+  </div>
+
+  <div class="booking-list">
+    <div class="booking-item">
+      <div class="booking-dot done"></div>
+      <div>
+        <div class="booking-name">Vuelos Vueling VY1170 / VY1183</div>
+        <div class="booking-when">Mar 17 07:10 BCN → OPO · Jue 19 21:55 OPO → BCN · reservados</div>
+      </div>
+      <div class="booking-urgency">✅ Hecho</div>
+      <div class="booking-price">85 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot red"></div>
+      <div>
+        <div class="booking-name">Maleta de cabina en la reserva Vueling</div>
+        <div class="booking-when">Comprobar si los 85 € la incluyen. Si no, añadirla online <strong>esta semana</strong>: en puerta 45-75 €</div>
+      </div>
+      <div class="booking-urgency">🔴 Ya</div>
+      <div class="booking-price">~10-40 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot red"></div>
+      <div>
+        <div class="booking-name">Alojamiento 2 noches · Baixa / Trindade</div>
+        <div class="booking-when">Cancelación gratuita + consigna de equipaje el martes por la mañana y el jueves por la tarde · <strong>antes del 31 oct</strong></div>
+      </div>
+      <div class="booking-urgency">🔴 Esta semana</div>
+      <div class="booking-price">~100-165 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot red"></div>
+      <div>
+        <div class="booking-name">Transporte a El Prat mar 05:15 y desde El Prat vie 00:35</div>
+        <div class="booking-when">Primer Aerobús / taxi de madrugada · último Aerobús o taxi a la llegada · depende de dónde duermas en Barcelona</div>
+      </div>
+      <div class="booking-urgency">🔴 Antes del 10 nov</div>
+      <div class="booking-price">~15-60 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot yellow"></div>
+      <div>
+        <div class="booking-name">Adega São Nicolau — cena mar 17, 19:00</div>
+        <div class="booking-when">Llamar o reservar con días de antelación · pedir mesa para uno</div>
+      </div>
+      <div class="booking-urgency">🟡 Antes del 10 nov</div>
+      <div class="booking-price">20-35 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot yellow"></div>
+      <div>
+        <div class="booking-name">Livraria Lello — franja jue 19, 09:00</div>
+        <div class="booking-when">livrarialello.pt · entrada descontable de un libro · confirmar precio y horario oficial</div>
+      </div>
+      <div class="booking-urgency">🟡 1 semana antes</div>
+      <div class="booking-price">~8-10 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot yellow"></div>
+      <div>
+        <div class="booking-name">Serralves — entrada general mié 18</div>
+        <div class="booking-when">serralves.pt · museo + Casa + parque · confirmar horario de invierno (oct-mar) · "The Century of Gehry" hasta el 10 ene 2027</div>
+      </div>
+      <div class="booking-urgency">🟡 Pocos días antes</div>
+      <div class="booking-price">24 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot yellow"></div>
+      <div>
+        <div class="booking-name">Taylor's — visita autoguiada jue 19, ~15:30</div>
+        <div class="booking-when">Online · ~90 min · blanco seco + oporto reserva</div>
+      </div>
+      <div class="booking-urgency">🟡 Pocos días antes</div>
+      <div class="booking-price">~25 €</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Horarios a verificar la semana del viaje</div>
+        <div class="booking-when">Último tranvía 1 de invierno (stcp.pt) · visitas Casa da Música · Torre dos Clérigos · claustro de la Sé · Palácio da Bolsa · previsión y oleaje en IPMA</div>
+      </div>
+      <div class="booking-urgency">🟢 14 nov</div>
+      <div class="booking-price">—</div>
+    </div>
+    <div class="booking-item">
+      <div class="booking-dot green"></div>
+      <div>
+        <div class="booking-name">Sin reserva</div>
+        <div class="booking-when">Taberna dos Mercadores (llegar antes de abrir) · Taberna Santo António · Taxca · Casa Guedes · Mercado do Bolhão · Mercado de Matosinhos · Torre dos Clérigos · Palácio da Bolsa · tranvía 1 · tarjeta Andante en el aeropuerto</div>
+      </div>
+      <div class="booking-urgency">🟢 Libre</div>
+      <div class="booking-price">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PRESUPUESTO ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1.3rem">
+    <div class="divider-line"></div><div class="divider-tile"></div>
+    <div class="divider-text">Presupuesto estimado</div>
+    <div class="divider-tile"></div><div class="divider-line"></div>
+  </div>
+
+  <div class="budget-box">
+    <div class="budget-row"><span class="budget-label">Vuelos BCN ⇄ OPO (Vueling)</span><span class="budget-value">85 €</span></div>
+    <div class="budget-row"><span class="budget-label">Maleta de cabina<small>Solo si la tarifa no la incluye</small></span><span class="budget-value">0-40 €</span></div>
+    <div class="budget-row"><span class="budget-label">Alojamiento 2 noches · Baixa<small>Rango de las opciones vistas en Booking el 10 oct</small></span><span class="budget-value">100-165 €</span></div>
+    <div class="budget-row"><span class="budget-label">Tasa turística (3 €/noche)</span><span class="budget-value">6 €</span></div>
+    <div class="budget-row"><span class="budget-label">Transporte en Oporto<small>Andante + 2 × Z4 + ~6 × Z2 · tranvía 1 · 3 trayectos Bolt</small></span><span class="budget-value">~45 €</span></div>
+    <div class="budget-row"><span class="budget-label">Transporte El Prat ida y vuelta<small>Aerobús ~15 € o taxi de madrugada hasta ~60 €</small></span><span class="budget-value">15-60 €</span></div>
+    <div class="budget-row"><span class="budget-label">Entradas<small>Serralves 24 · Taylor's 25 · Clérigos ~10 · Bolsa 14 · claustro Sé ~4</small></span><span class="budget-value">~77 €</span></div>
+    <div class="budget-row"><span class="budget-label">Comidas<small>3 desayunos ~18 · 3 comidas ~45 · 3 cenas ~85 · cafés y caprichos ~15</small></span><span class="budget-value">~165 €</span></div>
+    <div class="budget-row"><span class="budget-label">Libro de cocina (Lello descuenta su entrada)</span><span class="budget-value">25-40 €</span></div>
+    <div class="budget-row total"><span class="budget-label">Total estimado</span><span class="budget-value">~580 € (rango 520-685 €)</span></div>
+  </div>
+</div>
+
+<!-- ============ CHECKLIST ============ -->
+<div class="section-block">
+  <div class="divider" style="padding:0;margin-bottom:1.3rem">
+    <div class="divider-line"></div><div class="divider-tile"></div>
+    <div class="divider-text">Checklist pre-viaje</div>
+    <div class="divider-tile"></div><div class="divider-line"></div>
+  </div>
+
+  <div class="check-grid">
+    <div class="check-card">
+      <h4>🪪 Documentos</h4>
+      <div class="check-item">DNI (vuelo Schengen, sin pasaporte)</div>
+      <div class="check-item">Tarjeta de embarque en la app de Vueling</div>
+      <div class="check-item">Tarjeta sanitaria europea</div>
+      <div class="check-item">Confirmación del alojamiento + condiciones de consigna</div>
+    </div>
+    <div class="check-card">
+      <h4>💶 Dinero y conectividad</h4>
+      <div class="check-item">Tarjeta contactless + ~40 € en efectivo (tascas)</div>
+      <div class="check-item">Roaming UE: tu tarifa funciona igual, sin eSIM</div>
+      <div class="check-item">Batería externa (fotos + mapas todo el día)</div>
+    </div>
+    <div class="check-card">
+      <h4>📱 Apps</h4>
+      <div class="check-item">Vueling</div>
+      <div class="check-item">Google Maps con la zona descargada offline</div>
+      <div class="check-item">Bolt y/o Uber con la tarjeta ya añadida</div>
+      <div class="check-item">Metro do Porto / STCP (horarios del tranvía 1 y bus 500)</div>
+      <div class="check-item">IPMA (tiempo y avisos de oleaje)</div>
+    </div>
+    <div class="check-card">
+      <h4>🎒 Mochila</h4>
+      <div class="check-item">Sony a6400 + Sigma 18-50 f/2.8 + kit 16-50 de respaldo</div>
+      <div class="check-item">Trípode ligero, 2 baterías, tarjetas, gamuza (spray del mar en Foz)</div>
+      <div class="check-item">Impermeable con capucha + capa térmica (8-16 °C)</div>
+      <div class="check-item">Calzado con buena suela para granito mojado</div>
+      <div class="check-item">Snacks FODMAP-seguros para el madrugón y el aeropuerto</div>
+    </div>
+    <div class="check-card">
+      <h4>🩺 Salud</h4>
+      <div class="check-item">Sin vacunas ni requisitos sanitarios para Portugal</div>
+      <div class="check-item">Medicación habitual en el equipaje de mano</div>
+    </div>
+    <div class="check-card">
+      <h4>⏰ Fechas clave</h4>
+      <div class="check-item">Esta semana: maleta de cabina + alojamiento</div>
+      <div class="check-item">Antes del 10 nov: Adega São Nicolau + traslados a El Prat</div>
+      <div class="check-item">~12 nov: Lello, Serralves, Taylor's</div>
+      <div class="check-item">14 nov: previsión y reordenar días si hace falta</div>
+    </div>
+  </div>
+</div>
+
+<div class="tile-strip" style="margin-top:3rem"></div>
+<div class="footer" style="margin-top:0">
+  <p>Oporto · Azulejo &amp; Atlántico · 17-19 noviembre 2026</p>
+</div>
+
+</body>
+</html>
