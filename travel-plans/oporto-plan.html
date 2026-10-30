@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oporto — Azulejo, Douro y Atlántico</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -301,18 +302,21 @@
     border: 1px solid rgba(29,61,120,0.08);
   }
   .day-card-header {
-    padding: 0.9rem 1.2rem 0.7rem;
+    padding: 0.85rem 1.2rem 0.7rem;
     border-bottom: 1px solid var(--glaze);
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "block place" "date date";
     align-items: baseline;
-    gap: 0.75rem;
+    column-gap: 0.75rem;
+    row-gap: 0.25rem;
   }
   .day-card-header.ribeira  { background: rgba(122,29,45,0.06); }
   .day-card-header.atlantic { background: rgba(29,74,90,0.07); }
   .day-card-header.azulejo  { background: rgba(29,61,120,0.06); }
-  .card-block { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-light); }
-  .card-date  { font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600; color: var(--ink); white-space: nowrap; }
-  .card-title { font-style: italic; font-size: 0.85rem; color: var(--ink-light); margin-left: auto; text-align: right; }
+  .card-block { grid-area: block; font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-light); white-space: nowrap; }
+  .card-date  { grid-area: date; text-align: center; font-family: 'Cinzel', serif; font-size: 0.95rem; font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .card-title { grid-area: place; text-align: right; font-style: italic; font-size: 0.85rem; color: var(--ink-light); line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .day-card-body { padding: 1rem 1.2rem; }
 
   /* ---- TIME BLOCKS ---- */
@@ -550,7 +554,118 @@
     .backup { margin-left: 1rem; margin-right: 1rem; }
     .booking-item { grid-template-columns: auto 1fr; }
     .booking-urgency, .booking-price { grid-column: 2; }
-    .card-title { display: none; }
+  }
+
+  /* ---- MAPA (colapsable) ---- */
+  .map-panel {
+    margin: 0 2rem 2rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid rgba(29,61,120,0.08);
+    box-shadow: 0 2px 12px rgba(29,61,120,0.07);
+    overflow: hidden;
+  }
+  .map-panel > summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.9rem 1.2rem;
+    border-left: 3px solid var(--cobalt);
+    user-select: none;
+  }
+  .map-panel > summary::-webkit-details-marker { display: none; }
+  .map-panel > summary:hover { background: rgba(29,61,120,0.03); }
+  .map-sum-icon {
+    width: 2.2rem; height: 2.2rem; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background-color: var(--cobalt-mid);
+    background-image: var(--azulejo);
+    background-size: 22px 22px;
+    color: white; font-size: 1rem; border-radius: 2px;
+  }
+  .map-sum-text { display: flex; flex-direction: column; min-width: 0; }
+  .map-sum-title { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em; color: var(--ink); }
+  .map-sum-sub { font-size: 0.82rem; font-style: italic; color: var(--ink-light); }
+  .chev {
+    margin-left: auto; flex-shrink: 0;
+    width: 0.6rem; height: 0.6rem;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    transform: rotate(45deg); transition: transform 0.2s ease;
+    margin-right: 0.3rem; margin-top: -0.25rem;
+  }
+  .map-panel > summary .chev { color: var(--ink-light); }
+  .map-panel[open] > summary .chev { transform: rotate(-135deg); margin-top: 0.25rem; }
+  .map-body { padding: 0 1.2rem 1.1rem; border-top: 1px solid var(--glaze); }
+  .map-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.9rem 0 0.8rem; }
+  .map-filters button {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 0.4rem 0.8rem; border-radius: 2px; cursor: pointer;
+    border: 1px solid var(--glaze); background: var(--porcelain); color: var(--ink-mid);
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .map-filters button i { width: 9px; height: 9px; display: inline-block; transform: rotate(45deg); }
+  .map-filters button.active { background: var(--ink); border-color: var(--ink); color: var(--porcelain); }
+  #trip-map .leaflet-control-layers { border: 1px solid var(--glaze); border-radius: 3px; box-shadow: 0 2px 8px rgba(29,61,120,0.15); font-family: 'Crimson Pro', Georgia, serif; font-size: 0.85rem; color: var(--ink); }
+  #trip-map .leaflet-control-layers-expanded { padding: 0.4rem 0.7rem 0.4rem 0.5rem; }
+  #trip-map .leaflet-control-layers-base label { margin: 0.15rem 0; cursor: pointer; }
+  #trip-map .leaflet-control-layers-selector { accent-color: var(--cobalt); }
+  #trip-map { height: 440px; border-radius: 4px; border: 1px solid var(--glaze); background: var(--glaze); z-index: 0; }
+  .map-hint { font-size: 0.78rem; font-style: italic; color: var(--ink-light); margin-top: 0.5rem; }
+  .map-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.7rem; }
+  .map-chip {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.8rem; color: var(--ink-mid); text-decoration: none;
+    padding: 0.2rem 0.6rem 0.2rem 0.25rem; border-radius: 99px;
+    background: var(--porcelain); border: 1px solid var(--glaze);
+  }
+  .map-chip:hover { border-color: var(--cobalt-light); color: var(--ink); }
+  .map-chip b {
+    width: 1.25rem; height: 1.25rem; border-radius: 50%; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-size: 0.65rem; font-weight: 600; font-family: 'Cinzel', serif;
+  }
+  .pin {
+    width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+  }
+  .pin span { transform: rotate(45deg); color: white; font: 600 11px 'Cinzel', serif; }
+  .pin.base { background: var(--gold); width: 30px; height: 30px; }
+  .pin.base span { font-size: 13px; }
+  .leaflet-tooltip.trip-tip {
+    font-family: 'Crimson Pro', Georgia, serif; font-size: 0.85rem; color: var(--ink);
+    border: 1px solid var(--glaze); border-radius: 3px; box-shadow: 0 2px 8px rgba(29,61,120,0.15); padding: 0.3rem 0.55rem;
+  }
+  .trip-tip small { display: block; color: var(--ink-light); font-style: italic; }
+
+  .fold-body { padding: 1rem 1.2rem 1.2rem; border-top: 1px solid var(--glaze); background: var(--porcelain); }
+  .fold-panel .info-card { box-shadow: none; }
+  /* ---- DÍAS COLAPSABLES ---- */
+  .days-toolbar { display: flex; justify-content: flex-end; gap: 0.4rem; margin: 0 2rem 0.8rem; }
+  .days-toolbar button {
+    font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 0.35rem 0.75rem; border: 1px solid var(--glaze); background: white; color: var(--ink-mid);
+    border-radius: 2px; cursor: pointer;
+  }
+  .days-toolbar button:hover { border-color: var(--cobalt-light); color: var(--ink); }
+  .day-header { cursor: pointer; user-select: none; }
+  .day-header:focus-visible { outline: 2px solid var(--gold-light); outline-offset: -4px; }
+  .day-header .chev { color: rgba(255,255,255,0.75); margin-left: 0.6rem; }
+  .day-section.collapsed .day-header .chev { transform: rotate(-45deg); margin-top: 0; }
+  .day-section:not(.collapsed) .day-header .chev { transform: rotate(45deg); }
+  .day-section.collapsed .day-body { display: none; }
+  .day-section.collapsed { margin-bottom: 0.6rem; }
+  .day-section.collapsed .day-header { margin-bottom: 0; }
+
+  @media (max-width: 600px) {
+    .map-panel { margin: 0 1rem 2rem; }
+    .map-body { padding: 0 0.8rem 0.9rem; }
+    .fold-body { padding: 0.8rem; }
+    #trip-map { height: 360px; }
+    .days-toolbar { margin: 0 1rem 0.8rem; }
+    .day-header .chev { position: absolute; right: 1.1rem; top: 1.6rem; }
   }
 </style>
 </head>
@@ -594,14 +709,40 @@
   <div class="light-note">Hora local de Portugal (UTC+0), calculado para Oporto. ~9 h 50 min de luz. Regla del viaje: <strong>en el mirador a las 16:30</strong>, y no te vayas al ponerse el sol — la hora azul sobre la Ribeira iluminada es la mejor foto de la ciudad.</div>
 </div>
 
-<!-- ============ CONTEXTO LOCAL ============ -->
-<div class="divider">
-  <div class="divider-line"></div><div class="divider-tile"></div>
-  <div class="divider-text">Contexto local &amp; práctico</div>
-  <div class="divider-tile"></div><div class="divider-line"></div>
-</div>
+<!-- ============ MAPA ============ -->
+<details class="map-panel" id="map-panel">
+  <summary>
+    <span class="map-sum-icon">🗺️</span>
+    <span class="map-sum-text">
+      <span class="map-sum-title">Mapa del viaje</span>
+      <span class="map-sum-sub">Los tres días sobre el plano · toca un punto para abrirlo en Google Maps</span>
+    </span>
+    <span class="chev"></span>
+  </summary>
+  <div class="map-body">
+    <div class="map-filters" id="map-filters">
+      <button class="active" data-day="all">Todos</button>
+      <button data-day="1"><i style="background:#8a2f2a"></i>Mar 17</button>
+      <button data-day="2"><i style="background:#1d4a5a"></i>Mié 18</button>
+      <button data-day="3"><i style="background:#1d3d78"></i>Jue 19</button>
+    </div>
+    <div id="trip-map" role="region" aria-label="Mapa interactivo del viaje"></div>
+    <div class="map-hint">El número sigue el orden del día. ★ = Lost Inn. Arriba a la derecha (▤) cambias el estilo del mapa. Pasa el ratón para ver el nombre; un clic abre el sitio en Google Maps.</div>
+    <div class="map-chips" id="map-chips"></div>
+  </div>
+</details>
 
-<div class="section-block">
+<!-- ============ CONTEXTO LOCAL ============ -->
+<details class="map-panel fold-panel" id="context-panel">
+  <summary>
+    <span class="map-sum-icon">🧭</span>
+    <span class="map-sum-text">
+      <span class="map-sum-title">Contexto local &amp; práctico</span>
+      <span class="map-sum-sub">Cómo moverse · pagos y propinas · frases · barrios · errores típicos · seguridad</span>
+    </span>
+    <span class="chev"></span>
+  </summary>
+  <div class="fold-body">
   <div class="cards-grid">
     <div class="info-card">
       <h4>🚇 Cómo se mueve la gente</h4>
@@ -652,18 +793,23 @@
       <div class="card-item">Emergencias: <strong>112</strong>. TSE válida en el sistema público (SNS).</div>
     </div>
   </div>
-</div>
+  </div>
+</details>
+
+<div class="days-toolbar"><button type="button" data-days="expand">Expandir días</button><button type="button" data-days="collapse">Colapsar días</button></div>
 
 <!-- ============ DÍA 1 — MARTES ============ -->
-<div class="day-section">
-  <div class="day-header ribeira">
+<div class="day-section" data-day-section>
+  <div class="day-header ribeira" role="button" tabindex="0" aria-expanded="true">
     <div class="day-numeral">I</div>
     <div class="day-info">
       <h2>Martes 17 — Azulejo, granito y río</h2>
       <p>Bolhão · Capela das Almas · São Bento · Sé · Ponte Luís I · Ocaso en Gaia · Ribeira de noche</p>
     </div>
     <div class="day-badge">Madrugón · ritmo suave</div>
+    <span class="chev" aria-hidden="true"></span>
   </div>
+  <div class="day-body">
 
   <div class="days-grid">
     <!-- MAÑANA -->
@@ -843,18 +989,21 @@
     <div class="backup-icon">☔</div>
     <div class="backup-text"><strong>Plan lluvia:</strong> la mañana ya es casi toda bajo techo (Bolhão, São Bento). Por la tarde, cambia el mirador de Gaia por el <strong>Palácio da Bolsa</strong> (Salón Árabe, ~14 €) y un oporto seco en la bodega más cercana al puente, y sal a la Ribeira solo para la hora azul: con el suelo mojado los reflejos son aún mejores. Si se nubla del todo, el ocaso desde Serra do Pilar se puede intentar de nuevo el jueves desde Gaia.</div>
   </div>
+  </div>
 </div>
 
 <!-- ============ DÍA 2 — MIÉRCOLES ============ -->
-<div class="day-section">
-  <div class="day-header atlantic">
+<div class="day-section" data-day-section>
+  <div class="day-header atlantic" role="button" tabindex="0" aria-expanded="true">
     <div class="day-numeral">II</div>
     <div class="day-info">
       <h2>Miércoles 18 — Arquitectura y Atlántico</h2>
       <p>Casa da Música · Serralves (Siza + Gehry) · Matosinhos · Piscina das Marés · Faro de Felgueiras</p>
     </div>
     <div class="day-badge">El día del viaje</div>
+    <span class="chev" aria-hidden="true"></span>
   </div>
+  <div class="day-body">
 
   <div class="days-grid">
     <!-- MAÑANA -->
@@ -1028,18 +1177,21 @@
     <div class="backup-icon">☔</div>
     <div class="backup-text"><strong>Plan lluvia:</strong> alarga Serralves (Gehry y la Casa dan para 3-4 h), come en Matosinhos y <strong>sáltate Leça</strong>. Foz con temporal es espectacular desde un sitio a cubierto: un café con cristalera frente al mar en la Av. Brasil. Si el IPMA da aviso naranja de oleaje, cambia el faro por el <strong>Mercado Bom Sucesso</strong> (Boavista, mercado de mediados del s.XX reconvertido en food hall) y la Casa da Música por dentro.</div>
   </div>
+  </div>
 </div>
 
 <!-- ============ DÍA 3 — JUEVES ============ -->
-<div class="day-section">
-  <div class="day-header azulejo">
+<div class="day-section" data-day-section>
+  <div class="day-header azulejo" role="button" tabindex="0" aria-expanded="true">
     <div class="day-numeral">III</div>
     <div class="day-info">
       <h2>Jueves 19 — Libros, Miragaia y bodega</h2>
       <p>Lello · Clérigos · Carmo · Miragaia · Virtudes · Palácio da Bolsa · Taylor's · Vuelo 21:55</p>
     </div>
     <div class="day-badge">Último día · salir 19:30</div>
+    <span class="chev" aria-hidden="true"></span>
   </div>
+  <div class="day-body">
 
   <div class="days-grid">
     <!-- MAÑANA -->
@@ -1205,6 +1357,7 @@
   <div class="backup">
     <div class="backup-icon">☔</div>
     <div class="backup-text"><strong>Plan lluvia:</strong> el jueves es el día más resistente al mal tiempo — Lello, Clérigos, Bolsa, São Francisco y Taylor's son interiores. Recorta Miragaia a lo esencial (Rua de Miragaia bajo los soportales) y come igual en Virtudes. Si sobra tiempo antes del aeropuerto, el <strong>Museu Nacional Soares dos Reis</strong> (escultura portuguesa del s.XIX, en el Palácio dos Carrancas, a 5 min de la Cordoaria) es la alternativa.</div>
+  </div>
   </div>
 </div>
 
@@ -1568,5 +1721,161 @@
   <p>Oporto · Azulejo &amp; Atlántico · 17-19 noviembre 2026</p>
 </div>
 
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+/* ---------- Días colapsables ---------- */
+(function () {
+  var KEY = 'oporto-plan-collapsed';
+  var sections = Array.prototype.slice.call(document.querySelectorAll('[data-day-section]'));
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) {}
+  function save() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(sections.map(function (s, i) { return s.classList.contains('collapsed') ? i : -1; }).filter(function (i) { return i >= 0; })));
+    } catch (e) {}
+  }
+  function setCollapsed(sec, collapsed) {
+    sec.classList.toggle('collapsed', collapsed);
+    sec.querySelector('.day-header').setAttribute('aria-expanded', String(!collapsed));
+  }
+  sections.forEach(function (sec, i) {
+    if (saved.indexOf(i) >= 0) setCollapsed(sec, true);
+    var head = sec.querySelector('.day-header');
+    head.addEventListener('click', function () { setCollapsed(sec, !sec.classList.contains('collapsed')); save(); });
+    head.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); head.click(); }
+    });
+  });
+  document.querySelectorAll('[data-days]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var collapse = b.getAttribute('data-days') === 'collapse';
+      sections.forEach(function (sec) { setCollapsed(sec, collapse); });
+      save();
+    });
+  });
+})();
+
+/* ---------- Mapa ---------- */
+(function () {
+  var COLORS = { 1: '#8a2f2a', 2: '#1d4a5a', 3: '#1d3d78' };
+  var BASE = { name: 'Lost Inn Porto Hostel', note: 'Base · Rua Escura 23', q: 'Lost Inn Porto Hostel, Rua Escura 23, Porto', lat: 41.14335, lon: -8.61162 };
+  var P = [
+    [1, 'Mercado do Bolhão', '09:45 · desayuno', 'Mercado do Bolhão, Porto', 41.14932, -8.60695],
+    [1, 'Capela das Almas', '10:45 · azulejos', 'Capela das Almas, Porto', 41.14983, -8.60558],
+    [1, 'Igreja de Santo Ildefonso', '11:15 · azulejos', 'Igreja de Santo Ildefonso, Porto', 41.14620, -8.60658],
+    [1, 'Estação de São Bento', '11:45 · vestíbulo', 'Estação de São Bento, Porto', 41.14548, -8.61052],
+    [1, 'Taxca "A Badalhoca"', '12:30 · comida', 'Taxca, Rua da Picaria 26, Porto', 41.14891, -8.61290],
+    [1, 'Sé do Porto', '15:45', 'Sé do Porto', 41.14280, -8.61121],
+    [1, 'Ponte Luís I', '16:25 · tablero superior', 'Ponte Luís I, Porto', 41.14017, -8.60946],
+    [1, 'Mosteiro da Serra do Pilar', '16:35 · ocaso 17:13', 'Mosteiro da Serra do Pilar, Vila Nova de Gaia', 41.13835, -8.60807],
+    [1, 'Cais de Gaia', '17:30 · hora azul', 'Cais de Gaia, Vila Nova de Gaia', 41.13786, -8.61930],
+    [1, 'Adega São Nicolau', '19:00 · cena', 'Adega São Nicolau, Rua de São Nicolau 1, Porto', 41.14043, -8.61489],
+    [2, 'Casa da Música', '09:25', 'Casa da Música, Porto', 41.15890, -8.63077],
+    [2, 'Fundação de Serralves', '10:00 · Siza + Gehry', 'Fundação de Serralves, Porto', 41.15896, -8.65930],
+    [2, 'Mercado de Matosinhos', '13:00 · comida (A)', 'Mercado Municipal de Matosinhos', 41.18700, -8.69310],
+    [2, 'Lage Senhor do Padrão', '13:00 · comida (B)', 'Lage Senhor do Padrão, Rua Heróis de França 516, Matosinhos', 41.18158, -8.69372],
+    [2, 'Piscina das Marés', '14:30 · Siza', 'Piscina das Marés, Leça da Palmeira', 41.19308, -8.70729],
+    [2, 'Casa de Chá da Boa Nova', '15:30 · opcional', 'Casa de Chá da Boa Nova, Leça da Palmeira', 41.20300, -8.71511],
+    [2, 'Pérgola da Foz', '16:10', 'Pérgola da Foz, Porto', 41.15778, -8.68303],
+    [2, 'Farol de Felgueiras', '16:30 · ocaso 17:12', 'Farolim de Felgueiras, Porto', 41.14673, -8.67730],
+    [2, 'Passeio Alegre · tranvía 1', '17:50', 'Jardim do Passeio Alegre, Porto', 41.14830, -8.67102],
+    [2, 'Taberna dos Mercadores', '18:45 · cena', 'Taberna dos Mercadores, Porto', 41.14136, -8.61297],
+    [3, 'Livraria Lello', '09:00', 'Livraria Lello, Porto', 41.14683, -8.61485],
+    [3, 'Torre dos Clérigos', '09:45', 'Torre dos Clérigos, Porto', 41.14565, -8.61463],
+    [3, 'Igreja do Carmo', '10:40 · azulejos', 'Igreja do Carmo, Porto', 41.14746, -8.61625],
+    [3, 'Miragaia', '11:15 · São Pedro de Miragaia', 'Igreja de São Pedro de Miragaia, Porto', 41.14290, -8.61975],
+    [3, 'Jardim das Virtudes', '12:10', 'Jardim das Virtudes, Porto', 41.14519, -8.61912],
+    [3, 'Taberna Santo António', '12:30 · comida', 'Taberna Santo António, Rua das Virtudes, Porto', 41.14343, -8.61810],
+    [3, 'Palácio da Bolsa', '14:00', 'Palácio da Bolsa, Porto', 41.14131, -8.61600],
+    [3, "Taylor's", '15:15 · bodega', "Taylor's Port, Rua do Choupelo 250, Vila Nova de Gaia", 41.13435, -8.61440],
+    [3, 'Cais de Gaia', '16:45 · ocaso 17:12', 'Cais de Gaia, Vila Nova de Gaia', 41.13786, -8.61930],
+    [3, 'Casa Guedes Tradicional', '18:15 · cena', 'Casa Guedes Tradicional, Praça dos Poveiros, Porto', 41.14599, -8.60348],
+    [3, 'Metro Trindade', '19:30 · al aeropuerto', 'Estação Trindade, Porto', 41.15245, -8.60936]
+  ];
+  var pts = []; var count = { 1: 0, 2: 0, 3: 0 };
+  P.forEach(function (r) { count[r[0]]++; pts.push({ day: r[0], n: count[r[0]], name: r[1], note: r[2], q: r[3], lat: r[4], lon: r[5] }); });
+
+  function gmaps(q) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q); }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  var panel = document.getElementById('map-panel');
+  var map = null, layer = null, current = 'all';
+
+  function pinIcon(bg, label, base) {
+    return L.divIcon({
+      className: '',
+      html: '<div class="pin' + (base ? ' base' : '') + '" style="background:' + bg + '"><span>' + label + '</span></div>',
+      iconSize: base ? [30, 30] : [26, 26],
+      iconAnchor: base ? [15, 30] : [13, 26],
+      tooltipAnchor: [0, base ? -30 : -26]
+    });
+  }
+  function addMarker(p, color, label, base) {
+    var m = L.marker([p.lat, p.lon], { icon: pinIcon(color, label, base), keyboard: true, title: p.name, zIndexOffset: base ? 1000 : 0 });
+    m.bindTooltip('<b>' + esc(p.name) + '</b><small>' + esc(p.note) + ' · clic → Google Maps</small>', { direction: 'top', className: 'trip-tip' });
+    m.on('click', function () { window.open(gmaps(p.q), '_blank', 'noopener'); });
+    m.addTo(layer);
+    return m;
+  }
+  function chip(p, color, label) {
+    return '<a class="map-chip" target="_blank" rel="noopener" href="' + gmaps(p.q) + '"><b style="background:' + color + '">' + label + '</b>' + esc(p.name) + '</a>';
+  }
+  function draw(filter) {
+    current = filter;
+    layer.clearLayers();
+    var bounds = [], html = '';
+    [1, 2, 3].forEach(function (d) {
+      if (filter !== 'all' && +filter !== d) return;
+      var dp = pts.filter(function (p) { return p.day === d; });
+      L.polyline(dp.map(function (p) { return [p.lat, p.lon]; }), { color: COLORS[d], weight: 2.5, opacity: 0.55, dashArray: '5 7' }).addTo(layer);
+      dp.forEach(function (p) { addMarker(p, COLORS[d], p.n, false); bounds.push([p.lat, p.lon]); });
+      if (filter !== 'all') html += dp.map(function (p) { return chip(p, COLORS[d], p.n); }).join('');
+    });
+    addMarker(BASE, '#a8823a', '★', true);
+    if (filter !== '2') bounds.push([BASE.lat, BASE.lon]);
+    if (filter === 'all') html = chip(BASE, '#a8823a', '★');
+    else html = chip(BASE, '#a8823a', '★') + html;
+    document.getElementById('map-chips').innerHTML = html;
+    map.fitBounds(bounds, { padding: [28, 28], maxZoom: 16 });
+  }
+  function init() {
+    if (map || typeof L === 'undefined') return;
+    map = L.map('trip-map', { scrollWheelZoom: false, tap: true });
+    var ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+    var esriAttr = 'Tiles &copy; <a href="https://www.esri.com">Esri</a>';
+    var styles = {
+      'Claro': L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19, subdomains: 'abc', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &mdash; <a href="https://www.hotosm.org/">HOT</a>' }),
+      'Calles': L.tileLayer(ESRI + 'World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap' }),
+      'Topo': L.tileLayer(ESRI + 'World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap' }),
+      'Satélite': L.layerGroup([
+        L.tileLayer(ESRI + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, Maxar, Earthstar Geographics' }),
+        L.tileLayer(ESRI + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 })
+      ])
+    };
+    var STYLE_KEY = 'oporto-plan-map-style-v2', styleName = 'Claro';
+    try { var sv = localStorage.getItem(STYLE_KEY); if (sv && styles[sv]) styleName = sv; } catch (e) {}
+    styles[styleName].addTo(map);
+    L.control.layers(styles, null, { position: 'topright', collapsed: true }).addTo(map);
+    map.on('baselayerchange', function (e) { try { localStorage.setItem(STYLE_KEY, e.name); } catch (err) {} });
+    layer = L.layerGroup().addTo(map);
+    map.on('focus', function () { map.scrollWheelZoom.enable(); });
+    map.on('blur', function () { map.scrollWheelZoom.disable(); });
+    draw('all');
+  }
+  panel.addEventListener('toggle', function () {
+    if (!panel.open) return;
+    init();
+    if (map) setTimeout(function () { map.invalidateSize(); draw(current); }, 60);
+  });
+  document.querySelectorAll('#map-filters button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#map-filters button').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      if (map) draw(b.getAttribute('data-day'));
+    });
+  });
+})();
+</script>
 </body>
 </html>
