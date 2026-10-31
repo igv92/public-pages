@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Roma & Nápoles — Imperio Romano</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Roma &amp; Nápoles — Imperio Romano</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&amp;family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&amp;display=swap" rel="stylesheet"/>
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
 <style>
   :root {
     --stone: #f5efe6;
@@ -499,730 +501,948 @@
     .days-grid, .warnings, .section-block, .backup { padding-left: 1rem; padding-right: 1rem; margin-left: 0; margin-right: 0; }
     .city-header { padding: 1rem; }
   }
+
+  /* ===================== COMPONENTES v2 (plegables, mapa, cabecera de tarjeta) ===================== */
+  :root {
+    --fp-bg: var(--stone); --fp-surface: var(--parchment);
+    --fp-main: var(--rome-accent); --fp-mid: var(--terracotta); --fp-light: var(--terracotta-light);
+    --fp-gold: var(--gold);
+  }
+
+  /* Cabecera de tarjeta de día: franja + lugares arriba, título centrado abajo */
+  .day-card-header {
+    display: grid !important;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "block place" "date date";
+    align-items: baseline;
+    column-gap: 0.75rem;
+    row-gap: 0.25rem;
+    padding: 0.85rem 1.2rem 0.7rem;
+  }
+  .day-card-header .card-block, .day-card-header .day-number { grid-area: block; white-space: nowrap; margin: 0; }
+  .day-card-header .card-date, .day-card-header .day-date { grid-area: date; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; font-size: 0.95rem; }
+  .day-card-header .card-title, .day-card-header .day-title { grid-area: place; display: block !important; margin: 0 !important; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+
+  /* Paneles plegables */
+  .map-panel {
+    margin: 0 2rem 1rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.07);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+  .map-panel > summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center; gap: 0.9rem;
+    padding: 0.9rem 1.2rem; border-left: 3px solid var(--fp-main); user-select: none;
+  }
+  .map-panel > summary::-webkit-details-marker { display: none; }
+  .map-sum-icon {
+    width: 2.2rem; height: 2.2rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    background: var(--fp-mid); color: white; font-size: 1rem; border-radius: 2px;
+  }
+  .map-sum-text { display: flex; flex-direction: column; min-width: 0; }
+  .map-sum-title { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em; color: var(--ink); }
+  .map-sum-sub { font-size: 0.82rem; font-style: italic; color: var(--ink-light); }
+  .chev {
+    margin-left: auto; flex-shrink: 0; width: 0.6rem; height: 0.6rem;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    transform: rotate(45deg); transition: transform 0.2s ease; margin-right: 0.3rem; margin-top: -0.25rem;
+  }
+  .map-panel > summary .chev { color: var(--ink-light); }
+  .map-panel[open] > summary .chev { transform: rotate(-135deg); margin-top: 0.25rem; }
+  .map-body { padding: 0 1.2rem 1.1rem; border-top: 1px solid var(--fp-surface); }
+
+  /* Paneles de contenido: solo el summary es tarjeta; el contenido abierto ocupa el ancho de los días */
+  .fold-panel { background: transparent; border: none; box-shadow: none; overflow: visible; border-radius: 0; }
+  .fold-panel > summary {
+    background: white; border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.07); border-left: 3px solid var(--fp-main);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .fold-panel > summary:hover { background: #fcfcfc; }
+  .fold-body { padding: 1rem 0 0.6rem; }
+  .fold-body > * { margin-left: 0 !important; margin-right: 0 !important; }
+  .fold-body > *:last-child { margin-bottom: 0 !important; }
+  .fold-body > .section-block, .fold-body > .warnings { padding-left: 0 !important; padding-right: 0 !important; }
+  .fold-body .light-table, .fold-body .warnings { margin-bottom: 1rem; }
+  .fold-first { margin-top: 2rem; }
+  .fold-after-days { margin-top: 2.2rem; }
+
+  /* Mapa */
+  .map-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.9rem 0 0.8rem; }
+  .map-filters button {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 0.4rem 0.8rem; border-radius: 2px; cursor: pointer;
+    border: 1px solid var(--fp-surface); background: var(--fp-bg); color: var(--ink-mid);
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .map-filters button i { width: 9px; height: 9px; display: inline-block; transform: rotate(45deg); }
+  .map-filters button.active { background: var(--ink); border-color: var(--ink); color: var(--fp-bg); }
+  #trip-map { height: 440px; border-radius: 4px; border: 1px solid var(--fp-surface); background: var(--fp-surface); z-index: 0; }
+  #trip-map .leaflet-control-layers { border: 1px solid var(--fp-surface); border-radius: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-family: 'Crimson Pro', Georgia, serif; font-size: 0.85rem; color: var(--ink); }
+  #trip-map .leaflet-control-layers-expanded { padding: 0.4rem 0.7rem 0.4rem 0.5rem; }
+  #trip-map .leaflet-control-layers-base label { margin: 0.15rem 0; cursor: pointer; }
+  .map-hint { font-size: 0.78rem; font-style: italic; color: var(--ink-light); margin-top: 0.5rem; }
+  .map-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.7rem; }
+  .map-chip {
+    display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--ink-mid); text-decoration: none;
+    padding: 0.2rem 0.6rem 0.2rem 0.25rem; border-radius: 99px; background: var(--fp-bg); border: 1px solid var(--fp-surface);
+  }
+  .map-chip:hover { border-color: var(--fp-light); color: var(--ink); }
+  .map-chip b {
+    width: 1.25rem; height: 1.25rem; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-size: 0.65rem; font-weight: 600; font-family: 'Cinzel', serif;
+  }
+  .pin { width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.35); }
+  .pin span { transform: rotate(45deg); color: white; font: 600 11px 'Cinzel', serif; }
+  .pin.base { width: 30px; height: 30px; }
+  .pin.base span { font-size: 13px; }
+  .leaflet-tooltip.trip-tip { font-family: 'Crimson Pro', Georgia, serif; font-size: 0.85rem; color: var(--ink); border: 1px solid var(--fp-surface); border-radius: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); padding: 0.3rem 0.55rem; }
+  .trip-tip small { display: block; color: var(--ink-light); font-style: italic; }
+
+  /* Días plegables */
+  .days-toolbar { display: flex; justify-content: flex-end; gap: 0.4rem; margin: 1.6rem 2rem 0.8rem; }
+  .days-toolbar button {
+    font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 0.35rem 0.75rem; border: 1px solid var(--fp-surface); background: white; color: var(--ink-mid); border-radius: 2px; cursor: pointer;
+  }
+  .days-toolbar button:hover { border-color: var(--fp-light); color: var(--ink); }
+  .fold-day-head { cursor: pointer; user-select: none; position: relative; }
+  .fold-day-head:focus-visible { outline: 2px solid var(--fp-gold); outline-offset: -4px; }
+  .fold-day-head .chev { color: rgba(255,255,255,0.75); margin-left: 0.6rem; transform: rotate(45deg); }
+  .fold-day.collapsed .fold-day-head .chev { transform: rotate(-45deg); margin-top: 0; }
+  .fold-day.collapsed .day-body { display: none; }
+  .fold-day.collapsed { margin-bottom: 0.6rem; }
+  .fold-day.collapsed .fold-day-head { margin-bottom: 0; }
+
+  @media (max-width: 600px) {
+    .map-panel { margin: 0 1rem 0.8rem; }
+    .map-body { padding: 0 0.8rem 0.9rem; }
+    #trip-map { height: 360px; }
+    .fold-body { padding: 0.8rem 0 0.4rem; }
+    .fold-first { margin-top: 1.5rem; }
+    .days-toolbar { margin: 1.2rem 1rem 0.8rem; }
+    .fold-day-head { flex-wrap: wrap; }
+    .fold-day-head .chev { position: absolute; right: 1.1rem; top: 1.6rem; }
+    .light-table { overflow-x: auto; padding-left: 0.8rem !important; padding-right: 0.8rem !important; }
+    .light-table table { font-size: 0.78rem; }
+  }
 </style>
 </head>
 <body>
-
 <!-- HEADER -->
 <div class="header">
-  <div class="header-ornament">✦ Itinerario de viaje ✦</div>
-  <h1>Roma & <span>Nápoles</span></h1>
-  <p class="header-sub">Tras las huellas del Imperio Romano</p>
-  <div class="header-dates">27 Mar — 1 Abr · 2025 · 2 viajeros</div>
+<div class="header-ornament">✦ Itinerario de viaje ✦</div>
+<h1>Roma &amp; <span>Nápoles</span></h1>
+<p class="header-sub">Tras las huellas del Imperio Romano</p>
+<div class="header-dates">27 Mar — 1 Abr · 2025 · 2 viajeros</div>
 </div>
-
-
 <!-- ============ ROMA ============ -->
-<div class="city-section">
-  <div class="city-header rome">
-    <div class="city-numeral">I</div>
-    <div class="city-info">
-      <h2>Roma</h2>
-      <p>Viernes 27 — Lunes 30 de marzo · 3 noches</p>
-    </div>
-    <div class="city-badge">Capital del Imperio</div>
-  </div>
-
-  <div class="days-grid">
-
-    <!-- DÍA 1 -->
-    <div class="day-card">
-      <div class="day-card-header rome">
-        <div class="day-number">Día 1</div>
-        <div class="day-date">Viernes 27</div>
-        <div class="day-title">Llegada</div>
-      </div>
-      <div class="day-card-body">
-        <div class="time-block">
-          <div class="time-tag morning">✈️</div>
-          <div class="time-content">
-            <span class="time-label">20:00 — Llegada</span>
-            <div class="activity-name">Fiumicino → Centro</div>
-            <div class="activity-detail">Tren Leonardo Express a Termini (32 min, €14pp) o autobús (€6pp, 60 min)</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag evening">🍽️</div>
-          <div class="time-content">
-            <span class="time-label">22:00 — Cena</span>
-            <div class="food-highlight">
-              <div class="resto">Ristorante Luigi <span style="font-weight:300;font-size:0.78rem">(cerca de Termini)</span></div>
-              <div class="dish">Cena de llegada — cocina italiana clásica, bien situado para la primera noche cerca de Termini.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DÍA 2 -->
-    <div class="day-card">
-      <div class="day-card-header rome">
-        <div class="day-number">Día 2</div>
-        <div class="day-date">Sábado 28</div>
-        <div class="day-title">El corazón del Imperio</div>
-      </div>
-      <div class="day-card-body">
-        <div class="time-block">
-          <div class="time-tag morning">🏟️</div>
-          <div class="time-content">
-            <span class="time-label">9:00 — Coliseo</span>
-            <div class="activity-name">Coliseo — visita completa</div>
-            <div class="activity-detail">Niveles, arcos, exposiciones sobre los espectáculos y la historia del edificio. ~2h. No salir del recinto al terminar.</div>
-            <div class="activity-meta"><span class="tag tip">Ya reservado</span></div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag morning">⚔️</div>
-          <div class="time-content">
-            <span class="time-label">12:00 — Arena Floor</span>
-            <div class="activity-name">Coliseo — Arena Floor + Hipogeos</div>
-            <div class="activity-detail">El suelo de la arena y los túneles subterráneos donde esperaban gladiadores y fieras. La parte más impactante del recinto. ~45 min.</div>
-            <div class="activity-meta"><span class="tag tip">Ya reservado</span></div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🍝</div>
-          <div class="time-content">
-            <span class="time-label">13:00 — Comida</span>
-            <div class="food-highlight">
-              <div class="resto">Trattoria Luzzi <span style="font-weight:300;font-size:0.78rem">(junto al Coliseo)</span></div>
-              <div class="dish">Pedir: <strong>carbonara o cacio e pepe</strong> — pasta romana sin pretensiones, justo al salir del recinto.</div>
-            </div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🏛️</div>
-          <div class="time-content">
-            <span class="time-label">14:00 — Foro Romano</span>
-            <div class="activity-name">Foro Romano — templos y Via Sacra</div>
-            <div class="activity-detail">Acceso directo desde el Coliseo. Templo de Vesta, Arco de Septimio Severo, Basílica de Majencio, Via Sacra. ~1h15.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🏔️</div>
-          <div class="time-content">
-            <span class="time-label">15:15 — Palatino</span>
-            <div class="activity-name">Monte Palatino — palacios imperiales</div>
-            <div class="activity-detail">La colina donde vivieron los emperadores. Ruinas de los palacios de Augusto, Domiciano y Septimio Severo. Vistas aéreas extraordinarias sobre el Foro. ~2h. Incluido en la entrada.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🏛️</div>
-          <div class="time-content">
-            <span class="time-label">16:30 — Tarde</span>
-            <div class="activity-name">Circo Máximo → Termas de Caracalla</div>
-            <div class="activity-detail">Circo: gratuito, 250.000 espectadores en la antigüedad. Termas: complejo colosal, casi sin turistas. 1h30. <em>Nota: las Termas cierran los lunes — tenerlo en cuenta al planificar.</em></div>
-            <div class="activity-meta"><span class="tag reserve">Reservar Termas online</span></div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag evening">🚶</div>
-          <div class="time-content">
-            <span class="time-label">18:00 — Tarde-noche</span>
-            <div class="activity-name">Paseo por Trastevere</div>
-            <div class="activity-detail">El barrio más auténtico de Roma al atardecer. Calles medievales, iglesias, ambiente animado antes de cenar.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag evening">🍷</div>
-          <div class="time-content">
-            <span class="time-label">20:30 — Cena</span>
-            <div class="food-highlight">
-              <div class="resto">Trattoria Dell'Omo <span style="font-weight:300;font-size:0.78rem">(~8 min del hotel)</span></div>
-              <div class="dish">Pedir: <strong>Carbonara o ravioli con ragù</strong> — trattoria de barrio auténtica, menú de temporada, precios muy bajos. Solo cenas · abre desde las 19:30h · cierra domingos.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DÍA 3 -->
-    <div class="day-card">
-      <div class="day-card-header rome">
-        <div class="day-number">Día 3</div>
-        <div class="day-date">Domingo 29</div>
-        <div class="day-title">Museos y República</div>
-      </div>
-      <div class="day-card-body">
-        <div class="time-block">
-          <div class="time-tag morning">🏺</div>
-          <div class="time-content">
-            <span class="time-label">9:00 — Mañana</span>
-            <div class="activity-name">Palazzo Massimo alle Terme</div>
-            <div class="activity-detail">A 5 min del hotel. ⚠️ Cierra los lunes — hoy es el único día. Frescos de la Villa de Livia (30-20 a.C.), el Boxeador en reposo en bronce, mosaicos imperiales extraordinarios. Muy poco masificado. ~1h30.</div>
-            <div class="activity-meta"><span class="tag reserve">Reservar online</span></div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag morning">🗡️</div>
-          <div class="time-content">
-            <span class="time-label">10:30 — Mañana</span>
-            <div class="activity-name">Largo Argentina</div>
-            <div class="activity-detail">El lugar exacto del asesinato de César (entrada gratuita). ~30 min. De camino al centro histórico.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🍝</div>
-          <div class="time-content">
-            <span class="time-label">12:30 — Comida</span>
-            <div class="food-highlight">
-              <div class="resto">Come 'na Vorta — Paste e Vino</div>
-              <div class="dish">Pedir: <strong>carbonara, gnocchi con pesto</strong> o gricia. A 2 min andando de Largo Argentina.</div>
-            </div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🏛️</div>
-          <div class="time-content">
-            <span class="time-label">14:00 — Tarde</span>
-            <div class="activity-name">Panteón</div>
-            <div class="activity-detail">La cúpula de hormigón más grande de la antigüedad, perfectamente conservada. A 5 min andando de Largo Argentina. ~45 min.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🚶</div>
-          <div class="time-content">
-            <span class="time-label">16:30 — Museo</span>
-            <div class="activity-name">⚔️ Gladiator Museum</div>
-            <div class="activity-detail">Piazza Navona, 90. Más de 500 reproducciones de cascos, armaduras y armas de legionarios y gladiadores, desde el s.VII a.C. hasta el s.IV d.C. En el sótano, columnas auténticas del Estadio de Domiciano. El museo más completo sobre el ejército romano en Roma. ~45-60 min.</div>
-            <div class="activity-meta"><span class="tag price">€12pp</span><span class="tag tip">Abre hasta las 19:30h</span></div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🚶</div>
-          <div class="time-content">
-            <span class="time-label">17:30 — Paseo</span>
-            <div class="activity-name">Piazza Navona → Castel Sant'Angelo</div>
-            <div class="activity-detail">Al salir del museo estáis ya en Piazza Navona (construida sobre el estadio de Domiciano). Continuad hacia el Tíber y el Castel Sant'Angelo — el mausoleo del emperador Adriano reconvertido en fortaleza papal. Paseo de ~1h sin prisa.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag evening">🍷</div>
-          <div class="time-content">
-            <span class="time-label">21:00 — Cena</span>
-            <div class="food-highlight">
-              <div class="resto">Tonnarello <span style="font-weight:300;font-size:0.78rem">(Trastevere)</span></div>
-              <div class="dish">Pedir: <strong>tonnarelli cacio e pepe o carbonara</strong> — muy animado, con terraza. 4.7⭐ con más de 100.000 reseñas. <em>Nota: hay varios locales del mismo Tonnarello en el barrio — todos pertenecen a la misma familia.</em></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DÍA 4 -->
-    <div class="day-card">
-      <div class="day-card-header rome">
-        <div class="day-number">Día 4</div>
-        <div class="day-date">Lunes 30</div>
-        <div class="day-title">Roma → Nápoles</div>
-      </div>
-      <div class="day-card-body">
-        <div class="time-block">
-          <div class="time-tag morning">🚶</div>
-          <div class="time-content">
-            <span class="time-label">9:00 — Mañana</span>
-            <div class="activity-name">Paseo por el centro — Castel Sant'Angelo</div>
-            <div class="activity-detail">Último paseo por Roma. Calles del centro histórico hacia el Castel Sant'Angelo — el mausoleo del emperador Adriano reconvertido en fortaleza papal. Visita exterior sin entrar. Vistas al Tíber.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🍝</div>
-          <div class="time-content">
-            <span class="time-label">13:00 — Comida</span>
-            <div class="food-highlight">
-              <div class="resto">Come 'na Vorta — Paste e Vino</div>
-              <div class="dish">Pedir: <strong>carbonara, gnocchi con pesto</strong> o gricia. A 2 min andando de Largo Argentina.</div>
-            </div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🚄</div>
-          <div class="time-content">
-            <span class="time-label">15:30 — Tren</span>
-            <div class="activity-name">Roma Termini → Napoli Centrale</div>
-            <div class="activity-detail">1h10 de trayecto. Llegar a Termini a las 15:00h. Llegada a Nápoles ~16:40h. Andando al hotel en Corso Umberto I (~15 min). Check-in. Libres ~18h.</div>
-            <div class="activity-meta"><span class="tag transport">Ya reservado</span></div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag evening">⚔️</div>
-          <div class="time-content">
-            <span class="time-label">18:20 — Primera parada</span>
-            <div class="activity-name">Cappella San Severo</div>
-            <div class="activity-detail">El Cristo Velado de mármol — una de las esculturas más extraordinarias del mundo. Visitado.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag evening">🚶</div>
-          <div class="time-content">
-            <span class="time-label">18:55 — Centro histórico</span>
-            <div class="activity-name">Piazza San Domenico Maggiore → San Gregorio Armeno → Spaccanapoli → Duomo ✅</div>
-            <div class="activity-detail">Recorrido por el corazón de Nápoles: la plaza medieval, la calle de los artesanos de belenes, el Decumanus Maximus romano y la catedral gótica del s.XIII. Visitado.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag evening">🍕</div>
-          <div class="time-content">
-            <span class="time-label">21:00 — Cena</span>
-            <div class="food-highlight">
-              <div class="resto">L'Antica Pizzeria da Michele</div>
-              <div class="dish">Pedir: <strong>Margherita</strong>. Solo 2 pizzas en carta. La más auténtica desde 1870. Visitado.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /days-grid Roma -->
-
-  <div class="backup">
-    <div class="backup-icon">☁️</div>
-    <div class="backup-text"><strong>Backup lluvia (sáb 28):</strong> Si llueve por la mañana, empezad con los Museos Capitolinos en interior y moved el Foro/Palatino a la tarde. <strong>Backup domingo:</strong> Si los Capitolinos se alargan, saltaos el Panteón y guardad el tiempo libre para Trastevere antes de cenar.</div>
-  </div>
+<details class="map-panel fold-first" id="map-panel">
+<summary>
+<span class="map-sum-icon">🗺️</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Mapa del viaje</span>
+<span class="map-sum-sub">Roma y Nápoles sobre el plano · toca un punto para abrirlo en Google Maps</span>
+</span>
+<span class="chev"></span>
+</summary>
+<div class="map-body">
+<div class="map-filters" id="map-filters">
+<button class="active" data-day="all">Todos</button>
+<button data-day="1"><i style="background:#8c3e18"></i>Vie 27</button>
+<button data-day="2"><i style="background:#c0622f"></i>Sáb 28</button>
+<button data-day="3"><i style="background:#7a4f2d"></i>Dom 29</button>
+<button data-day="4"><i style="background:#b8860b"></i>Lun 30</button>
+<button data-day="5"><i style="background:#2d5a4f"></i>Mar 31</button>
+<button data-day="6"><i style="background:#103d2e"></i>Mié 1</button>
 </div>
+<div aria-label="Mapa interactivo del viaje" id="trip-map" role="region"></div>
+<div class="map-hint">El número sigue el orden del día. Arriba a la derecha (▤) cambias el estilo del mapa. Pasa el ratón para ver el nombre; un clic abre el sitio en Google Maps.</div>
+<div class="map-chips" id="map-chips"></div>
+</div>
+</details>
 
+<div class="days-toolbar"><button data-days="expand" type="button">Expandir días</button><button data-days="collapse" type="button">Colapsar días</button></div>
+
+<div class="city-section fold-day" data-day-section="">
+<div aria-expanded="true" class="city-header rome fold-day-head" role="button" tabindex="0">
+<div class="city-numeral">I</div>
+<div class="city-info">
+<h2>Roma</h2>
+<p>Viernes 27 — Lunes 30 de marzo · 3 noches</p>
+</div>
+<div class="city-badge">Capital del Imperio</div>
+<span aria-hidden="true" class="chev"></span>
+  </div><div class="day-body">
+<div class="days-grid">
+<!-- DÍA 1 -->
+<div class="day-card">
+<div class="day-card-header rome">
+<div class="day-number">Día 1</div>
+<div class="day-date">Viernes 27</div>
+<div class="day-title">Llegada</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag morning">✈️</div>
+<div class="time-content">
+<span class="time-label">20:00 — Llegada</span>
+<div class="activity-name">Fiumicino → Centro</div>
+<div class="activity-detail">Tren Leonardo Express a Termini (32 min, €14pp) o autobús (€6pp, 60 min)</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🍽️</div>
+<div class="time-content">
+<span class="time-label">22:00 — Cena</span>
+<div class="food-highlight">
+<div class="resto">Ristorante Luigi <span style="font-weight:300;font-size:0.78rem">(cerca de Termini)</span></div>
+<div class="dish">Cena de llegada — cocina italiana clásica, bien situado para la primera noche cerca de Termini.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- DÍA 2 -->
+<div class="day-card">
+<div class="day-card-header rome">
+<div class="day-number">Día 2</div>
+<div class="day-date">Sábado 28</div>
+<div class="day-title">El corazón del Imperio</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag morning">🏟️</div>
+<div class="time-content">
+<span class="time-label">9:00 — Coliseo</span>
+<div class="activity-name">Coliseo — visita completa</div>
+<div class="activity-detail">Niveles, arcos, exposiciones sobre los espectáculos y la historia del edificio. ~2h. No salir del recinto al terminar.</div>
+<div class="activity-meta"><span class="tag tip">Ya reservado</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">⚔️</div>
+<div class="time-content">
+<span class="time-label">12:00 — Arena Floor</span>
+<div class="activity-name">Coliseo — Arena Floor + Hipogeos</div>
+<div class="activity-detail">El suelo de la arena y los túneles subterráneos donde esperaban gladiadores y fieras. La parte más impactante del recinto. ~45 min.</div>
+<div class="activity-meta"><span class="tag tip">Ya reservado</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🍝</div>
+<div class="time-content">
+<span class="time-label">13:00 — Comida</span>
+<div class="food-highlight">
+<div class="resto">Trattoria Luzzi <span style="font-weight:300;font-size:0.78rem">(junto al Coliseo)</span></div>
+<div class="dish">Pedir: <strong>carbonara o cacio e pepe</strong> — pasta romana sin pretensiones, justo al salir del recinto.</div>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🏛️</div>
+<div class="time-content">
+<span class="time-label">14:00 — Foro Romano</span>
+<div class="activity-name">Foro Romano — templos y Via Sacra</div>
+<div class="activity-detail">Acceso directo desde el Coliseo. Templo de Vesta, Arco de Septimio Severo, Basílica de Majencio, Via Sacra. ~1h15.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🏔️</div>
+<div class="time-content">
+<span class="time-label">15:15 — Palatino</span>
+<div class="activity-name">Monte Palatino — palacios imperiales</div>
+<div class="activity-detail">La colina donde vivieron los emperadores. Ruinas de los palacios de Augusto, Domiciano y Septimio Severo. Vistas aéreas extraordinarias sobre el Foro. ~2h. Incluido en la entrada.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🏛️</div>
+<div class="time-content">
+<span class="time-label">16:30 — Tarde</span>
+<div class="activity-name">Circo Máximo → Termas de Caracalla</div>
+<div class="activity-detail">Circo: gratuito, 250.000 espectadores en la antigüedad. Termas: complejo colosal, casi sin turistas. 1h30. <em>Nota: las Termas cierran los lunes — tenerlo en cuenta al planificar.</em></div>
+<div class="activity-meta"><span class="tag reserve">Reservar Termas online</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🚶</div>
+<div class="time-content">
+<span class="time-label">18:00 — Tarde-noche</span>
+<div class="activity-name">Paseo por Trastevere</div>
+<div class="activity-detail">El barrio más auténtico de Roma al atardecer. Calles medievales, iglesias, ambiente animado antes de cenar.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🍷</div>
+<div class="time-content">
+<span class="time-label">20:30 — Cena</span>
+<div class="food-highlight">
+<div class="resto">Trattoria Dell'Omo <span style="font-weight:300;font-size:0.78rem">(~8 min del hotel)</span></div>
+<div class="dish">Pedir: <strong>Carbonara o ravioli con ragù</strong> — trattoria de barrio auténtica, menú de temporada, precios muy bajos. Solo cenas · abre desde las 19:30h · cierra domingos.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- DÍA 3 -->
+<div class="day-card">
+<div class="day-card-header rome">
+<div class="day-number">Día 3</div>
+<div class="day-date">Domingo 29</div>
+<div class="day-title">Museos y República</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag morning">🏺</div>
+<div class="time-content">
+<span class="time-label">9:00 — Mañana</span>
+<div class="activity-name">Palazzo Massimo alle Terme</div>
+<div class="activity-detail">A 5 min del hotel. ⚠️ Cierra los lunes — hoy es el único día. Frescos de la Villa de Livia (30-20 a.C.), el Boxeador en reposo en bronce, mosaicos imperiales extraordinarios. Muy poco masificado. ~1h30.</div>
+<div class="activity-meta"><span class="tag reserve">Reservar online</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">🗡️</div>
+<div class="time-content">
+<span class="time-label">10:30 — Mañana</span>
+<div class="activity-name">Largo Argentina</div>
+<div class="activity-detail">El lugar exacto del asesinato de César (entrada gratuita). ~30 min. De camino al centro histórico.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🍝</div>
+<div class="time-content">
+<span class="time-label">12:30 — Comida</span>
+<div class="food-highlight">
+<div class="resto">Come 'na Vorta — Paste e Vino</div>
+<div class="dish">Pedir: <strong>carbonara, gnocchi con pesto</strong> o gricia. A 2 min andando de Largo Argentina.</div>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🏛️</div>
+<div class="time-content">
+<span class="time-label">14:00 — Tarde</span>
+<div class="activity-name">Panteón</div>
+<div class="activity-detail">La cúpula de hormigón más grande de la antigüedad, perfectamente conservada. A 5 min andando de Largo Argentina. ~45 min.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🚶</div>
+<div class="time-content">
+<span class="time-label">16:30 — Museo</span>
+<div class="activity-name">⚔️ Gladiator Museum</div>
+<div class="activity-detail">Piazza Navona, 90. Más de 500 reproducciones de cascos, armaduras y armas de legionarios y gladiadores, desde el s.VII a.C. hasta el s.IV d.C. En el sótano, columnas auténticas del Estadio de Domiciano. El museo más completo sobre el ejército romano en Roma. ~45-60 min.</div>
+<div class="activity-meta"><span class="tag price">€12pp</span><span class="tag tip">Abre hasta las 19:30h</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🚶</div>
+<div class="time-content">
+<span class="time-label">17:30 — Paseo</span>
+<div class="activity-name">Piazza Navona → Castel Sant'Angelo</div>
+<div class="activity-detail">Al salir del museo estáis ya en Piazza Navona (construida sobre el estadio de Domiciano). Continuad hacia el Tíber y el Castel Sant'Angelo — el mausoleo del emperador Adriano reconvertido en fortaleza papal. Paseo de ~1h sin prisa.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🍷</div>
+<div class="time-content">
+<span class="time-label">21:00 — Cena</span>
+<div class="food-highlight">
+<div class="resto">Tonnarello <span style="font-weight:300;font-size:0.78rem">(Trastevere)</span></div>
+<div class="dish">Pedir: <strong>tonnarelli cacio e pepe o carbonara</strong> — muy animado, con terraza. 4.7⭐ con más de 100.000 reseñas. <em>Nota: hay varios locales del mismo Tonnarello en el barrio — todos pertenecen a la misma familia.</em></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- DÍA 4 -->
+<div class="day-card">
+<div class="day-card-header rome">
+<div class="day-number">Día 4</div>
+<div class="day-date">Lunes 30</div>
+<div class="day-title">Roma → Nápoles</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag morning">🚶</div>
+<div class="time-content">
+<span class="time-label">9:00 — Mañana</span>
+<div class="activity-name">Paseo por el centro — Castel Sant'Angelo</div>
+<div class="activity-detail">Último paseo por Roma. Calles del centro histórico hacia el Castel Sant'Angelo — el mausoleo del emperador Adriano reconvertido en fortaleza papal. Visita exterior sin entrar. Vistas al Tíber.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🍝</div>
+<div class="time-content">
+<span class="time-label">13:00 — Comida</span>
+<div class="food-highlight">
+<div class="resto">Come 'na Vorta — Paste e Vino</div>
+<div class="dish">Pedir: <strong>carbonara, gnocchi con pesto</strong> o gricia. A 2 min andando de Largo Argentina.</div>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🚄</div>
+<div class="time-content">
+<span class="time-label">15:30 — Tren</span>
+<div class="activity-name">Roma Termini → Napoli Centrale</div>
+<div class="activity-detail">1h10 de trayecto. Llegar a Termini a las 15:00h. Llegada a Nápoles ~16:40h. Andando al hotel en Corso Umberto I (~15 min). Check-in. Libres ~18h.</div>
+<div class="activity-meta"><span class="tag transport">Ya reservado</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">⚔️</div>
+<div class="time-content">
+<span class="time-label">18:20 — Primera parada</span>
+<div class="activity-name">Cappella San Severo</div>
+<div class="activity-detail">El Cristo Velado de mármol — una de las esculturas más extraordinarias del mundo. Visitado.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🚶</div>
+<div class="time-content">
+<span class="time-label">18:55 — Centro histórico</span>
+<div class="activity-name">Piazza San Domenico Maggiore → San Gregorio Armeno → Spaccanapoli → Duomo ✅</div>
+<div class="activity-detail">Recorrido por el corazón de Nápoles: la plaza medieval, la calle de los artesanos de belenes, el Decumanus Maximus romano y la catedral gótica del s.XIII. Visitado.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🍕</div>
+<div class="time-content">
+<span class="time-label">21:00 — Cena</span>
+<div class="food-highlight">
+<div class="resto">L'Antica Pizzeria da Michele</div>
+<div class="dish">Pedir: <strong>Margherita</strong>. Solo 2 pizzas en carta. La más auténtica desde 1870. Visitado.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><!-- /days-grid Roma -->
+<div class="backup">
+<div class="backup-icon">☁️</div>
+<div class="backup-text"><strong>Backup lluvia (sáb 28):</strong> Si llueve por la mañana, empezad con los Museos Capitolinos en interior y moved el Foro/Palatino a la tarde. <strong>Backup domingo:</strong> Si los Capitolinos se alargan, saltaos el Panteón y guardad el tiempo libre para Trastevere antes de cenar.</div>
+</div>
+</div></div>
 <!-- ============ NÁPOLES ============ -->
-<div class="city-section">
-  <div class="city-header naples">
-    <div class="city-numeral">II</div>
-    <div class="city-info">
-      <h2>Nápoles</h2>
-      <p>Lunes 30 (noche) — Miércoles 1 de abril · 2 noches</p>
-    </div>
-    <div class="city-badge">La Bahía del Vesubio</div>
-  </div>
-
-  <div class="days-grid">
-
-    <!-- DÍA 5 -->
-    <div class="day-card">
-      <div class="day-card-header naples">
-        <div class="day-number">Día 5</div>
-        <div class="day-date">Martes 31</div>
-        <div class="day-title">Pompeya</div>
-      </div>
-      <div class="day-card-body">
-        <div class="time-block">
-          <div class="time-tag morning">🚂</div>
-          <div class="time-content">
-            <span class="time-label">8:20 — Salida</span>
-            <div class="activity-name">Circumvesuviana → Pompeya</div>
-            <div class="activity-detail">Desde Napoli Garibaldi (planta baja). Dirección Sorrento, parada: <em>Pompei Scavi–Villa dei Misteri</em>. ~35 min.</div>
-            <div class="activity-meta"><span class="tag transport">~€3pp · billete en máquina</span></div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag morning">⚗️</div>
-          <div class="time-content">
-            <span class="time-label">9:00 — Todo el día</span>
-            <div class="activity-name">Parque Arqueológico de Pompeya</div>
-            <div class="activity-detail">44 ha. Ruta recomendada: Foro → Termas del Foro → Casa del Fauno → Lupanare → Anfiteatro (70 a.C., el más antiguo) → Giardino dei Fuggiaschi (moldes de yeso) → Casa dei Vettii.</div>
-            <div class="activity-meta"><span class="tag tip">Ya reservado</span><span class="tag tip">Llevar agua + calzado duro</span></div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🌋</div>
-          <div class="time-content">
-            <span class="time-label">15:30 — Opcional</span>
-            <div class="activity-name">Parada en Herculano (si hay energía)</div>
-            <div class="activity-detail">2 paradas antes de Nápoles. 1-1,5h de primera visita. Si estáis agotados, dejadlo para el miércoles.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag evening">🍝</div>
-          <div class="time-content">
-            <span class="time-label">21:00 — Cena</span>
-            <div class="food-highlight">
-              <div class="resto">Tandem Ragù <span style="font-weight:300;font-size:0.78rem">(Via Giovanni Paladino)</span></div>
-              <div class="dish">Pedir: <strong>rigatoni al ragù, lasagna o cuzzetiello</strong> — especializado en ragù napolitano cocinado durante horas. Abre todos los días.</div>
-            </div>
-            <div class="activity-meta"><span class="tag price">~€15pp</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DÍA 6 -->
-    <div class="day-card">
-      <div class="day-card-header naples">
-        <div class="day-number">Día 6</div>
-        <div class="day-date">Miércoles 1 abr</div>
-        <div class="day-title">MANN + Toledo + Vuelo</div>
-      </div>
-      <div class="day-card-body">
-        <div class="time-block">
-          <div class="time-tag morning">🏺</div>
-          <div class="time-content">
-            <span class="time-label">9:00 — Mañana</span>
-            <div class="activity-name">MANN — Museo Arqueológico de Nápoles</div>
-            <div class="activity-detail">Abre el miércoles. Los originales de Pompeya: Mosaico de Alejandro, frescos, Gabinetto Segreto. Verlo después de Pompeya da contexto extraordinario a todo lo que visteis el martes. ~2h.</div>
-            <div class="activity-meta"><span class="tag reserve">Reservar online</span></div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag morning">🎨</div>
-          <div class="time-content">
-            <span class="time-label">11:00 — Quartieri Spagnoli</span>
-            <div class="activity-name">Quartieri Spagnoli + Murale Maradona</div>
-            <div class="activity-detail">El barrio más auténtico de Nápoles. El mural de Diego Armando Maradona en Via Emanuele de Deo — el altar napolitano del dios del fútbol. Gratuito. ~30 min.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🍝</div>
-          <div class="time-content">
-            <span class="time-label">12:30 — Comida</span>
-            <div class="food-highlight">
-              <div class="resto">Trattoria Moré <span style="font-weight:300;font-size:0.78rem">(Vico Tiratoio, 5 · Quartieri Spagnoli)</span></div>
-              <div class="dish">Pedir: <strong>scarpariella, ragù napolitano o meatballs</strong> — en pleno barrio, recomendado por locales para evitar trampas turísticas. Ambiente íntimo de callejón. ~€18-22pp.</div>
-            </div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag afternoon">🏛️</div>
-          <div class="time-content">
-            <span class="time-label">14:00 — Zona Toledo</span>
-            <div class="activity-name">Galleria Umberto I + Teatro San Carlo + Metro Toledo + Piazza del Plebiscito</div>
-            <div class="activity-detail">La Galleria del s.XIX con su cúpula de cristal — buscad la sfogliatella en la pastelería del fondo. El Teatro San Carlo (1737, el más antiguo del mundo). La Estación de Metro Toledo, una de las más bellas de Europa — vale el billete de €1,50 solo para bajar a verla. La Piazza del Plebiscito, la plaza más grande de Nápoles, con vistas al mar.</div>
-          </div>
-        </div>
-        <div class="time-block">
-          <div class="time-tag evening">✈️</div>
-          <div class="time-content">
-            <span class="time-label">19:00 — Vuelo</span>
-            <div class="activity-name">Nápoles → Aeropuerto Capodichino</div>
-            <div class="activity-detail"><strong>Alibus</strong> desde Piazza Garibaldi (frente al McDonald's, buses verdes) → Aeropuerto Capodichino. €5pp · ~25 min · Sale cada 15-30 min hasta las 23:35h. Alternativa: Taxi tarifa fija ~€25-30.</div>
-            <div class="activity-meta"><span class="tag transport">Salir del hotel a las 19:00h</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /days-grid Nápoles -->
-
-  <div class="backup">
-    <div class="backup-icon">🌧️</div>
-    <div class="backup-text"><strong>Backup lluvia (mar 31):</strong> Si llueve intensamente en Pompeya, moved la visita al miércoles por la tarde y usad el martes para el MANN. El miércoles: MANN → Pompeya → vuelo (ajustado pero factible). Herculano en ese caso se quedaría fuera.</div>
-  </div>
+<div class="city-section fold-day" data-day-section="">
+<div aria-expanded="true" class="city-header naples fold-day-head" role="button" tabindex="0">
+<div class="city-numeral">II</div>
+<div class="city-info">
+<h2>Nápoles</h2>
+<p>Lunes 30 (noche) — Miércoles 1 de abril · 2 noches</p>
 </div>
-
+<div class="city-badge">La Bahía del Vesubio</div>
+<span aria-hidden="true" class="chev"></span>
+  </div><div class="day-body">
+<div class="days-grid">
+<!-- DÍA 5 -->
+<div class="day-card">
+<div class="day-card-header naples">
+<div class="day-number">Día 5</div>
+<div class="day-date">Martes 31</div>
+<div class="day-title">Pompeya</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag morning">🚂</div>
+<div class="time-content">
+<span class="time-label">8:20 — Salida</span>
+<div class="activity-name">Circumvesuviana → Pompeya</div>
+<div class="activity-detail">Desde Napoli Garibaldi (planta baja). Dirección Sorrento, parada: <em>Pompei Scavi–Villa dei Misteri</em>. ~35 min.</div>
+<div class="activity-meta"><span class="tag transport">~€3pp · billete en máquina</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">⚗️</div>
+<div class="time-content">
+<span class="time-label">9:00 — Todo el día</span>
+<div class="activity-name">Parque Arqueológico de Pompeya</div>
+<div class="activity-detail">44 ha. Ruta recomendada: Foro → Termas del Foro → Casa del Fauno → Lupanare → Anfiteatro (70 a.C., el más antiguo) → Giardino dei Fuggiaschi (moldes de yeso) → Casa dei Vettii.</div>
+<div class="activity-meta"><span class="tag tip">Ya reservado</span><span class="tag tip">Llevar agua + calzado duro</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🌋</div>
+<div class="time-content">
+<span class="time-label">15:30 — Opcional</span>
+<div class="activity-name">Parada en Herculano (si hay energía)</div>
+<div class="activity-detail">2 paradas antes de Nápoles. 1-1,5h de primera visita. Si estáis agotados, dejadlo para el miércoles.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🍝</div>
+<div class="time-content">
+<span class="time-label">21:00 — Cena</span>
+<div class="food-highlight">
+<div class="resto">Tandem Ragù <span style="font-weight:300;font-size:0.78rem">(Via Giovanni Paladino)</span></div>
+<div class="dish">Pedir: <strong>rigatoni al ragù, lasagna o cuzzetiello</strong> — especializado en ragù napolitano cocinado durante horas. Abre todos los días.</div>
+</div>
+<div class="activity-meta"><span class="tag price">~€15pp</span></div>
+</div>
+</div>
+</div>
+</div>
+<!-- DÍA 6 -->
+<div class="day-card">
+<div class="day-card-header naples">
+<div class="day-number">Día 6</div>
+<div class="day-date">Miércoles 1 abr</div>
+<div class="day-title">MANN + Toledo + Vuelo</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag morning">🏺</div>
+<div class="time-content">
+<span class="time-label">9:00 — Mañana</span>
+<div class="activity-name">MANN — Museo Arqueológico de Nápoles</div>
+<div class="activity-detail">Abre el miércoles. Los originales de Pompeya: Mosaico de Alejandro, frescos, Gabinetto Segreto. Verlo después de Pompeya da contexto extraordinario a todo lo que visteis el martes. ~2h.</div>
+<div class="activity-meta"><span class="tag reserve">Reservar online</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">🎨</div>
+<div class="time-content">
+<span class="time-label">11:00 — Quartieri Spagnoli</span>
+<div class="activity-name">Quartieri Spagnoli + Murale Maradona</div>
+<div class="activity-detail">El barrio más auténtico de Nápoles. El mural de Diego Armando Maradona en Via Emanuele de Deo — el altar napolitano del dios del fútbol. Gratuito. ~30 min.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🍝</div>
+<div class="time-content">
+<span class="time-label">12:30 — Comida</span>
+<div class="food-highlight">
+<div class="resto">Trattoria Moré <span style="font-weight:300;font-size:0.78rem">(Vico Tiratoio, 5 · Quartieri Spagnoli)</span></div>
+<div class="dish">Pedir: <strong>scarpariella, ragù napolitano o meatballs</strong> — en pleno barrio, recomendado por locales para evitar trampas turísticas. Ambiente íntimo de callejón. ~€18-22pp.</div>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🏛️</div>
+<div class="time-content">
+<span class="time-label">14:00 — Zona Toledo</span>
+<div class="activity-name">Galleria Umberto I + Teatro San Carlo + Metro Toledo + Piazza del Plebiscito</div>
+<div class="activity-detail">La Galleria del s.XIX con su cúpula de cristal — buscad la sfogliatella en la pastelería del fondo. El Teatro San Carlo (1737, el más antiguo del mundo). La Estación de Metro Toledo, una de las más bellas de Europa — vale el billete de €1,50 solo para bajar a verla. La Piazza del Plebiscito, la plaza más grande de Nápoles, con vistas al mar.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">✈️</div>
+<div class="time-content">
+<span class="time-label">19:00 — Vuelo</span>
+<div class="activity-name">Nápoles → Aeropuerto Capodichino</div>
+<div class="activity-detail"><strong>Alibus</strong> desde Piazza Garibaldi (frente al McDonald's, buses verdes) → Aeropuerto Capodichino. €5pp · ~25 min · Sale cada 15-30 min hasta las 23:35h. Alternativa: Taxi tarifa fija ~€25-30.</div>
+<div class="activity-meta"><span class="tag transport">Salir del hotel a las 19:00h</span></div>
+</div>
+</div>
+</div>
+</div>
+</div><!-- /days-grid Nápoles -->
+<div class="backup">
+<div class="backup-icon">🌧️</div>
+<div class="backup-text"><strong>Backup lluvia (mar 31):</strong> Si llueve intensamente en Pompeya, moved la visita al miércoles por la tarde y usad el martes para el MANN. El miércoles: MANN → Pompeya → vuelo (ajustado pero factible). Herculano en ese caso se quedaría fuera.</div>
+</div>
+</div></div>
 <!-- RESTAURANTES -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1.5rem">
-    <div class="divider-line"></div>
-    <div class="divider-text">Restaurantes en revisión</div>
-    <div class="divider-line"></div>
-  </div>
+<details class="map-panel fold-panel fold-after-days" id="restaurantes-en-revisi-n-panel">
+  <summary>
+<span class="map-sum-icon">🥗</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Restaurantes en revisión</span>
+<span class="map-sum-sub">30 restaurantes con qué pedir</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body"><div class="section-block">
 
-  <p style="font-style:italic;color:var(--ink-light);font-size:0.88rem;margin-bottom:1.5rem;">Lista de opciones barajadas — aún por decidir. Los del itinerario son sugerencias, no están confirmados.</p>
-
-  <!-- ROMA -->
-  <div style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--terracotta);margin-bottom:0.75rem;">🏙️ Roma</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem;margin-bottom:2rem;">
-
-    <div class="checklist-card">
-      <h4>🍝 Trattoria Dell'Omo ⭐</h4>
-      <div class="checklist-item">Via Vicenza, 18 · ~8 min del hotel</div>
-      <div class="checklist-item">La más auténtica de la zona. Solo cenas, menú de temporada, precios muy bajos. Reseñas destacan la mejor carbonara y tiramisú del barrio.</div>
-      <div class="checklist-item">Pedir: carbonara, ravioli con ragù</div>
-      <div class="checklist-item">Abre desde las 19:30h · Cierra domingos</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍝 Trattoria Cecio</h4>
-      <div class="checklist-item">Via Principe Amedeo, 104 · ~5 min del hotel</div>
-      <div class="checklist-item">La más cercana al hotel. Cocina romana honesta, mármol en las mesas, ambiente tranquilo. Abre todos los días incluyendo domingos.</div>
-      <div class="checklist-item">Pedir: carbonara, tonnarelli</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍝 Trattoria Vecchia Roma</h4>
-      <div class="checklist-item">Via Ferruccio, 12 · ~10 min del hotel</div>
-      <div class="checklist-item">Muy popular, 14.000 reseñas. Sólida para cualquier noche, especialmente si llegáis sin reserva. Supplì, cacio e pepe y rigatoni alla coda entre lo mejor.</div>
-      <div class="checklist-item">Pedir: rigatoni alla coda, cacio e pepe · Cierra domingos</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍝 Trattoria Monti</h4>
-      <div class="checklist-item">Via di San Vito, 13 · cerca de Termini</div>
-      <div class="checklist-item">Cocina romana clásica, sin trampa turística. ~10 min andando del hotel.</div>
-      <div class="checklist-item">Pedir: cacio e pepe o abbacchio alla romana</div>
-      <div class="checklist-item" style="color:var(--terracotta)">⚠️ Reservar mesa</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍝 Trattoria Luzzi</h4>
-      <div class="checklist-item">Via di San Giovanni in Laterano · cerca del Coliseo</div>
-      <div class="checklist-item">Pasta romana sin pretensiones. Buena opción para comer rápido cerca del Foro.</div>
-      <div class="checklist-item">Pedir: carbonara · Solo efectivo</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍷 Tonnarello</h4>
-      <div class="checklist-item">Via della Paglia, 1/2/3 · Trastevere</div>
-      <div class="checklist-item">Uno de los más populares de Trastevere. Animado, con terraza. 4.7⭐ con más de 100.000 reseñas.</div>
-      <div class="checklist-item">Pedir: tonnarelli cacio e pepe o carbonara</div>
-      <div class="checklist-item">Abre todos los días desde las 11:30h</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍝 LUCIANO Cucina Italiana</h4>
-      <div class="checklist-item">Piazza del Teatro di Pompeo, 18 · Campo de' Fiori</div>
-      <div class="checklist-item">Cocina romana contemporánea. Famoso por su carbonara con guanciale semicurado. Nivel más alto.</div>
-      <div class="checklist-item">Pedir: carbonara, trippa, coda alla vaccinara</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍷 Hosteria Grappolo d'Oro</h4>
-      <div class="checklist-item">Piazza della Cancelleria, 80 · Campo de' Fiori</div>
-      <div class="checklist-item">Recomendada por guías italianas de autenticidad. Muy local, buena relación calidad-precio.</div>
-      <div class="checklist-item">Pedir: cacio e pepe, pasta con bacalao · Cierra mié. mediodía</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍝 Come 'na Vorta — Paste e Vino</h4>
-      <div class="checklist-item">Via di Torre Argentina, 46 · junto a Largo Argentina</div>
-      <div class="checklist-item">Muy cerca del lugar del asesinato de César. Pasta fresca, ambiente acogedor. Perfecta para comer el domingo tras Largo Argentina.</div>
-      <div class="checklist-item">Pedir: carbonara, gnocchi con pesto, tiramisu</div>
-      <div class="checklist-item">Abre todos los días desde las 9h</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍝 Da Tonino — Trattoria Bassetti</h4>
-      <div class="checklist-item">Via del Governo Vecchio, 18 · cerca del Panteón</div>
-      <div class="checklist-item">El más barato de la lista. Porciones generosas, ambiente de toda la vida. Abre hasta medianoche.</div>
-      <div class="checklist-item">Pedir: carbonara, coda alla vaccinara, polpette · Cierra domingos</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🥖 All'Antico Vinaio</h4>
-      <div class="checklist-item">Piazza della Maddalena, 3 · cerca del Panteón</div>
-      <div class="checklist-item">Cadena florentina famosa por sus bocadillos gigantes. Street food, cola habitual. Opción rápida para comer de pie.</div>
-      <div class="checklist-item">Pedir: cualquier schiacciata con embutidos y queso</div>
-      <div class="checklist-item">Abre todos los días 10:30h–22:00h</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍕 Trapizzino</h4>
-      <div class="checklist-item">Piazza Trilussa, 46 · Trastevere</div>
-      <div class="checklist-item">Street food romano: triángulo de masa de pizza relleno de guisos clásicos. Informal, económico. Abre hasta la madrugada.</div>
-      <div class="checklist-item">Pedir: trapizzino de coda alla vaccinara o pollo alla cacciatora</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🥪 Il Panino Ingegnoso</h4>
-      <div class="checklist-item">Piazza di Pietra, 35 · junto al Panteón</div>
-      <div class="checklist-item">Sandwiches artesanales de alta calidad en una plaza preciosa. La estrella es la porchetta. Ideal para un almuerzo rápido el domingo tras los Capitolinos. 4.7⭐</div>
-      <div class="checklist-item">Pedir: panino de porchetta o mozzarella con pesto</div>
-      <div class="checklist-item">Abre todos los días desde las 10-11h</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🥬 Trattoria Lilli</h4>
-      <div class="checklist-item">Via di Tor di Nona, 23 · Tor di Nona / cerca del Ara Pacis</div>
-      <div class="checklist-item">Familiar, muy bien valorada. Ambiente genuino, precios honestos.</div>
-      <div class="checklist-item">Pedir: tonnarelli cacio e pepe, polpette · Cierra los lunes</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍷 La Gattabuia</h4>
-      <div class="checklist-item">Via del Porto, 1 · Trastevere</div>
-      <div class="checklist-item">Restaurante en semisótano en Trastevere. Ambiente íntimo, decoración temática, muy local. Reseñas destacan la carbonara y el tiramisú de pistacho como excepcionales.</div>
-      <div class="checklist-item">Pedir: carbonara, trippa, tiramisú de pistacho</div>
-      <div class="checklist-item">Solo cenas (lunes–viernes) · Sábados y domingos también mediodía · ⚠️ Reservar mesa</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🥩 Er Buchetto</h4>
-      <div class="checklist-item">Via del Viminale, 2F · ~5 min del hotel</div>
-      <div class="checklist-item">Bocadillo de porchetta desde 1890, 5ª generación. El más cercano al hotel. Muy local, sin turistas, con vino de la casa. Comer de pie o en la pequeña terraza.</div>
-      <div class="checklist-item">Pedir: bocadillo de porchetta · Cierra domingos y de 15:00 a 17:00h</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍕 Sfizio Pizzeria</h4>
-      <div class="checklist-item">Via Giovanni Giolitti, 77 · ~3 min del hotel, frente a Termini</div>
-      <div class="checklist-item">Pizza al taglio con 4.7⭐ y casi 10.000 reseñas. Masa fresca, variedad grande. Perfecto para desayunar antes de salir o picar rápido. El único de los 5 que abre domingos.</div>
-      <div class="checklist-item">Pedir: cualquier pizza del día · Abre todos los días desde las 8:30h</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍕 Pizzeria Acqua & Farina</h4>
-      <div class="checklist-item">Via Principe Amedeo, 90 · ~5 min del hotel</div>
-      <div class="checklist-item">Pizza al taglio artesanal tipo pinsa (masa más ligera y crujiente). En la misma calle que Trattoria Cecio. 4.6⭐, muy buenas reseñas de locales.</div>
-      <div class="checklist-item">Pedir: diavola, margherita, pizza del día · Cierra domingos</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍅 Supplì Roma</h4>
-      <div class="checklist-item">Via di San Francesco a Ripa, 137 · Trastevere</div>
-      <div class="checklist-item">El mejor supplì de Roma según guías locales (4.7⭐). Bola de arroz frita con ragù y mozzarella fundida. También pizza al taglio. Perfecto para picar antes de cenar en Trastevere.</div>
-      <div class="checklist-item">Pedir: supplì classico o cacio e pepe · Cierra domingos</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍕 Forno Campo de' Fiori</h4>
-      <div class="checklist-item">Campo de' Fiori, 22 · Campo de' Fiori</div>
-      <div class="checklist-item">Horno histórico en la plaza. Pizza al taglio con ingredientes frescos y panini artesanales. Ideal para un snack rápido antes o después de Largo Argentina.</div>
-      <div class="checklist-item">Pedir: pizza al taglio o panino con mortadella · Cierra domingos y de 14:30 a 16:30h</div>
-    </div>
-
-  </div>
-
-  <!-- NÁPOLES -->
-  <div style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--naples-accent);margin-bottom:0.75rem;">🌋 Nápoles</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem;">
-
-    <div class="checklist-card">
-      <h4>🍕 L'Antica Pizzeria da Michele</h4>
-      <div class="checklist-item">Via Cesare Sersale, 1-3 · Centro</div>
-      <div class="checklist-item">La pizzeria más histórica de Nápoles desde 1870. Solo 2 pizzas en carta.</div>
-      <div class="checklist-item">Pedir: margherita · Posible espera 30-45 min</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍝 Trattoria da Nennella</h4>
-      <div class="checklist-item">Vico Lungo Teatro Nuovo, 103 · Quartieri Spagnoli</div>
-      <div class="checklist-item">La trattoria más caótica y genuina de Nápoles. Camareros que cantan, vino en jarras. Solo efectivo, sin reserva.</div>
-      <div class="checklist-item">Pedir: spaghetti al ragù napoletano, babbà al rum</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🦑 Friggitoria Fiorenzano</h4>
-      <div class="checklist-item">Piazza Montesanto, 1 · Centro</div>
-      <div class="checklist-item">La friggitoria más histórica de Nápoles, desde 1897. Comida de pie en la calle.</div>
-      <div class="checklist-item">Pedir: cuoppo di mare (cono de frittura de marisco)</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍝 Tandem Ragù</h4>
-      <div class="checklist-item">Via Giovanni Paladino, 51 · Centro histórico</div>
-      <div class="checklist-item">Especializado única y exclusivamente en ragù napolitano cocinado durante horas. Una sola cosa en carta, la mejor versión posible. También sirve cuzzetiello con ragù, polpette y provola. Económico, abre todos los días.</div>
-      <div class="checklist-item">Pedir: rigatoni al ragù, lasagna, cuzzetiello</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍷 Osteria da Carmela</h4>
-      <div class="checklist-item">Via Conte di Ruvo, 12 · cerca del MANN</div>
-      <div class="checklist-item">Institución desde 1967, solo 8 mesas. La más bien valorada de la lista (4.6⭐). Cocina napolitana tradicional con toque creativo. Reservar obligatorio.</div>
-      <div class="checklist-item">Pedir: ziti alla genovese, frittura di paranza, marisco fresco · Cierra domingos</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍷 Antica Osteria Pisano</h4>
-      <div class="checklist-item">Piazza Crocelle ai Mannesi, 1 · Forcella / Via Duomo</div>
-      <div class="checklist-item">Osteria histórica desde 1880, en el corazón de Forcella. Cocina popular y auténtica, ambiente sin artificio.</div>
-      <div class="checklist-item">Pedir: ragù, genovese, frittura · Cierra miércoles</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🌿 La Campagnola</h4>
-      <div class="checklist-item">Via dei Tribunali, 47 · Centro histórico</div>
-      <div class="checklist-item">70 años en la calle más animada del centro. Buena para mediodía. Muy recomendada en guías locales italianas.</div>
-      <div class="checklist-item">Pedir: ziti alla genovese, pasta e patate · Abre todos los días</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍕 1947 Pizza Fritta</h4>
-      <div class="checklist-item">Via Pietro Colletta, 29 · justo enfrente de Da Michele · ~2 min del hotel</div>
-      <div class="checklist-item">Pizza fritta napolitana en local pequeño y auténtico. Masa rellena de ricotta, ciccioli o mortadella. También cuoppo clásico.</div>
-      <div class="checklist-item">Pedir: pizza fritta clásica o cuoppo napoletano · Cierra martes</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍕 Antica Pizzeria Di Matteo</h4>
-      <div class="checklist-item">Via dei Tribunali, 94 · Centro histórico</div>
-      <div class="checklist-item">Histórica pizzería de 1936 donde Clinton comió pizza a portafoglio en 1994. La pizza al portafoglio y la frittatina di pasta son las mejores de la ciudad según guías locales. Mostrador en planta baja para llevar.</div>
-      <div class="checklist-item">Pedir: pizza a portafoglio, frittatina di pasta · Cierra domingos</div>
-    </div>
-
-    <div class="checklist-card">
-      <h4>🍕 Antica Pizzeria Port'Alba</h4>
-      <div class="checklist-item">Via Port'Alba, 18 · Centro histórico</div>
-      <div class="checklist-item">La pizzería más antigua del mundo, fundada en 1738. Nació como puesto callejero para vender pizzas a portafoglio a estudiantes y trabajadores. Hoy sigue sirviendo la misma pizza en el mismo callejón histórico.</div>
-      <div class="checklist-item">Pedir: pizza a portafoglio, margherita histórica · Cierra martes</div>
-    </div>
-
-  </div>
+<p style="font-style:italic;color:var(--ink-light);font-size:0.88rem;margin-bottom:1.5rem;">Lista de opciones barajadas — aún por decidir. Los del itinerario son sugerencias, no están confirmados.</p>
+<!-- ROMA -->
+<div style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--terracotta);margin-bottom:0.75rem;">🏙️ Roma</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem;margin-bottom:2rem;">
+<div class="checklist-card">
+<h4>🍝 Trattoria Dell'Omo ⭐</h4>
+<div class="checklist-item">Via Vicenza, 18 · ~8 min del hotel</div>
+<div class="checklist-item">La más auténtica de la zona. Solo cenas, menú de temporada, precios muy bajos. Reseñas destacan la mejor carbonara y tiramisú del barrio.</div>
+<div class="checklist-item">Pedir: carbonara, ravioli con ragù</div>
+<div class="checklist-item">Abre desde las 19:30h · Cierra domingos</div>
 </div>
-
+<div class="checklist-card">
+<h4>🍝 Trattoria Cecio</h4>
+<div class="checklist-item">Via Principe Amedeo, 104 · ~5 min del hotel</div>
+<div class="checklist-item">La más cercana al hotel. Cocina romana honesta, mármol en las mesas, ambiente tranquilo. Abre todos los días incluyendo domingos.</div>
+<div class="checklist-item">Pedir: carbonara, tonnarelli</div>
+</div>
+<div class="checklist-card">
+<h4>🍝 Trattoria Vecchia Roma</h4>
+<div class="checklist-item">Via Ferruccio, 12 · ~10 min del hotel</div>
+<div class="checklist-item">Muy popular, 14.000 reseñas. Sólida para cualquier noche, especialmente si llegáis sin reserva. Supplì, cacio e pepe y rigatoni alla coda entre lo mejor.</div>
+<div class="checklist-item">Pedir: rigatoni alla coda, cacio e pepe · Cierra domingos</div>
+</div>
+<div class="checklist-card">
+<h4>🍝 Trattoria Monti</h4>
+<div class="checklist-item">Via di San Vito, 13 · cerca de Termini</div>
+<div class="checklist-item">Cocina romana clásica, sin trampa turística. ~10 min andando del hotel.</div>
+<div class="checklist-item">Pedir: cacio e pepe o abbacchio alla romana</div>
+<div class="checklist-item" style="color:var(--terracotta)">⚠️ Reservar mesa</div>
+</div>
+<div class="checklist-card">
+<h4>🍝 Trattoria Luzzi</h4>
+<div class="checklist-item">Via di San Giovanni in Laterano · cerca del Coliseo</div>
+<div class="checklist-item">Pasta romana sin pretensiones. Buena opción para comer rápido cerca del Foro.</div>
+<div class="checklist-item">Pedir: carbonara · Solo efectivo</div>
+</div>
+<div class="checklist-card">
+<h4>🍷 Tonnarello</h4>
+<div class="checklist-item">Via della Paglia, 1/2/3 · Trastevere</div>
+<div class="checklist-item">Uno de los más populares de Trastevere. Animado, con terraza. 4.7⭐ con más de 100.000 reseñas.</div>
+<div class="checklist-item">Pedir: tonnarelli cacio e pepe o carbonara</div>
+<div class="checklist-item">Abre todos los días desde las 11:30h</div>
+</div>
+<div class="checklist-card">
+<h4>🍝 LUCIANO Cucina Italiana</h4>
+<div class="checklist-item">Piazza del Teatro di Pompeo, 18 · Campo de' Fiori</div>
+<div class="checklist-item">Cocina romana contemporánea. Famoso por su carbonara con guanciale semicurado. Nivel más alto.</div>
+<div class="checklist-item">Pedir: carbonara, trippa, coda alla vaccinara</div>
+</div>
+<div class="checklist-card">
+<h4>🍷 Hosteria Grappolo d'Oro</h4>
+<div class="checklist-item">Piazza della Cancelleria, 80 · Campo de' Fiori</div>
+<div class="checklist-item">Recomendada por guías italianas de autenticidad. Muy local, buena relación calidad-precio.</div>
+<div class="checklist-item">Pedir: cacio e pepe, pasta con bacalao · Cierra mié. mediodía</div>
+</div>
+<div class="checklist-card">
+<h4>🍝 Come 'na Vorta — Paste e Vino</h4>
+<div class="checklist-item">Via di Torre Argentina, 46 · junto a Largo Argentina</div>
+<div class="checklist-item">Muy cerca del lugar del asesinato de César. Pasta fresca, ambiente acogedor. Perfecta para comer el domingo tras Largo Argentina.</div>
+<div class="checklist-item">Pedir: carbonara, gnocchi con pesto, tiramisu</div>
+<div class="checklist-item">Abre todos los días desde las 9h</div>
+</div>
+<div class="checklist-card">
+<h4>🍝 Da Tonino — Trattoria Bassetti</h4>
+<div class="checklist-item">Via del Governo Vecchio, 18 · cerca del Panteón</div>
+<div class="checklist-item">El más barato de la lista. Porciones generosas, ambiente de toda la vida. Abre hasta medianoche.</div>
+<div class="checklist-item">Pedir: carbonara, coda alla vaccinara, polpette · Cierra domingos</div>
+</div>
+<div class="checklist-card">
+<h4>🥖 All'Antico Vinaio</h4>
+<div class="checklist-item">Piazza della Maddalena, 3 · cerca del Panteón</div>
+<div class="checklist-item">Cadena florentina famosa por sus bocadillos gigantes. Street food, cola habitual. Opción rápida para comer de pie.</div>
+<div class="checklist-item">Pedir: cualquier schiacciata con embutidos y queso</div>
+<div class="checklist-item">Abre todos los días 10:30h–22:00h</div>
+</div>
+<div class="checklist-card">
+<h4>🍕 Trapizzino</h4>
+<div class="checklist-item">Piazza Trilussa, 46 · Trastevere</div>
+<div class="checklist-item">Street food romano: triángulo de masa de pizza relleno de guisos clásicos. Informal, económico. Abre hasta la madrugada.</div>
+<div class="checklist-item">Pedir: trapizzino de coda alla vaccinara o pollo alla cacciatora</div>
+</div>
+<div class="checklist-card">
+<h4>🥪 Il Panino Ingegnoso</h4>
+<div class="checklist-item">Piazza di Pietra, 35 · junto al Panteón</div>
+<div class="checklist-item">Sandwiches artesanales de alta calidad en una plaza preciosa. La estrella es la porchetta. Ideal para un almuerzo rápido el domingo tras los Capitolinos. 4.7⭐</div>
+<div class="checklist-item">Pedir: panino de porchetta o mozzarella con pesto</div>
+<div class="checklist-item">Abre todos los días desde las 10-11h</div>
+</div>
+<div class="checklist-card">
+<h4>🥬 Trattoria Lilli</h4>
+<div class="checklist-item">Via di Tor di Nona, 23 · Tor di Nona / cerca del Ara Pacis</div>
+<div class="checklist-item">Familiar, muy bien valorada. Ambiente genuino, precios honestos.</div>
+<div class="checklist-item">Pedir: tonnarelli cacio e pepe, polpette · Cierra los lunes</div>
+</div>
+<div class="checklist-card">
+<h4>🍷 La Gattabuia</h4>
+<div class="checklist-item">Via del Porto, 1 · Trastevere</div>
+<div class="checklist-item">Restaurante en semisótano en Trastevere. Ambiente íntimo, decoración temática, muy local. Reseñas destacan la carbonara y el tiramisú de pistacho como excepcionales.</div>
+<div class="checklist-item">Pedir: carbonara, trippa, tiramisú de pistacho</div>
+<div class="checklist-item">Solo cenas (lunes–viernes) · Sábados y domingos también mediodía · ⚠️ Reservar mesa</div>
+</div>
+<div class="checklist-card">
+<h4>🥩 Er Buchetto</h4>
+<div class="checklist-item">Via del Viminale, 2F · ~5 min del hotel</div>
+<div class="checklist-item">Bocadillo de porchetta desde 1890, 5ª generación. El más cercano al hotel. Muy local, sin turistas, con vino de la casa. Comer de pie o en la pequeña terraza.</div>
+<div class="checklist-item">Pedir: bocadillo de porchetta · Cierra domingos y de 15:00 a 17:00h</div>
+</div>
+<div class="checklist-card">
+<h4>🍕 Sfizio Pizzeria</h4>
+<div class="checklist-item">Via Giovanni Giolitti, 77 · ~3 min del hotel, frente a Termini</div>
+<div class="checklist-item">Pizza al taglio con 4.7⭐ y casi 10.000 reseñas. Masa fresca, variedad grande. Perfecto para desayunar antes de salir o picar rápido. El único de los 5 que abre domingos.</div>
+<div class="checklist-item">Pedir: cualquier pizza del día · Abre todos los días desde las 8:30h</div>
+</div>
+<div class="checklist-card">
+<h4>🍕 Pizzeria Acqua &amp; Farina</h4>
+<div class="checklist-item">Via Principe Amedeo, 90 · ~5 min del hotel</div>
+<div class="checklist-item">Pizza al taglio artesanal tipo pinsa (masa más ligera y crujiente). En la misma calle que Trattoria Cecio. 4.6⭐, muy buenas reseñas de locales.</div>
+<div class="checklist-item">Pedir: diavola, margherita, pizza del día · Cierra domingos</div>
+</div>
+<div class="checklist-card">
+<h4>🍅 Supplì Roma</h4>
+<div class="checklist-item">Via di San Francesco a Ripa, 137 · Trastevere</div>
+<div class="checklist-item">El mejor supplì de Roma según guías locales (4.7⭐). Bola de arroz frita con ragù y mozzarella fundida. También pizza al taglio. Perfecto para picar antes de cenar en Trastevere.</div>
+<div class="checklist-item">Pedir: supplì classico o cacio e pepe · Cierra domingos</div>
+</div>
+<div class="checklist-card">
+<h4>🍕 Forno Campo de' Fiori</h4>
+<div class="checklist-item">Campo de' Fiori, 22 · Campo de' Fiori</div>
+<div class="checklist-item">Horno histórico en la plaza. Pizza al taglio con ingredientes frescos y panini artesanales. Ideal para un snack rápido antes o después de Largo Argentina.</div>
+<div class="checklist-item">Pedir: pizza al taglio o panino con mortadella · Cierra domingos y de 14:30 a 16:30h</div>
+</div>
+</div>
+<!-- NÁPOLES -->
+<div style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--naples-accent);margin-bottom:0.75rem;">🌋 Nápoles</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem;">
+<div class="checklist-card">
+<h4>🍕 L'Antica Pizzeria da Michele</h4>
+<div class="checklist-item">Via Cesare Sersale, 1-3 · Centro</div>
+<div class="checklist-item">La pizzeria más histórica de Nápoles desde 1870. Solo 2 pizzas en carta.</div>
+<div class="checklist-item">Pedir: margherita · Posible espera 30-45 min</div>
+</div>
+<div class="checklist-card">
+<h4>🍝 Trattoria da Nennella</h4>
+<div class="checklist-item">Vico Lungo Teatro Nuovo, 103 · Quartieri Spagnoli</div>
+<div class="checklist-item">La trattoria más caótica y genuina de Nápoles. Camareros que cantan, vino en jarras. Solo efectivo, sin reserva.</div>
+<div class="checklist-item">Pedir: spaghetti al ragù napoletano, babbà al rum</div>
+</div>
+<div class="checklist-card">
+<h4>🦑 Friggitoria Fiorenzano</h4>
+<div class="checklist-item">Piazza Montesanto, 1 · Centro</div>
+<div class="checklist-item">La friggitoria más histórica de Nápoles, desde 1897. Comida de pie en la calle.</div>
+<div class="checklist-item">Pedir: cuoppo di mare (cono de frittura de marisco)</div>
+</div>
+<div class="checklist-card">
+<h4>🍝 Tandem Ragù</h4>
+<div class="checklist-item">Via Giovanni Paladino, 51 · Centro histórico</div>
+<div class="checklist-item">Especializado única y exclusivamente en ragù napolitano cocinado durante horas. Una sola cosa en carta, la mejor versión posible. También sirve cuzzetiello con ragù, polpette y provola. Económico, abre todos los días.</div>
+<div class="checklist-item">Pedir: rigatoni al ragù, lasagna, cuzzetiello</div>
+</div>
+<div class="checklist-card">
+<h4>🍷 Osteria da Carmela</h4>
+<div class="checklist-item">Via Conte di Ruvo, 12 · cerca del MANN</div>
+<div class="checklist-item">Institución desde 1967, solo 8 mesas. La más bien valorada de la lista (4.6⭐). Cocina napolitana tradicional con toque creativo. Reservar obligatorio.</div>
+<div class="checklist-item">Pedir: ziti alla genovese, frittura di paranza, marisco fresco · Cierra domingos</div>
+</div>
+<div class="checklist-card">
+<h4>🍷 Antica Osteria Pisano</h4>
+<div class="checklist-item">Piazza Crocelle ai Mannesi, 1 · Forcella / Via Duomo</div>
+<div class="checklist-item">Osteria histórica desde 1880, en el corazón de Forcella. Cocina popular y auténtica, ambiente sin artificio.</div>
+<div class="checklist-item">Pedir: ragù, genovese, frittura · Cierra miércoles</div>
+</div>
+<div class="checklist-card">
+<h4>🌿 La Campagnola</h4>
+<div class="checklist-item">Via dei Tribunali, 47 · Centro histórico</div>
+<div class="checklist-item">70 años en la calle más animada del centro. Buena para mediodía. Muy recomendada en guías locales italianas.</div>
+<div class="checklist-item">Pedir: ziti alla genovese, pasta e patate · Abre todos los días</div>
+</div>
+<div class="checklist-card">
+<h4>🍕 1947 Pizza Fritta</h4>
+<div class="checklist-item">Via Pietro Colletta, 29 · justo enfrente de Da Michele · ~2 min del hotel</div>
+<div class="checklist-item">Pizza fritta napolitana en local pequeño y auténtico. Masa rellena de ricotta, ciccioli o mortadella. También cuoppo clásico.</div>
+<div class="checklist-item">Pedir: pizza fritta clásica o cuoppo napoletano · Cierra martes</div>
+</div>
+<div class="checklist-card">
+<h4>🍕 Antica Pizzeria Di Matteo</h4>
+<div class="checklist-item">Via dei Tribunali, 94 · Centro histórico</div>
+<div class="checklist-item">Histórica pizzería de 1936 donde Clinton comió pizza a portafoglio en 1994. La pizza al portafoglio y la frittatina di pasta son las mejores de la ciudad según guías locales. Mostrador en planta baja para llevar.</div>
+<div class="checklist-item">Pedir: pizza a portafoglio, frittatina di pasta · Cierra domingos</div>
+</div>
+<div class="checklist-card">
+<h4>🍕 Antica Pizzeria Port'Alba</h4>
+<div class="checklist-item">Via Port'Alba, 18 · Centro histórico</div>
+<div class="checklist-item">La pizzería más antigua del mundo, fundada en 1738. Nació como puesto callejero para vender pizzas a portafoglio a estudiantes y trabajadores. Hoy sigue sirviendo la misma pizza en el mismo callejón histórico.</div>
+<div class="checklist-item">Pedir: pizza a portafoglio, margherita histórica · Cierra martes</div>
+</div>
+</div>
+</div>
 <!-- RESERVAS -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1rem">
-    <div class="divider-line"></div>
-    <div class="divider-text">Lista de reservas</div>
-    <div class="divider-line"></div>
-  </div>
+</div>
+</details><details class="map-panel fold-panel" id="lista-de-reservas-panel">
+  <summary>
+<span class="map-sum-icon">📋</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Lista de reservas</span>
+<span class="map-sum-sub">7 reservas y comprobaciones, con urgencia y fecha</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body"><div class="section-block">
 
-  <div class="booking-list">
-    <div class="booking-item">
-      <div class="booking-dot red"></div>
-      <div>
-        <div class="booking-name">Coliseo — Arena Floor · Sáb. 28 · 12:00h</div>
-        <div class="booking-when">ticketing.colosseo.it · Verificar que incluye Foro Romano + Palatino</div>
-      </div>
-      <div class="booking-urgency">🔴 Ya reservado</div>
-      <div class="booking-price"></div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot red"></div>
-      <div>
-        <div class="booking-name">Pompeya — Mar. 31 · 9:00h</div>
-        <div class="booking-when">pompeiisites.org</div>
-      </div>
-      <div class="booking-urgency">🔴 Ya reservado</div>
-      <div class="booking-price"></div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot red"></div>
-      <div>
-        <div class="booking-name">MANN Nápoles — Mié. 1 · 9:00h</div>
-        <div class="booking-when">museoarcheologiconapoli.it</div>
-      </div>
-      <div class="booking-urgency">🔴 Ya reservado</div>
-      <div class="booking-price"></div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot yellow"></div>
-      <div>
-        <div class="booking-name">Palazzo Massimo alle Terme — Dom. 29 · 9:00h</div>
-        <div class="booking-when">museonazionaleromano.beniculturali.it</div>
-      </div>
-      <div class="booking-urgency">🟡 Reservar</div>
-      <div class="booking-price"></div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot yellow"></div>
-      <div>
-        <div class="booking-name">Museos Capitolinos — Dom. 29 · 11:00h</div>
-        <div class="booking-when">museicapitolini.org · Evita colas, especialmente en Semana Santa</div>
-      </div>
-      <div class="booking-urgency">🟡 Reservar</div>
-      <div class="booking-price"></div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot yellow"></div>
-      <div>
-        <div class="booking-name">Herculano — Mié. 1 · 11:30h</div>
-        <div class="booking-when">ercolano.cultura.gov.it · También en taquilla</div>
-      </div>
-      <div class="booking-urgency">🟡 Recomendable</div>
-      <div class="booking-price"></div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot green"></div>
-      <div>
-        <div class="booking-name">Termas de Caracalla — Sáb. 28 · 16:30h</div>
-        <div class="booking-when">coopculture.it · También en taquilla</div>
-      </div>
-      <div class="booking-urgency">🟢 Opcional</div>
-      <div class="booking-price"></div>
-    </div>
-  </div>
+<div class="booking-list">
+<div class="booking-item">
+<div class="booking-dot red"></div>
+<div>
+<div class="booking-name">Coliseo — Arena Floor · Sáb. 28 · 12:00h</div>
+<div class="booking-when">ticketing.colosseo.it · Verificar que incluye Foro Romano + Palatino</div>
+</div>
+<div class="booking-urgency">🔴 Ya reservado</div>
+<div class="booking-price"></div>
+</div>
+<div class="booking-item">
+<div class="booking-dot red"></div>
+<div>
+<div class="booking-name">Pompeya — Mar. 31 · 9:00h</div>
+<div class="booking-when">pompeiisites.org</div>
+</div>
+<div class="booking-urgency">🔴 Ya reservado</div>
+<div class="booking-price"></div>
+</div>
+<div class="booking-item">
+<div class="booking-dot red"></div>
+<div>
+<div class="booking-name">MANN Nápoles — Mié. 1 · 9:00h</div>
+<div class="booking-when">museoarcheologiconapoli.it</div>
+</div>
+<div class="booking-urgency">🔴 Ya reservado</div>
+<div class="booking-price"></div>
+</div>
+<div class="booking-item">
+<div class="booking-dot yellow"></div>
+<div>
+<div class="booking-name">Palazzo Massimo alle Terme — Dom. 29 · 9:00h</div>
+<div class="booking-when">museonazionaleromano.beniculturali.it</div>
+</div>
+<div class="booking-urgency">🟡 Reservar</div>
+<div class="booking-price"></div>
+</div>
+<div class="booking-item">
+<div class="booking-dot yellow"></div>
+<div>
+<div class="booking-name">Museos Capitolinos — Dom. 29 · 11:00h</div>
+<div class="booking-when">museicapitolini.org · Evita colas, especialmente en Semana Santa</div>
+</div>
+<div class="booking-urgency">🟡 Reservar</div>
+<div class="booking-price"></div>
+</div>
+<div class="booking-item">
+<div class="booking-dot yellow"></div>
+<div>
+<div class="booking-name">Herculano — Mié. 1 · 11:30h</div>
+<div class="booking-when">ercolano.cultura.gov.it · También en taquilla</div>
+</div>
+<div class="booking-urgency">🟡 Recomendable</div>
+<div class="booking-price"></div>
+</div>
+<div class="booking-item">
+<div class="booking-dot green"></div>
+<div>
+<div class="booking-name">Termas de Caracalla — Sáb. 28 · 16:30h</div>
+<div class="booking-when">coopculture.it · También en taquilla</div>
+</div>
+<div class="booking-urgency">🟢 Opcional</div>
+<div class="booking-price"></div>
+</div>
+</div>
+</div>
+</div>
+</details><div class="footer">
+<p>Roma &amp; Nápoles · Imperio Romano · Marzo–Abril 2025</p>
 </div>
 
-<div class="footer">
-  <p>Roma & Nápoles · Imperio Romano · Marzo–Abril 2025</p>
-</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+/* ---------- Días plegables ---------- */
+(function () {
+  var KEY = 'roma-plan-collapsed';
+  var sections = Array.prototype.slice.call(document.querySelectorAll('[data-day-section]'));
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) {}
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(sections.map(function (s, i) { return s.classList.contains('collapsed') ? i : -1; }).filter(function (i) { return i >= 0; }))); } catch (e) {}
+  }
+  function setCollapsed(sec, c) { sec.classList.toggle('collapsed', c); sec.querySelector('.fold-day-head').setAttribute('aria-expanded', String(!c)); }
+  sections.forEach(function (sec, i) {
+    if (saved.indexOf(i) >= 0) setCollapsed(sec, true);
+    var head = sec.querySelector('.fold-day-head');
+    head.addEventListener('click', function () { setCollapsed(sec, !sec.classList.contains('collapsed')); save(); });
+    head.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); head.click(); } });
+  });
+  document.querySelectorAll('[data-days]').forEach(function (b) {
+    b.addEventListener('click', function () { var c = b.getAttribute('data-days') === 'collapse'; sections.forEach(function (s) { setCollapsed(s, c); }); save(); });
+  });
+})();
+
+/* ---------- Mapa ---------- */
+(function () {
+  var COLORS = {"1": "#8c3e18", "2": "#c0622f", "3": "#7a4f2d", "4": "#b8860b", "5": "#2d5a4f", "6": "#103d2e"};
+  var BASES = [];
+  var P = [[1, "Roma Termini", "20:00 · llegada", "Roma Termini", 41.9012, 12.50167], [2, "Coliseo", "9:00 + Arena Floor 12:00", "Colosseo, Roma", 41.89094, 12.4919], [2, "Trattoria Luzzi", "13:00 · comida", "Trattoria Luzzi, Via di San Giovanni in Laterano 88, Roma", 41.88929, 12.49662], [2, "Foro Romano", "14:00", "Foro Romano", 41.89164, 12.48673], [2, "Monte Palatino", "15:15", "Palatino, Roma", 41.88931, 12.48711], [2, "Circo Máximo", "16:30", "Circo Massimo", 41.88616, 12.48531], [2, "Termas de Caracalla", "16:30", "Terme di Caracalla", 41.87883, 12.49247], [2, "Trastevere", "18:00 · paseo", "Piazza di Santa Maria in Trastevere", 41.88956, 12.47051], [2, "Trattoria Dell'Omo", "20:30 · cena", "Trattoria Dell'Omo, Via Vicenza 18, Roma", 41.90293, 12.50247], [3, "Palazzo Massimo alle Terme", "9:00", "Palazzo Massimo alle Terme", 41.9013, 12.49866], [3, "Largo Argentina", "10:30", "Largo di Torre Argentina", 41.89532, 12.47688], [3, "Come 'na Vorta", "12:30 · comida", "Come 'na Vorta Paste e Vino, Roma", 41.8953, 12.47645], [3, "Panteón", "14:00", "Pantheon, Roma", 41.89862, 12.47683], [3, "Gladiator Museum", "16:30", "Gladiator Museum, Piazza Navona, Roma", 41.89894, 12.47341], [3, "Piazza Navona", "17:30", "Piazza Navona", 41.89893, 12.47312], [3, "Castel Sant'Angelo", "Paseo", "Castel Sant'Angelo", 41.90312, 12.46634], [3, "Tonnarello", "21:00 · cena · Trastevere", "Tonnarello, Via della Paglia 1, Roma", 41.8896, 12.46882], [4, "Castel Sant'Angelo", "9:00 · paseo", "Castel Sant'Angelo", 41.90312, 12.46634], [4, "Roma Termini", "15:30 · tren", "Roma Termini", 41.9012, 12.50167], [4, "Napoli Centrale", "~16:40 · llegada", "Napoli Centrale", 40.85302, 14.27314], [4, "Cappella Sansevero", "18:20", "Museo Cappella Sansevero, Napoli", 40.8493, 14.25493], [4, "San Gregorio Armeno", "18:55 · Spaccanapoli", "Via San Gregorio Armeno, Napoli", 40.84978, 14.25798], [4, "Duomo di Napoli", "Centro histórico", "Duomo di Napoli", 40.85265, 14.25987], [4, "L'Antica Pizzeria da Michele", "21:00 · cena", "L'Antica Pizzeria da Michele, Napoli", 40.84975, 14.26335], [5, "Pompeya", "9:00 · todo el día", "Parco Archeologico di Pompei", 40.74729, 14.48016], [5, "Herculano", "15:30 · opcional", "Parco Archeologico di Ercolano", 40.80536, 14.34711], [5, "Tandem Ragù", "21:00 · cena", "Tandem Ragù, Via Giovanni Paladino 51, Napoli", 40.84824, 14.25633], [6, "MANN", "9:00", "Museo Archeologico Nazionale di Napoli", 40.85361, 14.25115], [6, "Murale Maradona", "11:00 · Quartieri Spagnoli", "Murale Maradona, Quartieri Spagnoli, Napoli", 40.84138, 14.24511], [6, "Trattoria Moré", "12:30 · comida", "Trattoria Moré, Vico Tiratoio 5, Napoli", 40.83824, 14.24632], [6, "Galleria Umberto I", "14:00 · Toledo", "Galleria Umberto I, Napoli", 40.83851, 14.24924], [6, "Piazza del Plebiscito", "Tarde", "Piazza del Plebiscito, Napoli", 40.83586, 14.24857], [6, "Aeropuerto Capodichino", "19:00 · vuelo", "Aeroporto di Napoli", 40.884, 14.28455]];
+  var pts = []; var count = {};
+  P.forEach(function (r) { count[r[0]] = (count[r[0]] || 0) + 1; pts.push({ day: r[0], n: count[r[0]], name: r[1], note: r[2], q: r[3], lat: r[4], lon: r[5] }); });
+  function gmaps(q) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q); }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var panel = document.getElementById('map-panel');
+  var map = null, layer = null, current = 'all';
+  var GOLD = getComputedStyle(document.documentElement).getPropertyValue('--fp-gold').trim() || '#a8823a';
+  function pinIcon(bg, label, base) {
+    return L.divIcon({ className: '', html: '<div class="pin' + (base ? ' base' : '') + '" style="background:' + bg + '"><span>' + label + '</span></div>',
+      iconSize: base ? [30, 30] : [26, 26], iconAnchor: base ? [15, 30] : [13, 26], tooltipAnchor: [0, base ? -30 : -26] });
+  }
+  function addMarker(p, color, label, base) {
+    var m = L.marker([p.lat, p.lon], { icon: pinIcon(color, label, base), keyboard: true, title: p.name, zIndexOffset: base ? 1000 : 0 });
+    m.bindTooltip('<b>' + esc(p.name) + '</b><small>' + esc(p.note) + ' · clic → Google Maps</small>', { direction: 'top', className: 'trip-tip' });
+    m.on('click', function () { window.open(gmaps(p.q), '_blank', 'noopener'); });
+    m.addTo(layer); return m;
+  }
+  function chip(p, color, label) {
+    return '<a class="map-chip" target="_blank" rel="noopener" href="' + gmaps(p.q) + '"><b style="background:' + color + '">' + label + '</b>' + esc(p.name) + '</a>';
+  }
+  function draw(filter) {
+    current = filter; layer.clearLayers();
+    var bounds = [], html = '', days = Object.keys(COLORS).map(Number);
+    days.forEach(function (d) {
+      if (filter !== 'all' && +filter !== d) return;
+      var dp = pts.filter(function (p) { return p.day === d; });
+      L.polyline(dp.map(function (p) { return [p.lat, p.lon]; }), { color: COLORS[d], weight: 2.5, opacity: 0.55, dashArray: '5 7' }).addTo(layer);
+      dp.forEach(function (p) { addMarker(p, COLORS[d], p.n, false); bounds.push([p.lat, p.lon]); });
+      if (filter !== 'all') html += dp.map(function (p) { return chip(p, COLORS[d], p.n); }).join('');
+    });
+    var bh = '';
+    BASES.forEach(function (b) {
+      if (filter !== 'all' && b.days.indexOf(+filter) < 0) return;
+      addMarker(b, GOLD, '★', true); bh += chip(b, GOLD, '★');
+      if (filter !== 'all' || b.fitAll) bounds.push([b.lat, b.lon]);
+    });
+    document.getElementById('map-chips').innerHTML = bh + html;
+    if (bounds.length) map.fitBounds(bounds, { padding: [28, 28], maxZoom: 16 });
+  }
+  function init() {
+    if (map || typeof L === 'undefined') return;
+    map = L.map('trip-map', { scrollWheelZoom: false, tap: true });
+    var ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+    var esriAttr = 'Tiles &copy; <a href="https://www.esri.com">Esri</a>';
+    var styles = {
+      'Claro': L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19, subdomains: 'abc', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &mdash; <a href="https://www.hotosm.org/">HOT</a>' }),
+      'Calles': L.tileLayer(ESRI + 'World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap' }),
+      'Topo': L.tileLayer(ESRI + 'World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap' }),
+      'Satélite': L.layerGroup([
+        L.tileLayer(ESRI + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, Maxar, Earthstar Geographics' }),
+        L.tileLayer(ESRI + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 })
+      ])
+    };
+    var STYLE_KEY = 'roma-plan-map-style', styleName = 'Claro';
+    try { var sv = localStorage.getItem(STYLE_KEY); if (sv && styles[sv]) styleName = sv; } catch (e) {}
+    styles[styleName].addTo(map);
+    L.control.layers(styles, null, { position: 'topright', collapsed: true }).addTo(map);
+    map.on('baselayerchange', function (e) { try { localStorage.setItem(STYLE_KEY, e.name); } catch (err) {} });
+    layer = L.layerGroup().addTo(map);
+    map.on('focus', function () { map.scrollWheelZoom.enable(); });
+    map.on('blur', function () { map.scrollWheelZoom.disable(); });
+    draw('all');
+  }
+  panel.addEventListener('toggle', function () {
+    if (!panel.open) return;
+    init();
+    if (map) setTimeout(function () { map.invalidateSize(); draw(current); }, 60);
+  });
+  document.querySelectorAll('#map-filters button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#map-filters button').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active'); if (map) draw(b.getAttribute('data-day'));
+    });
+  });
+})();
+</script>
 
 </body>
 </html>

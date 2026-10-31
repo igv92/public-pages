@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Mosela &amp; Rin — Viñedos, Castillos y Meandros</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&amp;family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&amp;display=swap" rel="stylesheet"/>
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
 <style>
   :root {
     --parch: #f2efe8;
@@ -461,542 +463,801 @@
     .warnings, .section-block, .backup { padding-left: 0; padding-right: 0; margin-left: 1rem; margin-right: 1rem; }
     .days-grid { padding: 0 1rem; }
   }
+
+  /* ===================== COMPONENTES v2 (plegables, mapa, cabecera de tarjeta) ===================== */
+  :root {
+    --fp-bg: var(--parch); --fp-surface: var(--mist);
+    --fp-main: var(--river); --fp-mid: var(--river-mid); --fp-light: var(--river-light);
+    --fp-gold: var(--gold);
+  }
+
+  /* Cabecera de tarjeta de día: franja + lugares arriba, título centrado abajo */
+  .day-card-header {
+    display: grid !important;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "block place" "date date";
+    align-items: baseline;
+    column-gap: 0.75rem;
+    row-gap: 0.25rem;
+    padding: 0.85rem 1.2rem 0.7rem;
+  }
+  .day-card-header .card-block, .day-card-header .day-number { grid-area: block; white-space: nowrap; margin: 0; }
+  .day-card-header .card-date, .day-card-header .day-date { grid-area: date; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; font-size: 0.95rem; }
+  .day-card-header .card-title, .day-card-header .day-title { grid-area: place; display: block !important; margin: 0 !important; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+
+  /* Paneles plegables */
+  .map-panel {
+    margin: 0 2rem 1rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.07);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+  .map-panel > summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center; gap: 0.9rem;
+    padding: 0.9rem 1.2rem; border-left: 3px solid var(--fp-main); user-select: none;
+  }
+  .map-panel > summary::-webkit-details-marker { display: none; }
+  .map-sum-icon {
+    width: 2.2rem; height: 2.2rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    background: var(--fp-mid); color: white; font-size: 1rem; border-radius: 2px;
+  }
+  .map-sum-text { display: flex; flex-direction: column; min-width: 0; }
+  .map-sum-title { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em; color: var(--ink); }
+  .map-sum-sub { font-size: 0.82rem; font-style: italic; color: var(--ink-light); }
+  .chev {
+    margin-left: auto; flex-shrink: 0; width: 0.6rem; height: 0.6rem;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    transform: rotate(45deg); transition: transform 0.2s ease; margin-right: 0.3rem; margin-top: -0.25rem;
+  }
+  .map-panel > summary .chev { color: var(--ink-light); }
+  .map-panel[open] > summary .chev { transform: rotate(-135deg); margin-top: 0.25rem; }
+  .map-body { padding: 0 1.2rem 1.1rem; border-top: 1px solid var(--fp-surface); }
+
+  /* Paneles de contenido: solo el summary es tarjeta; el contenido abierto ocupa el ancho de los días */
+  .fold-panel { background: transparent; border: none; box-shadow: none; overflow: visible; border-radius: 0; }
+  .fold-panel > summary {
+    background: white; border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.07); border-left: 3px solid var(--fp-main);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .fold-panel > summary:hover { background: #fcfcfc; }
+  .fold-body { padding: 1rem 0 0.6rem; }
+  .fold-body > * { margin-left: 0 !important; margin-right: 0 !important; }
+  .fold-body > *:last-child { margin-bottom: 0 !important; }
+  .fold-body > .section-block, .fold-body > .warnings { padding-left: 0 !important; padding-right: 0 !important; }
+  .fold-body .light-table, .fold-body .warnings { margin-bottom: 1rem; }
+  .fold-first { margin-top: 2rem; }
+  .fold-after-days { margin-top: 2.2rem; }
+
+  /* Mapa */
+  .map-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.9rem 0 0.8rem; }
+  .map-filters button {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 0.4rem 0.8rem; border-radius: 2px; cursor: pointer;
+    border: 1px solid var(--fp-surface); background: var(--fp-bg); color: var(--ink-mid);
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .map-filters button i { width: 9px; height: 9px; display: inline-block; transform: rotate(45deg); }
+  .map-filters button.active { background: var(--ink); border-color: var(--ink); color: var(--fp-bg); }
+  #trip-map { height: 440px; border-radius: 4px; border: 1px solid var(--fp-surface); background: var(--fp-surface); z-index: 0; }
+  #trip-map .leaflet-control-layers { border: 1px solid var(--fp-surface); border-radius: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-family: 'Crimson Pro', Georgia, serif; font-size: 0.85rem; color: var(--ink); }
+  #trip-map .leaflet-control-layers-expanded { padding: 0.4rem 0.7rem 0.4rem 0.5rem; }
+  #trip-map .leaflet-control-layers-base label { margin: 0.15rem 0; cursor: pointer; }
+  .map-hint { font-size: 0.78rem; font-style: italic; color: var(--ink-light); margin-top: 0.5rem; }
+  .map-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.7rem; }
+  .map-chip {
+    display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--ink-mid); text-decoration: none;
+    padding: 0.2rem 0.6rem 0.2rem 0.25rem; border-radius: 99px; background: var(--fp-bg); border: 1px solid var(--fp-surface);
+  }
+  .map-chip:hover { border-color: var(--fp-light); color: var(--ink); }
+  .map-chip b {
+    width: 1.25rem; height: 1.25rem; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-size: 0.65rem; font-weight: 600; font-family: 'Cinzel', serif;
+  }
+  .pin { width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.35); }
+  .pin span { transform: rotate(45deg); color: white; font: 600 11px 'Cinzel', serif; }
+  .pin.base { width: 30px; height: 30px; }
+  .pin.base span { font-size: 13px; }
+  .leaflet-tooltip.trip-tip { font-family: 'Crimson Pro', Georgia, serif; font-size: 0.85rem; color: var(--ink); border: 1px solid var(--fp-surface); border-radius: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); padding: 0.3rem 0.55rem; }
+  .trip-tip small { display: block; color: var(--ink-light); font-style: italic; }
+
+  /* Días plegables */
+  .days-toolbar { display: flex; justify-content: flex-end; gap: 0.4rem; margin: 1.6rem 2rem 0.8rem; }
+  .days-toolbar button {
+    font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 0.35rem 0.75rem; border: 1px solid var(--fp-surface); background: white; color: var(--ink-mid); border-radius: 2px; cursor: pointer;
+  }
+  .days-toolbar button:hover { border-color: var(--fp-light); color: var(--ink); }
+  .fold-day-head { cursor: pointer; user-select: none; position: relative; }
+  .fold-day-head:focus-visible { outline: 2px solid var(--fp-gold); outline-offset: -4px; }
+  .fold-day-head .chev { color: rgba(255,255,255,0.75); margin-left: 0.6rem; transform: rotate(45deg); }
+  .fold-day.collapsed .fold-day-head .chev { transform: rotate(-45deg); margin-top: 0; }
+  .fold-day.collapsed .day-body { display: none; }
+  .fold-day.collapsed { margin-bottom: 0.6rem; }
+  .fold-day.collapsed .fold-day-head { margin-bottom: 0; }
+
+  @media (max-width: 600px) {
+    .map-panel { margin: 0 1rem 0.8rem; }
+    .map-body { padding: 0 0.8rem 0.9rem; }
+    #trip-map { height: 360px; }
+    .fold-body { padding: 0.8rem 0 0.4rem; }
+    .fold-first { margin-top: 1.5rem; }
+    .days-toolbar { margin: 1.2rem 1rem 0.8rem; }
+    .fold-day-head { flex-wrap: wrap; }
+    .fold-day-head .chev { position: absolute; right: 1.1rem; top: 1.6rem; }
+    .light-table { overflow-x: auto; padding-left: 0.8rem !important; padding-right: 0.8rem !important; }
+    .light-table table { font-size: 0.78rem; }
+  }
 </style>
 </head>
 <body>
-
 <!-- HEADER -->
 <div class="header">
-  <div class="header-ornament">⚜ Escapada de fin de semana ⚜</div>
-  <h1>Mosela <span>&amp; Rin</span></h1>
-  <p class="header-sub">Viñedos, castillos y meandros — combinado en coche desde Maastricht</p>
-  <div class="header-dates">Sáb 29 — Dom 30 agosto 2026 · 2 días · 1 viajero</div>
+<div class="header-ornament">⚜ Escapada de fin de semana ⚜</div>
+<h1>Mosela <span>&amp; Rin</span></h1>
+<p class="header-sub">Viñedos, castillos y meandros — combinado en coche desde Maastricht</p>
+<div class="header-dates">Sáb 29 — Dom 30 agosto 2026 · 2 días · 1 viajero</div>
 </div>
-
 <!-- ============ ANTES DE SALIR ============ -->
-<div class="divider" style="margin-top:2rem">
-  <div class="divider-line"></div>
-  <div class="divider-text">Antes de salir</div>
-  <div class="divider-line"></div>
-</div>
-
+<details class="map-panel fold-panel fold-first" id="antes-de-salir-panel">
+  <summary>
+<span class="map-sum-icon">🧳</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Antes de salir</span>
+<span class="map-sum-sub">Base · dónde dormir · Por qué combinado · Conducción · Temporada &amp; efectivo · Luz &amp; foto</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body">
 <div class="warnings">
-  <div class="warning-card river" style="grid-column:1/-1;">
-    <div class="warning-label">🏨 Base · dónde dormir</div>
-    <div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:0.5rem;">
-      <span style="text-align:center;line-height:1.3;">🍇 <strong style="color:var(--ink);">Sábado · Mosela</strong><br><span style="font-size:0.78rem;color:var(--ink-light);font-style:italic;">Bremm · Beilstein · Cochem</span></span>
-      <span style="font-family:'Cinzel',serif;color:var(--river-mid);font-size:1.15rem;white-space:nowrap;"> ⟶ </span>
-      <span style="text-align:center;line-height:1.3;">🛏️ <strong style="color:var(--ink);">Das Ebertor, Boppard</strong><br><span style="font-size:0.78rem;color:var(--ink-light);font-style:italic;">1 noche · dormitorio 6 pax · 33 € · check-in hasta 22:30 · parking propio</span></span>
-      <span style="font-family:'Cinzel',serif;color:var(--slate);font-size:1.15rem;white-space:nowrap;"> ⟶ </span>
-      <span style="text-align:center;line-height:1.3;">🏰 <strong style="color:var(--ink);">Domingo · Rin</strong><br><span style="font-size:0.78rem;color:var(--ink-light);font-style:italic;">Bacharach · Oberwesel · St. Goar</span></span>
-    </div>
-  </div>
-  <div class="warning-card slate">
-    <div class="warning-label">🧭 Por qué combinado</div>
-    <div class="warning-text">Los dos valles se juntan en <strong>Koblenz</strong>, donde el Mosela desemboca en el Rin. El sábado bajas por el Mosela y saltas al Rin para dormir en Boppard (~50 min); el domingo recorres la garganta de vuelta hacia casa. Es un finde de <strong>grandes éxitos</strong>: más coche y menos pausa que una escapada a un solo valle.</div>
-  </div>
-  <div class="warning-card river">
-    <div class="warning-label">🚗 Conducción</div>
-    <div class="warning-text">~500 km en total (Maastricht→Bremm ~2h20; salto Cochem→Boppard ~50 min; Boppard→casa ~2h). <strong>Sin peajes en Alemania y sin Umweltplakette</strong>: ninguna parada tiene zona de bajas emisiones. Dentro de cada valle conduces poco; deja el coche en Cochem/Bacharach y muévete a pie.</div>
-  </div>
-  <div class="warning-card wine">
-    <div class="warning-label">🍷 Temporada &amp; efectivo</div>
-    <div class="warning-text">Finales de agosto = vendimia: verás <strong>Zwiebelkuchen</strong> (tarta de cebolla) y <strong>Federweißer</strong> (mosto en fermentación) por todas partes — la tarta es un no rotundo (cebolla) y del mosto, como mucho un sorbo. Muchas tabernas y parkings <strong>no aceptan tarjeta</strong>: lleva 60-80 € en efectivo.</div>
-  </div>
-  <div class="warning-card vine">
-    <div class="warning-label">📷 Luz &amp; foto</div>
-    <div class="warning-text">Ocaso ~20:20. La hora dorada del sábado es la <strong>Reichsburg de Cochem</strong>; la del domingo, la <strong>garganta del Rin de mañana</strong>, vacía antes de que lleguen los cruceros. En Calmont, Stahleck y Vierseenblick <strong>hace viento</strong> — cortavientos y algo para fijar el trípode.</div>
-  </div>
+<div class="warning-card river" style="grid-column:1/-1;">
+<div class="warning-label">🏨 Base · dónde dormir</div>
+<div style="display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:0.5rem;">
+<span style="text-align:center;line-height:1.3;">🍇 <strong style="color:var(--ink);">Sábado · Mosela</strong><br/><span style="font-size:0.78rem;color:var(--ink-light);font-style:italic;">Bremm · Beilstein · Cochem</span></span>
+<span style="font-family:'Cinzel',serif;color:var(--river-mid);font-size:1.15rem;white-space:nowrap;"> ⟶ </span>
+<span style="text-align:center;line-height:1.3;">🛏️ <strong style="color:var(--ink);">Das Ebertor, Boppard</strong><br/><span style="font-size:0.78rem;color:var(--ink-light);font-style:italic;">1 noche · dormitorio 6 pax · 33 € · check-in hasta 22:30 · parking propio</span></span>
+<span style="font-family:'Cinzel',serif;color:var(--slate);font-size:1.15rem;white-space:nowrap;"> ⟶ </span>
+<span style="text-align:center;line-height:1.3;">🏰 <strong style="color:var(--ink);">Domingo · Rin</strong><br/><span style="font-size:0.78rem;color:var(--ink-light);font-style:italic;">Bacharach · Oberwesel · St. Goar</span></span>
 </div>
-
-<!-- ============ CONTEXTO LOCAL ============ -->
-<div class="divider">
-  <div class="divider-line"></div>
-  <div class="divider-text">Contexto local &amp; práctico</div>
-  <div class="divider-line"></div>
 </div>
+<div class="warning-card slate">
+<div class="warning-label">🧭 Por qué combinado</div>
+<div class="warning-text">Los dos valles se juntan en <strong>Koblenz</strong>, donde el Mosela desemboca en el Rin. El sábado bajas por el Mosela y saltas al Rin para dormir en Boppard (~50 min); el domingo recorres la garganta de vuelta hacia casa. Es un finde de <strong>grandes éxitos</strong>: más coche y menos pausa que una escapada a un solo valle.</div>
+</div>
+<div class="warning-card river">
+<div class="warning-label">🚗 Conducción</div>
+<div class="warning-text">~500 km en total (Maastricht→Bremm ~2h20; salto Cochem→Boppard ~50 min; Boppard→casa ~2h). <strong>Sin peajes en Alemania y sin Umweltplakette</strong>: ninguna parada tiene zona de bajas emisiones. Dentro de cada valle conduces poco; deja el coche en Cochem/Bacharach y muévete a pie.</div>
+</div>
+<div class="warning-card wine">
+<div class="warning-label">🍷 Temporada &amp; efectivo</div>
+<div class="warning-text">Finales de agosto = vendimia: verás <strong>Zwiebelkuchen</strong> (tarta de cebolla) y <strong>Federweißer</strong> (mosto en fermentación) por todas partes — la tarta es un no rotundo (cebolla) y del mosto, como mucho un sorbo. Muchas tabernas y parkings <strong>no aceptan tarjeta</strong>: lleva 60-80 € en efectivo.</div>
+</div>
+<div class="warning-card vine">
+<div class="warning-label">📷 Luz &amp; foto</div>
+<div class="warning-text">Ocaso ~20:20. La hora dorada del sábado es la <strong>Reichsburg de Cochem</strong>; la del domingo, la <strong>garganta del Rin de mañana</strong>, vacía antes de que lleguen los cruceros. En Calmont, Stahleck y Vierseenblick <strong>hace viento</strong> — cortavientos y algo para fijar el trípode.</div>
+</div>
+</div>
+</div>
+</details>
 
+<details class="map-panel" id="map-panel">
+<summary>
+<span class="map-sum-icon">🗺️</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Mapa del viaje</span>
+<span class="map-sum-sub">Mosela y Rin sobre el plano · toca un punto para abrirlo en Google Maps</span>
+</span>
+<span class="chev"></span>
+</summary>
+<div class="map-body">
+<div class="map-filters" id="map-filters">
+<button class="active" data-day="all">Todos</button>
+<button data-day="1"><i style="background:#4a6b2f"></i>Sáb 29 · Mosela</button>
+<button data-day="2"><i style="background:#3a5570"></i>Dom 30 · Rin</button>
+</div>
+<div aria-label="Mapa interactivo del viaje" id="trip-map" role="region"></div>
+<div class="map-hint">El número sigue el orden del día. ★ = alojamiento. Arriba a la derecha (▤) cambias el estilo del mapa. Pasa el ratón para ver el nombre; un clic abre el sitio en Google Maps.</div>
+<div class="map-chips" id="map-chips"></div>
+</div>
+</details><!-- ============ CONTEXTO LOCAL ============ -->
+<details class="map-panel fold-panel" id="contexto-local-pr-ctico-panel">
+  <summary>
+<span class="map-sum-icon">🧭</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Contexto local &amp; práctico</span>
+<span class="map-sum-sub">Cómo moverse · Errores típicos a evitar</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body">
 <div class="section-block">
-  <div class="cards-grid">
-    <div class="info-card">
-      <h4 class="river">🚗 Cómo moverse</h4>
-      <div class="card-item">Todo en coche. Las carreteras de valle (<strong>B49/B416</strong> en el Mosela, <strong>B9</strong> en el Rin) son lentas y panorámicas: tómalas en vez de la autopista dentro de la zona.</div>
-      <div class="card-item">La ruta va toda por la <strong>orilla izquierda</strong> del Rin (Bacharach, Oberwesel, St. Goar, Boppard): <strong>no necesitas ferry</strong> salvo que quieras cruzar a la roca de la Loreley.</div>
-      <div class="card-item">Parking de pago en Cochem y Bacharach; llega temprano en fin de semana con buen tiempo. En Boppard aparcas en el propio hotel.</div>
-    </div>
-    <div class="info-card">
-      <h4 class="river">⚠ Errores típicos a evitar</h4>
-      <div class="card-item">No verificar el <strong>horario de la Sesselbahn de Cochem</strong> (suele cerrar ~18:00): si cierras tarde, te quedas sin el plano elevado del Pinnerkreuz.</div>
-      <div class="card-item">Querer subir a la <strong>Loreley</strong> sin contar el ferry St. Goar↔St. Goarshausen (la roca está en la orilla derecha; suma ~1 h).</div>
-      <div class="card-item">El <strong>Günderodehaus</strong> abre a las 12:00 (cerrado lun/mar): por eso cae a mediodía. Y <strong>Onkel Willi</strong> en sábado se llena — reserva.</div>
-    </div>
-  </div>
+<div class="cards-grid">
+<div class="info-card">
+<h4 class="river">🚗 Cómo moverse</h4>
+<div class="card-item">Todo en coche. Las carreteras de valle (<strong>B49/B416</strong> en el Mosela, <strong>B9</strong> en el Rin) son lentas y panorámicas: tómalas en vez de la autopista dentro de la zona.</div>
+<div class="card-item">La ruta va toda por la <strong>orilla izquierda</strong> del Rin (Bacharach, Oberwesel, St. Goar, Boppard): <strong>no necesitas ferry</strong> salvo que quieras cruzar a la roca de la Loreley.</div>
+<div class="card-item">Parking de pago en Cochem y Bacharach; llega temprano en fin de semana con buen tiempo. En Boppard aparcas en el propio hotel.</div>
 </div>
+<div class="info-card">
+<h4 class="river">⚠ Errores típicos a evitar</h4>
+<div class="card-item">No verificar el <strong>horario de la Sesselbahn de Cochem</strong> (suele cerrar ~18:00): si cierras tarde, te quedas sin el plano elevado del Pinnerkreuz.</div>
+<div class="card-item">Querer subir a la <strong>Loreley</strong> sin contar el ferry St. Goar↔St. Goarshausen (la roca está en la orilla derecha; suma ~1 h).</div>
+<div class="card-item">El <strong>Günderodehaus</strong> abre a las 12:00 (cerrado lun/mar): por eso cae a mediodía. Y <strong>Onkel Willi</strong> en sábado se llena — reserva.</div>
+</div>
+</div>
+</div>
+</div>
+</details><div class="days-toolbar"><button data-days="expand" type="button">Expandir días</button><button data-days="collapse" type="button">Colapsar días</button></div>
 
 <!-- ============ DÍA 1 · MOSELA ============ -->
-<div class="day-section">
-  <div class="day-header mosela">
-    <div class="day-numeral">I</div>
-    <div class="day-info">
-      <h2>Mosela — meandro, viñedo y castillo</h2>
-      <p>Bremm/Calmont · Beilstein · Cochem</p>
-    </div>
-    <div class="day-badge">De lejos hacia la cama</div>
-  </div>
-
-  <div class="days-grid">
-    <div class="day-card">
-      <div class="day-card-header mosela">
-        <div class="card-block">Día 1</div>
-        <div class="card-date">Sáb 29 ago</div>
-        <div class="card-title">Río sinuoso &amp; vendimia</div>
-      </div>
-      <div class="day-card-body">
-
-        <div class="time-block">
-          <div class="time-tag transit">🚗</div>
-          <div class="time-content">
-            <span class="time-label">Muy pronto — salida</span>
-            <div class="activity-name">Maastricht → Bremm/Calmont</div>
-            <div class="activity-detail">Salida ~06:30. ~2h20 (~180 km) directo al punto más lejano; así trabajas de vuelta hacia la cama. Llegada ~09:00 con luz lateral sobre el meandro.</div>
-            <div class="activity-meta"><span class="tag transport">~180 km · sin peaje</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag morning">🍇</div>
-          <div class="time-content">
-            <span class="time-label">Mañana</span>
-            <div class="activity-name">Calmont · Moselschleife de Bremm</div>
-            <div class="activity-detail">El meandro más espectacular del Mosela, con el <strong>viñedo más empinado de Europa</strong> cayendo sobre el río. El mirador del bucle se alcanza con un paseo corto desde el parking. La <em>vía ferrata</em> del Calmont (2-3 h, expuesta, cables y escaleras) queda como opción para gente con ganas — no encaja en un día con tanto coche.</div>
-            <div class="activity-meta"><span class="tag free">Mirador gratuito</span><span class="tag photo">📷 Meandro + viñedo</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">🏘️</div>
-          <div class="time-content">
-            <span class="time-label">Mediodía</span>
-            <div class="activity-name">Beilstein — la "Bella Durmiente" del Mosela</div>
-            <div class="activity-detail">~15 min. Pueblo diminuto e intacto de entramado: la plaza del mercado, el callejón de Klein-Venedig y las escaleras hasta la <strong>Burg Metternich</strong> con vista al río. Se ve entero en un paseo tranquilo.</div>
-            <div class="activity-meta"><span class="tag free">Casco gratuito</span><span class="tag photo">📷 Entramado + castillo</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">🍽️</div>
-          <div class="time-content">
-            <span class="time-label">Comida</span>
-            <div class="food-highlight">
-              <div class="resto">Zehnthauskeller <span style="font-weight:300;font-size:0.78rem">(bodega abovedada, Beilstein)</span></div>
-              <div class="dish">Bodega histórica de piedra, ambiente local. Pide <strong>trucha o un plato sencillo</strong> <em>"ohne Zwiebeln und Knoblauch"</em>; evita embutidos con ajo. (~450 kcal.) Confirma horario en temporada.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">🏰</div>
-          <div class="time-content">
-            <span class="time-label">Tarde</span>
-            <div class="activity-name">Cochem + Pinnerkreuz</div>
-            <div class="activity-detail">~15 min. Casco antiguo y la <strong>Reichsburg</strong> dominando el pueblo. Hacia las <strong>16:30 sube en la Sesselbahn</strong> (telesilla) al mirador del <strong>Pinnerkreuz</strong> para el plano clásico del castillo sobre el meandro, mientras el telesilla sigue abierto.</div>
-            <div class="activity-meta"><span class="tag price">Sesselbahn ~9 €</span><span class="tag photo">📷 Reichsburg sobre el meandro</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag wine">🍽️</div>
-          <div class="time-content">
-            <span class="time-label">Cena</span>
-            <div class="food-highlight">
-              <div class="resto">Restaurant Zum Onkel Willi <span style="font-weight:300;font-size:0.78rem">(Cochem, casco antiguo)</span></div>
-              <div class="dish">El regional de referencia del tramo, muy querido y sin trampa turística. Pide <strong>Zanderfilet o Forelle a la plancha</strong> <em>"ohne Soße / ohne Sahnesoße"</em> con <strong>Salzkartoffeln</strong> y verdura simple; evita las salsas de caza (cebolla/fondo). (~550-600 kcal · ~40 g proteína.) Alternativa: <strong>Zom Stüffje</strong>, taberna de 1642.</div>
-            </div>
-            <div class="activity-meta" style="margin-top:0.4rem;"><span class="tag reserve">reservar esta semana</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag evening">🌇</div>
-          <div class="time-content">
-            <span class="time-label">Atardecer — hora dorada</span>
-            <div class="activity-name">Cochem a pie de río</div>
-            <div class="activity-detail">~19:45-20:20 (ocaso ~20:20): la Reichsburg encendida por la última luz desde la <strong>Moselpromenade</strong> o el puente <strong>Skagerrakbrücke</strong>. El telesilla ya habrá cerrado, así que este plano es a nivel de río.</div>
-            <div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Castillo · hora dorada</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag transit">🛏️</div>
-          <div class="time-content">
-            <span class="time-label">Noche — salto al Rin</span>
-            <div class="activity-name">Cochem → Boppard · Das Ebertor</div>
-            <div class="activity-detail">~50 min por Koblenz. Check-in relajado (hasta 22:30), parking propio, junto al río. En dormitorio compartido: prepara la mochila y trae toalla de viaje, candado y frontal para salir sin ruido a primera hora.</div>
-            <div class="activity-meta"><span class="tag transport">~50 min</span><span class="tag tip">check-in hasta 22:30</span></div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="backup">
-    <div class="backup-icon">🌧️</div>
-    <div class="backup-text"><strong>Plan B (lluvia/cierre):</strong> si el Calmont está mojado o la Sesselbahn cerrada → <strong>Burg Eltz</strong> (~40 min de Cochem, fotogénico incluso con niebla) o, sin salir de Cochem, la <strong>Senfmühle</strong> (molino de mostaza artesanal) + visita guiada a la Reichsburg (cubiertas).</div>
-  </div>
+<div class="day-section fold-day" data-day-section="">
+<div aria-expanded="true" class="day-header mosela fold-day-head" role="button" tabindex="0">
+<div class="day-numeral">I</div>
+<div class="day-info">
+<h2>Mosela — meandro, viñedo y castillo</h2>
+<p>Bremm/Calmont · Beilstein · Cochem</p>
 </div>
-
+<div class="day-badge">De lejos hacia la cama</div>
+<span aria-hidden="true" class="chev"></span>
+  </div><div class="day-body">
+<div class="days-grid">
+<div class="day-card">
+<div class="day-card-header mosela">
+<div class="card-block">Día 1</div>
+<div class="card-date">Sáb 29 ago</div>
+<div class="card-title">Río sinuoso &amp; vendimia</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag transit">🚗</div>
+<div class="time-content">
+<span class="time-label">Muy pronto — salida</span>
+<div class="activity-name">Maastricht → Bremm/Calmont</div>
+<div class="activity-detail">Salida ~06:30. ~2h20 (~180 km) directo al punto más lejano; así trabajas de vuelta hacia la cama. Llegada ~09:00 con luz lateral sobre el meandro.</div>
+<div class="activity-meta"><span class="tag transport">~180 km · sin peaje</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">🍇</div>
+<div class="time-content">
+<span class="time-label">Mañana</span>
+<div class="activity-name">Calmont · Moselschleife de Bremm</div>
+<div class="activity-detail">El meandro más espectacular del Mosela, con el <strong>viñedo más empinado de Europa</strong> cayendo sobre el río. El mirador del bucle se alcanza con un paseo corto desde el parking. La <em>vía ferrata</em> del Calmont (2-3 h, expuesta, cables y escaleras) queda como opción para gente con ganas — no encaja en un día con tanto coche.</div>
+<div class="activity-meta"><span class="tag free">Mirador gratuito</span><span class="tag photo">📷 Meandro + viñedo</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🏘️</div>
+<div class="time-content">
+<span class="time-label">Mediodía</span>
+<div class="activity-name">Beilstein — la "Bella Durmiente" del Mosela</div>
+<div class="activity-detail">~15 min. Pueblo diminuto e intacto de entramado: la plaza del mercado, el callejón de Klein-Venedig y las escaleras hasta la <strong>Burg Metternich</strong> con vista al río. Se ve entero en un paseo tranquilo.</div>
+<div class="activity-meta"><span class="tag free">Casco gratuito</span><span class="tag photo">📷 Entramado + castillo</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🍽️</div>
+<div class="time-content">
+<span class="time-label">Comida</span>
+<div class="food-highlight">
+<div class="resto">Zehnthauskeller <span style="font-weight:300;font-size:0.78rem">(bodega abovedada, Beilstein)</span></div>
+<div class="dish">Bodega histórica de piedra, ambiente local. Pide <strong>trucha o un plato sencillo</strong> <em>"ohne Zwiebeln und Knoblauch"</em>; evita embutidos con ajo. (~450 kcal.) Confirma horario en temporada.</div>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🏰</div>
+<div class="time-content">
+<span class="time-label">Tarde</span>
+<div class="activity-name">Cochem + Pinnerkreuz</div>
+<div class="activity-detail">~15 min. Casco antiguo y la <strong>Reichsburg</strong> dominando el pueblo. Hacia las <strong>16:30 sube en la Sesselbahn</strong> (telesilla) al mirador del <strong>Pinnerkreuz</strong> para el plano clásico del castillo sobre el meandro, mientras el telesilla sigue abierto.</div>
+<div class="activity-meta"><span class="tag price">Sesselbahn ~9 €</span><span class="tag photo">📷 Reichsburg sobre el meandro</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag wine">🍽️</div>
+<div class="time-content">
+<span class="time-label">Cena</span>
+<div class="food-highlight">
+<div class="resto">Restaurant Zum Onkel Willi <span style="font-weight:300;font-size:0.78rem">(Cochem, casco antiguo)</span></div>
+<div class="dish">El regional de referencia del tramo, muy querido y sin trampa turística. Pide <strong>Zanderfilet o Forelle a la plancha</strong> <em>"ohne Soße / ohne Sahnesoße"</em> con <strong>Salzkartoffeln</strong> y verdura simple; evita las salsas de caza (cebolla/fondo). (~550-600 kcal · ~40 g proteína.) Alternativa: <strong>Zom Stüffje</strong>, taberna de 1642.</div>
+</div>
+<div class="activity-meta" style="margin-top:0.4rem;"><span class="tag reserve">reservar esta semana</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🌇</div>
+<div class="time-content">
+<span class="time-label">Atardecer — hora dorada</span>
+<div class="activity-name">Cochem a pie de río</div>
+<div class="activity-detail">~19:45-20:20 (ocaso ~20:20): la Reichsburg encendida por la última luz desde la <strong>Moselpromenade</strong> o el puente <strong>Skagerrakbrücke</strong>. El telesilla ya habrá cerrado, así que este plano es a nivel de río.</div>
+<div class="activity-meta"><span class="tag free">Gratuito</span><span class="tag photo">📷 Castillo · hora dorada</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag transit">🛏️</div>
+<div class="time-content">
+<span class="time-label">Noche — salto al Rin</span>
+<div class="activity-name">Cochem → Boppard · Das Ebertor</div>
+<div class="activity-detail">~50 min por Koblenz. Check-in relajado (hasta 22:30), parking propio, junto al río. En dormitorio compartido: prepara la mochila y trae toalla de viaje, candado y frontal para salir sin ruido a primera hora.</div>
+<div class="activity-meta"><span class="tag transport">~50 min</span><span class="tag tip">check-in hasta 22:30</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="backup">
+<div class="backup-icon">🌧️</div>
+<div class="backup-text"><strong>Plan B (lluvia/cierre):</strong> si el Calmont está mojado o la Sesselbahn cerrada → <strong>Burg Eltz</strong> (~40 min de Cochem, fotogénico incluso con niebla) o, sin salir de Cochem, la <strong>Senfmühle</strong> (molino de mostaza artesanal) + visita guiada a la Reichsburg (cubiertas).</div>
+</div>
+</div></div>
 <!-- ============ DÍA 2 · RIN ============ -->
-<div class="day-section">
-  <div class="day-header rin">
-    <div class="day-numeral">II</div>
-    <div class="day-info">
-      <h2>Rin Romántico — garganta y castillos</h2>
-      <p>Bacharach · Oberwesel · St. Goar · Boppard</p>
-    </div>
-    <div class="day-badge">Río abajo, hacia casa</div>
-  </div>
-
-  <div class="days-grid">
-    <div class="day-card">
-      <div class="day-card-header rin">
-        <div class="card-block">Día 2</div>
-        <div class="card-date">Dom 30 ago</div>
-        <div class="card-title">La garganta UNESCO</div>
-      </div>
-      <div class="day-card-body">
-
-        <div class="time-block">
-          <div class="time-tag morning">🌄</div>
-          <div class="time-content">
-            <span class="time-label">Amanecer</span>
-            <div class="activity-name">Bacharach + Burg Stahleck</div>
-            <div class="activity-detail">Salida de Boppard ~07:30 al punto más lejano (~25 min). Calles medievales vacías y subida a <strong>Burg Stahleck</strong> (hoy albergue, pero el mirador es público) sobre tejados y viñedos, con luz de mañana y sin cruceros.</div>
-            <div class="activity-meta"><span class="tag free">Mirador gratuito</span><span class="tag photo">📷 Casco + viñedos al alba</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag morning">🗼</div>
-          <div class="time-content">
-            <span class="time-label">Media mañana</span>
-            <div class="activity-name">Oberwesel — la ciudad de las torres</div>
-            <div class="activity-detail">~10 min. Una de las murallas medievales mejor conservadas del Rin, con dieciséis torres y un paseo de ronda junto al río. Callejeo tranquilo antes de subir al mirador.</div>
-            <div class="activity-meta"><span class="tag free">Muralla gratuita</span><span class="tag photo">📷 Torres + río</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">🍽️</div>
-          <div class="time-content">
-            <span class="time-label">Mediodía — vista &amp; comida</span>
-            <div class="activity-name">Günderodehaus (sobre Oberwesel)</div>
-            <div class="activity-detail">Sube a la casa-mirador (célebre por la serie <em>Heimat</em>): la mejor vista del gran meandro del Rin. <strong>Abre a las 12:00</strong> (domingo incluido).</div>
-            <div class="food-highlight" style="margin-top:0.5rem;">
-              <div class="resto">Günderodehaus <span style="font-weight:300;font-size:0.78rem">(cocina sencilla con panorámica)</span></div>
-              <div class="dish">Plancha de carne/pescado <em>natur</em> o ensalada <em>"ohne Zwiebeln"</em> con aceite y vinagre. (~450 kcal.) Alternativa en Bacharach: <strong>Altes Haus</strong> (la casa más antigua, 1368) — ahí <strong>evita la Rieslingrahmsuppe</strong> (nata) y tira de plato a la plancha sin salsa.</div>
-            </div>
-            <div class="activity-meta" style="margin-top:0.4rem;"><span class="tag photo">📷 Gran meandro del Rin</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">🏰</div>
-          <div class="time-content">
-            <span class="time-label">Tarde</span>
-            <div class="activity-name">Burg Rheinfels (St. Goar)</div>
-            <div class="activity-detail">~10 min. El <strong>castillo más grande del Rin</strong> (10:00-18:00): ruinas enormes, túneles y panorámica sobre la Loreley enfrente. <strong>Opción foto clásica:</strong> ferry St. Goar→St. Goarshausen (frecuente, ~5 €) y subir a la roca de la <strong>Loreley</strong> / mirador Maria Ruh para la curva completa (+~1 h).</div>
-            <div class="activity-meta"><span class="tag price">Entrada ~9 €</span><span class="tag photo">📷 Ruinas + garganta</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">🚠</div>
-          <div class="time-content">
-            <span class="time-label">Cierre</span>
-            <div class="activity-name">Boppard — Vierseenblick</div>
-            <div class="activity-detail">~15 min de vuelta. Telesilla al <strong>Vierseenblick/Gedeonseck</strong> (junto al hotel y al coche) para el bucle del Bopparder Hamm, donde el Rin parece cuatro lagos. Última parada, la más cercana a casa.</div>
-            <div class="activity-meta"><span class="tag price">Sesselbahn ~8-9 €</span><span class="tag photo">📷 Bucle del Bopparder Hamm</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag transit">🚗</div>
-          <div class="time-content">
-            <span class="time-label">Regreso</span>
-            <div class="activity-name">Boppard → Maastricht</div>
-            <div class="activity-detail">Sobre las 17:45, ~2 h a casa (~180 km). Terminas en el punto más cercano a Maastricht, en casa ~20:00.</div>
-            <div class="activity-meta"><span class="tag transport">~180 km · sin peaje</span></div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="backup">
-    <div class="backup-icon">🌧️</div>
-    <div class="backup-text"><strong>Plan B (lluvia):</strong> <strong>Marksburg</strong> en Braubach (~20 min de Boppard, de camino a casa): el único castillo del Rin nunca destruido, con interior amueblado y visita cubierta. También sirve el tour de túneles de Rheinfels.</div>
-  </div>
+<div class="day-section fold-day" data-day-section="">
+<div aria-expanded="true" class="day-header rin fold-day-head" role="button" tabindex="0">
+<div class="day-numeral">II</div>
+<div class="day-info">
+<h2>Rin Romántico — garganta y castillos</h2>
+<p>Bacharach · Oberwesel · St. Goar · Boppard</p>
 </div>
-
+<div class="day-badge">Río abajo, hacia casa</div>
+<span aria-hidden="true" class="chev"></span>
+  </div><div class="day-body">
+<div class="days-grid">
+<div class="day-card">
+<div class="day-card-header rin">
+<div class="card-block">Día 2</div>
+<div class="card-date">Dom 30 ago</div>
+<div class="card-title">La garganta UNESCO</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag morning">🌄</div>
+<div class="time-content">
+<span class="time-label">Amanecer</span>
+<div class="activity-name">Bacharach + Burg Stahleck</div>
+<div class="activity-detail">Salida de Boppard ~07:30 al punto más lejano (~25 min). Calles medievales vacías y subida a <strong>Burg Stahleck</strong> (hoy albergue, pero el mirador es público) sobre tejados y viñedos, con luz de mañana y sin cruceros.</div>
+<div class="activity-meta"><span class="tag free">Mirador gratuito</span><span class="tag photo">📷 Casco + viñedos al alba</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">🗼</div>
+<div class="time-content">
+<span class="time-label">Media mañana</span>
+<div class="activity-name">Oberwesel — la ciudad de las torres</div>
+<div class="activity-detail">~10 min. Una de las murallas medievales mejor conservadas del Rin, con dieciséis torres y un paseo de ronda junto al río. Callejeo tranquilo antes de subir al mirador.</div>
+<div class="activity-meta"><span class="tag free">Muralla gratuita</span><span class="tag photo">📷 Torres + río</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🍽️</div>
+<div class="time-content">
+<span class="time-label">Mediodía — vista &amp; comida</span>
+<div class="activity-name">Günderodehaus (sobre Oberwesel)</div>
+<div class="activity-detail">Sube a la casa-mirador (célebre por la serie <em>Heimat</em>): la mejor vista del gran meandro del Rin. <strong>Abre a las 12:00</strong> (domingo incluido).</div>
+<div class="food-highlight" style="margin-top:0.5rem;">
+<div class="resto">Günderodehaus <span style="font-weight:300;font-size:0.78rem">(cocina sencilla con panorámica)</span></div>
+<div class="dish">Plancha de carne/pescado <em>natur</em> o ensalada <em>"ohne Zwiebeln"</em> con aceite y vinagre. (~450 kcal.) Alternativa en Bacharach: <strong>Altes Haus</strong> (la casa más antigua, 1368) — ahí <strong>evita la Rieslingrahmsuppe</strong> (nata) y tira de plato a la plancha sin salsa.</div>
+</div>
+<div class="activity-meta" style="margin-top:0.4rem;"><span class="tag photo">📷 Gran meandro del Rin</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🏰</div>
+<div class="time-content">
+<span class="time-label">Tarde</span>
+<div class="activity-name">Burg Rheinfels (St. Goar)</div>
+<div class="activity-detail">~10 min. El <strong>castillo más grande del Rin</strong> (10:00-18:00): ruinas enormes, túneles y panorámica sobre la Loreley enfrente. <strong>Opción foto clásica:</strong> ferry St. Goar→St. Goarshausen (frecuente, ~5 €) y subir a la roca de la <strong>Loreley</strong> / mirador Maria Ruh para la curva completa (+~1 h).</div>
+<div class="activity-meta"><span class="tag price">Entrada ~9 €</span><span class="tag photo">📷 Ruinas + garganta</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🚠</div>
+<div class="time-content">
+<span class="time-label">Cierre</span>
+<div class="activity-name">Boppard — Vierseenblick</div>
+<div class="activity-detail">~15 min de vuelta. Telesilla al <strong>Vierseenblick/Gedeonseck</strong> (junto al hotel y al coche) para el bucle del Bopparder Hamm, donde el Rin parece cuatro lagos. Última parada, la más cercana a casa.</div>
+<div class="activity-meta"><span class="tag price">Sesselbahn ~8-9 €</span><span class="tag photo">📷 Bucle del Bopparder Hamm</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag transit">🚗</div>
+<div class="time-content">
+<span class="time-label">Regreso</span>
+<div class="activity-name">Boppard → Maastricht</div>
+<div class="activity-detail">Sobre las 17:45, ~2 h a casa (~180 km). Terminas en el punto más cercano a Maastricht, en casa ~20:00.</div>
+<div class="activity-meta"><span class="tag transport">~180 km · sin peaje</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="backup">
+<div class="backup-icon">🌧️</div>
+<div class="backup-text"><strong>Plan B (lluvia):</strong> <strong>Marksburg</strong> en Braubach (~20 min de Boppard, de camino a casa): el único castillo del Rin nunca destruido, con interior amueblado y visita cubierta. También sirve el tour de túneles de Rheinfels.</div>
+</div>
+</div></div>
 <!-- ============ GASTRONOMÍA ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1.5rem">
-    <div class="divider-line"></div>
-    <div class="divider-text">Guía gastronómica · FODMAP</div>
-    <div class="divider-line"></div>
-  </div>
+<details class="map-panel fold-panel fold-after-days" id="gu-a-gastron-mica-fodmap-panel">
+  <summary>
+<span class="map-sum-icon">🥗</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Guía gastronómica · FODMAP</span>
+<span class="map-sum-sub">Mosela (sábado) · Rin (domingo) · Refugios FODMAP &amp; ✕ a evitar</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body"><div class="section-block">
 
-  <div class="sub-label" style="color:var(--vine);">🍇 Mosela (sábado)</div>
-  <div class="cards-grid" style="margin-bottom:2rem;">
-    <div class="info-card">
-      <h4 class="vine">🍽️ Zum Onkel Willi ⭐</h4>
-      <div class="card-item">Cochem, casco antiguo — <strong>cena del sábado</strong></div>
-      <div class="card-item">El regional de referencia del tramo, muy querido, sin trampa turística. Caza y pescado del Mosela.</div>
-      <div class="card-item">Pedir: Zanderfilet o Forelle a la plancha, <em>"ohne Soße"</em>, con Salzkartoffeln</div>
-      <div class="card-item safe">A la plancha sin salsa = FODMAP-seguro · <strong>reservar</strong></div>
-    </div>
-    <div class="info-card">
-      <h4 class="vine">🍷 Zehnthauskeller</h4>
-      <div class="card-item">Beilstein — comida del sábado</div>
-      <div class="card-item">Bodega abovedada histórica, ambiente local. Confirma horario en temporada.</div>
-      <div class="card-item safe">Trucha o plato simple <em>"ohne Zwiebeln und Knoblauch"</em></div>
-    </div>
-    <div class="info-card">
-      <h4 class="vine">🍷 Zom Stüffje</h4>
-      <div class="card-item">Cochem (taberna de 1642) — alternativa de cena</div>
-      <div class="card-item">Cocina alemana clásica y vino de la región en ambiente histórico.</div>
-      <div class="card-item safe">Pescado/carne a la plancha, sin salsa</div>
-    </div>
-  </div>
+<div class="sub-label" style="color:var(--vine);">🍇 Mosela (sábado)</div>
+<div class="cards-grid" style="margin-bottom:2rem;">
+<div class="info-card">
+<h4 class="vine">🍽️ Zum Onkel Willi ⭐</h4>
+<div class="card-item">Cochem, casco antiguo — <strong>cena del sábado</strong></div>
+<div class="card-item">El regional de referencia del tramo, muy querido, sin trampa turística. Caza y pescado del Mosela.</div>
+<div class="card-item">Pedir: Zanderfilet o Forelle a la plancha, <em>"ohne Soße"</em>, con Salzkartoffeln</div>
+<div class="card-item safe">A la plancha sin salsa = FODMAP-seguro · <strong>reservar</strong></div>
+</div>
+<div class="info-card">
+<h4 class="vine">🍷 Zehnthauskeller</h4>
+<div class="card-item">Beilstein — comida del sábado</div>
+<div class="card-item">Bodega abovedada histórica, ambiente local. Confirma horario en temporada.</div>
+<div class="card-item safe">Trucha o plato simple <em>"ohne Zwiebeln und Knoblauch"</em></div>
+</div>
+<div class="info-card">
+<h4 class="vine">🍷 Zom Stüffje</h4>
+<div class="card-item">Cochem (taberna de 1642) — alternativa de cena</div>
+<div class="card-item">Cocina alemana clásica y vino de la región en ambiente histórico.</div>
+<div class="card-item safe">Pescado/carne a la plancha, sin salsa</div>
+</div>
+</div>
+<div class="sub-label" style="color:var(--slate);">🏰 Rin (domingo)</div>
+<div class="cards-grid" style="margin-bottom:2rem;">
+<div class="info-card">
+<h4 class="slate">🍽️ Günderodehaus</h4>
+<div class="card-item">Sobre Oberwesel — comida del domingo (abre 12:00)</div>
+<div class="card-item">Casa-mirador con la mejor vista del gran meandro; cocina sencilla y terraza.</div>
+<div class="card-item safe">Plancha <em>natur</em> o ensalada <em>"ohne Zwiebeln"</em>, aceite y vinagre</div>
+</div>
+<div class="info-card">
+<h4 class="slate">🍴 Altes Haus</h4>
+<div class="card-item">Bacharach (la casa más antigua, 1368) — alternativa</div>
+<div class="card-item">Clásicos regionales en un entramado icónico y muy fotogénico.</div>
+<div class="card-item safe">Plato a la plancha sin salsa</div>
+<div class="card-item avoid">Evita la Rieslingrahmsuppe (nata) y Flammkuchen (nata + cebolla)</div>
+</div>
+<div class="info-card">
+<h4 class="slate">🥐 Das Ebertor</h4>
+<div class="card-item">Boppard — desayuno del domingo</div>
+<div class="card-item">Buffet muy valorado, con vista al río.</div>
+<div class="card-item safe">Huevos, queso curado, pepino, tomate, algo de masa madre; salta embutido con ajo</div>
+</div>
+</div>
+<div class="sub-label" style="color:var(--gold-dark);">✓ Refugios FODMAP &amp; ✕ a evitar</div>
+<div class="cards-grid">
+<div class="info-card">
+<h4 class="vine">✓ Seguros</h4>
+<div class="card-item safe">Pescado de río a la plancha: Zander, Forelle (sin salsa)</div>
+<div class="card-item safe">Carne a la plancha <em>natur</em>, Salzkartoffeln (patata cocida)</div>
+<div class="card-item safe">Queso curado y ensalada con aceite/vinagre <em>"ohne Zwiebeln"</em></div>
+<div class="card-item safe">Riesling seco con moderación</div>
+</div>
+<div class="info-card">
+<h4 class="slate">⚠ Con cuidado / a evitar</h4>
+<div class="card-item avoid">Zwiebelkuchen (tarta de cebolla) — omnipresente en vendimia, no</div>
+<div class="card-item avoid">Federweißer (mosto en fermentación) — como mucho un sorbo</div>
+<div class="card-item avoid">Salsas de caza / Jägersoße (cebolla + fondo) · Sahnesoße (nata)</div>
+<div class="card-item avoid">Flammkuchen (nata + cebolla) · Zwiebelrostbraten</div>
+</div>
+<div class="info-card">
+<h4 class="river">🗣️ Frases clave (alemán)</h4>
+<div class="card-item"><em>"Ohne Zwiebeln und Knoblauch, bitte"</em> — sin cebolla ni ajo</div>
+<div class="card-item"><em>"Ohne Soße / ohne Sahnesoße"</em> — sin salsa / sin salsa de nata</div>
+<div class="card-item safe">Lleva snacks seguros para el coche (tortitas de arroz, plátano firme, crema de cacahuete): las gasolineras van cargadas de cebolla y trigo</div>
+</div>
+</div>
+</div>
+</div>
+</details><!-- ============ FOTOGRAFÍA ============ -->
+<details class="map-panel fold-panel" id="spots-fotogr-ficos-panel">
+  <summary>
+<span class="map-sum-icon">📷</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Spots fotográficos</span>
+<span class="map-sum-sub">8 spots con momento, focal y ajustes</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body"><div class="section-block">
 
-  <div class="sub-label" style="color:var(--slate);">🏰 Rin (domingo)</div>
-  <div class="cards-grid" style="margin-bottom:2rem;">
-    <div class="info-card">
-      <h4 class="slate">🍽️ Günderodehaus</h4>
-      <div class="card-item">Sobre Oberwesel — comida del domingo (abre 12:00)</div>
-      <div class="card-item">Casa-mirador con la mejor vista del gran meandro; cocina sencilla y terraza.</div>
-      <div class="card-item safe">Plancha <em>natur</em> o ensalada <em>"ohne Zwiebeln"</em>, aceite y vinagre</div>
-    </div>
-    <div class="info-card">
-      <h4 class="slate">🍴 Altes Haus</h4>
-      <div class="card-item">Bacharach (la casa más antigua, 1368) — alternativa</div>
-      <div class="card-item">Clásicos regionales en un entramado icónico y muy fotogénico.</div>
-      <div class="card-item safe">Plato a la plancha sin salsa</div>
-      <div class="card-item avoid">Evita la Rieslingrahmsuppe (nata) y Flammkuchen (nata + cebolla)</div>
-    </div>
-    <div class="info-card">
-      <h4 class="slate">🥐 Das Ebertor</h4>
-      <div class="card-item">Boppard — desayuno del domingo</div>
-      <div class="card-item">Buffet muy valorado, con vista al río.</div>
-      <div class="card-item safe">Huevos, queso curado, pepino, tomate, algo de masa madre; salta embutido con ajo</div>
-    </div>
-  </div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;">
+<div class="photo-card">
+<h4>📷 Calmont · Moselschleife</h4>
+<div class="photo-detail">El meandro cerrado de Bremm con el viñedo más empinado de Europa cayendo al río. Luz lateral de mañana para marcar las terrazas de viña. Gran angular para el bucle completo.</div>
+<div class="photo-meta">Mañana · 24-50mm</div>
+</div>
+<div class="photo-card">
+<h4>📷 Reichsburg desde Pinnerkreuz</h4>
+<div class="photo-detail">El plano clásico de Cochem: el castillo sobre el meandro visto desde el mirador. Elevado con el telesilla por la tarde; a nivel de río a la hora dorada desde la Moselpromenade.</div>
+<div class="photo-meta">Tarde + hora dorada · 35-85mm</div>
+</div>
+<div class="photo-card">
+<h4>📷 Beilstein</h4>
+<div class="photo-detail">Entramado intacto, la plaza y el callejón de Klein-Venedig, con la Burg Metternich arriba. Calles estrechas: gran angular y detalle de fachadas.</div>
+<div class="photo-meta">Mediodía · 24-50mm</div>
+</div>
+<div class="photo-card">
+<h4>📷 Bacharach · Burg Stahleck</h4>
+<div class="photo-detail">Tejados medievales y viñedos desde el mirador del castillo, con el Rin de fondo. Amanecer para calles vacías y luz cálida antes de los cruceros.</div>
+<div class="photo-meta">Amanecer · 24-70mm</div>
+</div>
+<div class="photo-card">
+<h4>📷 Günderodehaus</h4>
+<div class="photo-detail">La mejor vista del gran meandro del Rin, con la garganta abriéndose. Teleobjetivo medio para comprimir el recodo; gran angular para el conjunto valle-viña.</div>
+<div class="photo-meta">Mediodía · 35-135mm</div>
+</div>
+<div class="photo-card">
+<h4>📷 Loreley / Maria Ruh</h4>
+<div class="photo-detail">La curva más cerrada del Rin bajo la roca icónica (orilla derecha, requiere ferry). Maria Ruh, enfrente, da la vista completa del recodo. Opción si cruzas.</div>
+<div class="photo-meta">Tarde · 24-85mm</div>
+</div>
+<div class="photo-card">
+<h4>📷 Burg Rheinfels</h4>
+<div class="photo-detail">Ruinas colosales y murallas escalonadas con la garganta y la Loreley enfrente. Volúmenes de piedra y panorámicas; luz lateral de tarde para el relieve.</div>
+<div class="photo-meta">Tarde · 24-70mm</div>
+</div>
+<div class="photo-card">
+<h4>📷 Vierseenblick (Boppard)</h4>
+<div class="photo-detail">El bucle del Bopparder Hamm, donde el Rin parece cuatro lagos separados. Teleobjetivo desde el Gedeonseck para aislar los "lagos". Cierre del domingo.</div>
+<div class="photo-meta">Tarde · 35-135mm</div>
+</div>
+</div>
+</div>
+</div>
+</details><!-- ============ RESERVAS ============ -->
+<details class="map-panel fold-panel" id="a-reservar-verificar-panel">
+  <summary>
+<span class="map-sum-icon">📋</span>
+<span class="map-sum-text">
+<span class="map-sum-title">A reservar / verificar</span>
+<span class="map-sum-sub">6 reservas y comprobaciones, con urgencia y fecha</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body"><div class="section-block">
 
-  <div class="sub-label" style="color:var(--gold-dark);">✓ Refugios FODMAP &amp; ✕ a evitar</div>
-  <div class="cards-grid">
-    <div class="info-card">
-      <h4 class="vine">✓ Seguros</h4>
-      <div class="card-item safe">Pescado de río a la plancha: Zander, Forelle (sin salsa)</div>
-      <div class="card-item safe">Carne a la plancha <em>natur</em>, Salzkartoffeln (patata cocida)</div>
-      <div class="card-item safe">Queso curado y ensalada con aceite/vinagre <em>"ohne Zwiebeln"</em></div>
-      <div class="card-item safe">Riesling seco con moderación</div>
-    </div>
-    <div class="info-card">
-      <h4 class="slate">⚠ Con cuidado / a evitar</h4>
-      <div class="card-item avoid">Zwiebelkuchen (tarta de cebolla) — omnipresente en vendimia, no</div>
-      <div class="card-item avoid">Federweißer (mosto en fermentación) — como mucho un sorbo</div>
-      <div class="card-item avoid">Salsas de caza / Jägersoße (cebolla + fondo) · Sahnesoße (nata)</div>
-      <div class="card-item avoid">Flammkuchen (nata + cebolla) · Zwiebelrostbraten</div>
-    </div>
-    <div class="info-card">
-      <h4 class="river">🗣️ Frases clave (alemán)</h4>
-      <div class="card-item"><em>"Ohne Zwiebeln und Knoblauch, bitte"</em> — sin cebolla ni ajo</div>
-      <div class="card-item"><em>"Ohne Soße / ohne Sahnesoße"</em> — sin salsa / sin salsa de nata</div>
-      <div class="card-item safe">Lleva snacks seguros para el coche (tortitas de arroz, plátano firme, crema de cacahuete): las gasolineras van cargadas de cebolla y trigo</div>
-    </div>
-  </div>
+<div class="booking-list">
+<div class="booking-item">
+<div class="booking-dot green"></div>
+<div>
+<div class="booking-name">Alojamiento — Das Ebertor, Boppard (1 noche: sáb 29 → dom 30)</div>
+<div class="booking-when">Dormitorio compartido 6 pax · junto al río, parking propio, check-in hasta 22:30 · <strong>ya reservado</strong></div>
+</div>
+<div class="booking-urgency">🟢 Hecho</div>
+<div class="booking-price">33 €</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot red"></div>
+<div>
+<div class="booking-name">Cena — Zum Onkel Willi (Cochem), sábado</div>
+<div class="booking-when">Sábado en temporada se llena · reservar esta semana</div>
+</div>
+<div class="booking-urgency">🔴 Reservar</div>
+<div class="booking-price">~25-30 €</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot yellow"></div>
+<div>
+<div class="booking-name">Sesselbahn Cochem (Pinnerkreuz) — sábado</div>
+<div class="booking-when">Verificar horario y última subida (suele cerrar ~18:00 en verano); si cierra antes, adelanta el Pinnerkreuz</div>
+</div>
+<div class="booking-urgency">🟡 Verificar</div>
+<div class="booking-price">~9 €</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot green"></div>
+<div>
+<div class="booking-name">Burg Rheinfels (St. Goar) — domingo</div>
+<div class="booking-when">Abierto a diario 10:00-18:00 · sin reserva · tour de túneles opcional</div>
+</div>
+<div class="booking-urgency">🟢 Sin reserva</div>
+<div class="booking-price">~9 €</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot green"></div>
+<div>
+<div class="booking-name">Günderodehaus (Oberwesel) — domingo</div>
+<div class="booking-when">Abre 12:00 (cerrado lun/mar) · por eso va a mediodía · sin reserva</div>
+</div>
+<div class="booking-urgency">🟢 Sin reserva</div>
+<div class="booking-price">—</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot green"></div>
+<div>
+<div class="booking-name">Ferry Loreley (St. Goar↔St. Goarshausen) — opcional</div>
+<div class="booking-when">Frecuente, sin reserva · solo si quieres la roca de la Loreley / Maria Ruh (+~1 h)</div>
+</div>
+<div class="booking-urgency">🟢 Opcional</div>
+<div class="booking-price">~5 €</div>
+</div>
+</div>
+</div>
+</div>
+</details><!-- ============ CHECKLIST ============ -->
+<details class="map-panel fold-panel" id="checklist-pre-viaje-panel">
+  <summary>
+<span class="map-sum-icon">✅</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Checklist pre-viaje</span>
+<span class="map-sum-sub">Documentos · Dinero · Conectividad &amp; apps · Equipo &amp; salud</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body"><div class="section-block">
+
+<div class="checklist-grid">
+<div class="checklist-card">
+<h4>📄 Documentos</h4>
+<div class="checklist-item">DNI/pasaporte y carné de conducir</div>
+<div class="checklist-item">Papeles y seguro del coche</div>
+<div class="checklist-item">Obligatorios en Alemania: triángulo y chaleco reflectante</div>
+<div class="checklist-item">Sin Umweltplakette: la ruta no tiene zonas de bajas emisiones</div>
+</div>
+<div class="checklist-card">
+<h4>💶 Dinero</h4>
+<div class="checklist-item">Tarjeta + 60-80 € en efectivo</div>
+<div class="checklist-item">Muchas tabernas y parkings no aceptan tarjeta</div>
+<div class="checklist-item">Efectivo también para el ferry (si cruzas a la Loreley)</div>
+</div>
+<div class="checklist-card">
+<h4>📶 Conectividad &amp; apps</h4>
+<div class="checklist-item">SIM holandesa con roaming UE sin coste; sin eSIM</div>
+<div class="checklist-item">Google Maps offline del Mosela y la garganta del Rin (cobertura floja en valles/túneles)</div>
+<div class="checklist-item">EasyPark/Parkster (parking), Komoot (Calmont/Stahleck), WarnWetter/Windy</div>
+</div>
+<div class="checklist-card">
+<h4>🎒 Equipo &amp; salud</h4>
+<div class="checklist-item">Dormitorio compartido: toalla de viaje, candado, frontal</div>
+<div class="checklist-item">Cortavientos y algo para fijar el trípode (miradores con viento)</div>
+<div class="checklist-item">Tarjeta sanitaria europea (TSE)</div>
+<div class="checklist-item">Mira la meteo el viernes; ten a mano los planes B (Marksburg, túneles Rheinfels)</div>
+</div>
+</div>
+</div>
+</div>
+</details><!-- ============ PRESUPUESTO ============ -->
+<details class="map-panel fold-panel" id="presupuesto-aproximado-panel">
+  <summary>
+<span class="map-sum-icon">💶</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Presupuesto aproximado</span>
+<span class="map-sum-sub">Total aproximado: 190-225 €</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body"><div class="section-block">
+
+<div class="budget-box">
+<div class="budget-row"><span class="budget-label">Alojamiento — dormitorio Das Ebertor (1 noche)</span><span class="budget-value">33 €</span></div>
+<div class="budget-row"><span class="budget-label">Combustible (~500 km)</span><span class="budget-value">45-55 €</span></div>
+<div class="budget-row"><span class="budget-label">Sesselbahn Cochem + telesilla Boppard</span><span class="budget-value">~17 €</span></div>
+<div class="budget-row"><span class="budget-label">Parking (2 días)</span><span class="budget-value">12-15 €</span></div>
+<div class="budget-row"><span class="budget-label">Entradas opcionales (Reichsburg y/o Rheinfels)</span><span class="budget-value">8-16 €</span></div>
+<div class="budget-row"><span class="budget-label">Comidas (2 almuerzos + cena + desayuno)</span><span class="budget-value">75-90 €</span></div>
+<div class="budget-row"><span class="budget-label">Total aproximado</span><span class="budget-value">190-225 €</span></div>
+</div>
+</div>
+</div>
+</details><div class="footer">
+<p>Mosela &amp; Rin · Viñedos, castillos y meandros · 29-30 agosto 2026</p>
 </div>
 
-<!-- ============ FOTOGRAFÍA ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1.5rem">
-    <div class="divider-line"></div>
-    <div class="divider-text">Spots fotográficos</div>
-    <div class="divider-line"></div>
-  </div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+/* ---------- Días plegables ---------- */
+(function () {
+  var KEY = 'mosela-plan-collapsed';
+  var sections = Array.prototype.slice.call(document.querySelectorAll('[data-day-section]'));
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) {}
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(sections.map(function (s, i) { return s.classList.contains('collapsed') ? i : -1; }).filter(function (i) { return i >= 0; }))); } catch (e) {}
+  }
+  function setCollapsed(sec, c) { sec.classList.toggle('collapsed', c); sec.querySelector('.fold-day-head').setAttribute('aria-expanded', String(!c)); }
+  sections.forEach(function (sec, i) {
+    if (saved.indexOf(i) >= 0) setCollapsed(sec, true);
+    var head = sec.querySelector('.fold-day-head');
+    head.addEventListener('click', function () { setCollapsed(sec, !sec.classList.contains('collapsed')); save(); });
+    head.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); head.click(); } });
+  });
+  document.querySelectorAll('[data-days]').forEach(function (b) {
+    b.addEventListener('click', function () { var c = b.getAttribute('data-days') === 'collapse'; sections.forEach(function (s) { setCollapsed(s, c); }); save(); });
+  });
+})();
 
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;">
-    <div class="photo-card">
-      <h4>📷 Calmont · Moselschleife</h4>
-      <div class="photo-detail">El meandro cerrado de Bremm con el viñedo más empinado de Europa cayendo al río. Luz lateral de mañana para marcar las terrazas de viña. Gran angular para el bucle completo.</div>
-      <div class="photo-meta">Mañana · 24-50mm</div>
-    </div>
-    <div class="photo-card">
-      <h4>📷 Reichsburg desde Pinnerkreuz</h4>
-      <div class="photo-detail">El plano clásico de Cochem: el castillo sobre el meandro visto desde el mirador. Elevado con el telesilla por la tarde; a nivel de río a la hora dorada desde la Moselpromenade.</div>
-      <div class="photo-meta">Tarde + hora dorada · 35-85mm</div>
-    </div>
-    <div class="photo-card">
-      <h4>📷 Beilstein</h4>
-      <div class="photo-detail">Entramado intacto, la plaza y el callejón de Klein-Venedig, con la Burg Metternich arriba. Calles estrechas: gran angular y detalle de fachadas.</div>
-      <div class="photo-meta">Mediodía · 24-50mm</div>
-    </div>
-    <div class="photo-card">
-      <h4>📷 Bacharach · Burg Stahleck</h4>
-      <div class="photo-detail">Tejados medievales y viñedos desde el mirador del castillo, con el Rin de fondo. Amanecer para calles vacías y luz cálida antes de los cruceros.</div>
-      <div class="photo-meta">Amanecer · 24-70mm</div>
-    </div>
-    <div class="photo-card">
-      <h4>📷 Günderodehaus</h4>
-      <div class="photo-detail">La mejor vista del gran meandro del Rin, con la garganta abriéndose. Teleobjetivo medio para comprimir el recodo; gran angular para el conjunto valle-viña.</div>
-      <div class="photo-meta">Mediodía · 35-135mm</div>
-    </div>
-    <div class="photo-card">
-      <h4>📷 Loreley / Maria Ruh</h4>
-      <div class="photo-detail">La curva más cerrada del Rin bajo la roca icónica (orilla derecha, requiere ferry). Maria Ruh, enfrente, da la vista completa del recodo. Opción si cruzas.</div>
-      <div class="photo-meta">Tarde · 24-85mm</div>
-    </div>
-    <div class="photo-card">
-      <h4>📷 Burg Rheinfels</h4>
-      <div class="photo-detail">Ruinas colosales y murallas escalonadas con la garganta y la Loreley enfrente. Volúmenes de piedra y panorámicas; luz lateral de tarde para el relieve.</div>
-      <div class="photo-meta">Tarde · 24-70mm</div>
-    </div>
-    <div class="photo-card">
-      <h4>📷 Vierseenblick (Boppard)</h4>
-      <div class="photo-detail">El bucle del Bopparder Hamm, donde el Rin parece cuatro lagos separados. Teleobjetivo desde el Gedeonseck para aislar los "lagos". Cierre del domingo.</div>
-      <div class="photo-meta">Tarde · 35-135mm</div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ RESERVAS ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1rem">
-    <div class="divider-line"></div>
-    <div class="divider-text">A reservar / verificar</div>
-    <div class="divider-line"></div>
-  </div>
-
-  <div class="booking-list">
-    <div class="booking-item">
-      <div class="booking-dot green"></div>
-      <div>
-        <div class="booking-name">Alojamiento — Das Ebertor, Boppard (1 noche: sáb 29 → dom 30)</div>
-        <div class="booking-when">Dormitorio compartido 6 pax · junto al río, parking propio, check-in hasta 22:30 · <strong>ya reservado</strong></div>
-      </div>
-      <div class="booking-urgency">🟢 Hecho</div>
-      <div class="booking-price">33 €</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot red"></div>
-      <div>
-        <div class="booking-name">Cena — Zum Onkel Willi (Cochem), sábado</div>
-        <div class="booking-when">Sábado en temporada se llena · reservar esta semana</div>
-      </div>
-      <div class="booking-urgency">🔴 Reservar</div>
-      <div class="booking-price">~25-30 €</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot yellow"></div>
-      <div>
-        <div class="booking-name">Sesselbahn Cochem (Pinnerkreuz) — sábado</div>
-        <div class="booking-when">Verificar horario y última subida (suele cerrar ~18:00 en verano); si cierra antes, adelanta el Pinnerkreuz</div>
-      </div>
-      <div class="booking-urgency">🟡 Verificar</div>
-      <div class="booking-price">~9 €</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot green"></div>
-      <div>
-        <div class="booking-name">Burg Rheinfels (St. Goar) — domingo</div>
-        <div class="booking-when">Abierto a diario 10:00-18:00 · sin reserva · tour de túneles opcional</div>
-      </div>
-      <div class="booking-urgency">🟢 Sin reserva</div>
-      <div class="booking-price">~9 €</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot green"></div>
-      <div>
-        <div class="booking-name">Günderodehaus (Oberwesel) — domingo</div>
-        <div class="booking-when">Abre 12:00 (cerrado lun/mar) · por eso va a mediodía · sin reserva</div>
-      </div>
-      <div class="booking-urgency">🟢 Sin reserva</div>
-      <div class="booking-price">—</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot green"></div>
-      <div>
-        <div class="booking-name">Ferry Loreley (St. Goar↔St. Goarshausen) — opcional</div>
-        <div class="booking-when">Frecuente, sin reserva · solo si quieres la roca de la Loreley / Maria Ruh (+~1 h)</div>
-      </div>
-      <div class="booking-urgency">🟢 Opcional</div>
-      <div class="booking-price">~5 €</div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ CHECKLIST ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1.5rem">
-    <div class="divider-line"></div>
-    <div class="divider-text">Checklist pre-viaje</div>
-    <div class="divider-line"></div>
-  </div>
-
-  <div class="checklist-grid">
-    <div class="checklist-card">
-      <h4>📄 Documentos</h4>
-      <div class="checklist-item">DNI/pasaporte y carné de conducir</div>
-      <div class="checklist-item">Papeles y seguro del coche</div>
-      <div class="checklist-item">Obligatorios en Alemania: triángulo y chaleco reflectante</div>
-      <div class="checklist-item">Sin Umweltplakette: la ruta no tiene zonas de bajas emisiones</div>
-    </div>
-    <div class="checklist-card">
-      <h4>💶 Dinero</h4>
-      <div class="checklist-item">Tarjeta + 60-80 € en efectivo</div>
-      <div class="checklist-item">Muchas tabernas y parkings no aceptan tarjeta</div>
-      <div class="checklist-item">Efectivo también para el ferry (si cruzas a la Loreley)</div>
-    </div>
-    <div class="checklist-card">
-      <h4>📶 Conectividad &amp; apps</h4>
-      <div class="checklist-item">SIM holandesa con roaming UE sin coste; sin eSIM</div>
-      <div class="checklist-item">Google Maps offline del Mosela y la garganta del Rin (cobertura floja en valles/túneles)</div>
-      <div class="checklist-item">EasyPark/Parkster (parking), Komoot (Calmont/Stahleck), WarnWetter/Windy</div>
-    </div>
-    <div class="checklist-card">
-      <h4>🎒 Equipo &amp; salud</h4>
-      <div class="checklist-item">Dormitorio compartido: toalla de viaje, candado, frontal</div>
-      <div class="checklist-item">Cortavientos y algo para fijar el trípode (miradores con viento)</div>
-      <div class="checklist-item">Tarjeta sanitaria europea (TSE)</div>
-      <div class="checklist-item">Mira la meteo el viernes; ten a mano los planes B (Marksburg, túneles Rheinfels)</div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ PRESUPUESTO ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1.5rem">
-    <div class="divider-line"></div>
-    <div class="divider-text">Presupuesto aproximado</div>
-    <div class="divider-line"></div>
-  </div>
-
-  <div class="budget-box">
-    <div class="budget-row"><span class="budget-label">Alojamiento — dormitorio Das Ebertor (1 noche)</span><span class="budget-value">33 €</span></div>
-    <div class="budget-row"><span class="budget-label">Combustible (~500 km)</span><span class="budget-value">45-55 €</span></div>
-    <div class="budget-row"><span class="budget-label">Sesselbahn Cochem + telesilla Boppard</span><span class="budget-value">~17 €</span></div>
-    <div class="budget-row"><span class="budget-label">Parking (2 días)</span><span class="budget-value">12-15 €</span></div>
-    <div class="budget-row"><span class="budget-label">Entradas opcionales (Reichsburg y/o Rheinfels)</span><span class="budget-value">8-16 €</span></div>
-    <div class="budget-row"><span class="budget-label">Comidas (2 almuerzos + cena + desayuno)</span><span class="budget-value">75-90 €</span></div>
-    <div class="budget-row"><span class="budget-label">Total aproximado</span><span class="budget-value">190-225 €</span></div>
-  </div>
-</div>
-
-<div class="footer">
-  <p>Mosela &amp; Rin · Viñedos, castillos y meandros · 29-30 agosto 2026</p>
-</div>
+/* ---------- Mapa ---------- */
+(function () {
+  var COLORS = {"1": "#4a6b2f", "2": "#3a5570"};
+  var BASES = [{"name": "Das Ebertor · Boppard", "note": "Base · noche del sábado", "q": "Das Ebertor Boppard", "lat": 50.2329398, "lon": 7.5857867, "days": [1, 2], "fitAll": true}];
+  var P = [[1, "Calmont · Moselschleife de Bremm", "Mañana · mirador", "Calmont Gipfelkreuz Bremm", 50.10683, 7.12521], [1, "Beilstein", "Mediodía + Zehnthauskeller", "Zehnthauskeller Beilstein", 50.10926, 7.24108], [1, "Reichsburg Cochem", "Tarde", "Reichsburg Cochem", 50.14223, 7.16709], [1, "Pinnerkreuz", "16:30 · Sesselbahn", "Pinnerkreuz Cochem", 50.14998, 7.16308], [1, "Zum Onkel Willi", "Cena · Cochem", "Restaurant Zum Onkel Willi Cochem", 50.14767, 7.16637], [1, "Moselpromenade · Skagerrakbrücke", "Atardecer", "Skagerrakbrücke Cochem", 50.14733, 7.16763], [2, "Bacharach + Burg Stahleck", "Amanecer", "Burg Stahleck Bacharach", 50.05838, 7.76583], [2, "Oberwesel", "Media mañana · torres", "Oberwesel Stadtmauer", 50.1075, 7.72662], [2, "Günderodehaus", "Mediodía · vista + comida", "Günderodehaus Oberwesel", 50.11564, 7.7164], [2, "Burg Rheinfels", "Tarde · St. Goar", "Burg Rheinfels St. Goar", 50.15424, 7.70464], [2, "Vierseenblick", "Cierre · Boppard", "Vierseenblick Boppard", 50.24638, 7.5712]];
+  var pts = []; var count = {};
+  P.forEach(function (r) { count[r[0]] = (count[r[0]] || 0) + 1; pts.push({ day: r[0], n: count[r[0]], name: r[1], note: r[2], q: r[3], lat: r[4], lon: r[5] }); });
+  function gmaps(q) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q); }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var panel = document.getElementById('map-panel');
+  var map = null, layer = null, current = 'all';
+  var GOLD = getComputedStyle(document.documentElement).getPropertyValue('--fp-gold').trim() || '#a8823a';
+  function pinIcon(bg, label, base) {
+    return L.divIcon({ className: '', html: '<div class="pin' + (base ? ' base' : '') + '" style="background:' + bg + '"><span>' + label + '</span></div>',
+      iconSize: base ? [30, 30] : [26, 26], iconAnchor: base ? [15, 30] : [13, 26], tooltipAnchor: [0, base ? -30 : -26] });
+  }
+  function addMarker(p, color, label, base) {
+    var m = L.marker([p.lat, p.lon], { icon: pinIcon(color, label, base), keyboard: true, title: p.name, zIndexOffset: base ? 1000 : 0 });
+    m.bindTooltip('<b>' + esc(p.name) + '</b><small>' + esc(p.note) + ' · clic → Google Maps</small>', { direction: 'top', className: 'trip-tip' });
+    m.on('click', function () { window.open(gmaps(p.q), '_blank', 'noopener'); });
+    m.addTo(layer); return m;
+  }
+  function chip(p, color, label) {
+    return '<a class="map-chip" target="_blank" rel="noopener" href="' + gmaps(p.q) + '"><b style="background:' + color + '">' + label + '</b>' + esc(p.name) + '</a>';
+  }
+  function draw(filter) {
+    current = filter; layer.clearLayers();
+    var bounds = [], html = '', days = Object.keys(COLORS).map(Number);
+    days.forEach(function (d) {
+      if (filter !== 'all' && +filter !== d) return;
+      var dp = pts.filter(function (p) { return p.day === d; });
+      L.polyline(dp.map(function (p) { return [p.lat, p.lon]; }), { color: COLORS[d], weight: 2.5, opacity: 0.55, dashArray: '5 7' }).addTo(layer);
+      dp.forEach(function (p) { addMarker(p, COLORS[d], p.n, false); bounds.push([p.lat, p.lon]); });
+      if (filter !== 'all') html += dp.map(function (p) { return chip(p, COLORS[d], p.n); }).join('');
+    });
+    var bh = '';
+    BASES.forEach(function (b) {
+      if (filter !== 'all' && b.days.indexOf(+filter) < 0) return;
+      addMarker(b, GOLD, '★', true); bh += chip(b, GOLD, '★');
+      if (filter !== 'all' || b.fitAll) bounds.push([b.lat, b.lon]);
+    });
+    document.getElementById('map-chips').innerHTML = bh + html;
+    if (bounds.length) map.fitBounds(bounds, { padding: [28, 28], maxZoom: 16 });
+  }
+  function init() {
+    if (map || typeof L === 'undefined') return;
+    map = L.map('trip-map', { scrollWheelZoom: false, tap: true });
+    var ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+    var esriAttr = 'Tiles &copy; <a href="https://www.esri.com">Esri</a>';
+    var styles = {
+      'Claro': L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19, subdomains: 'abc', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &mdash; <a href="https://www.hotosm.org/">HOT</a>' }),
+      'Calles': L.tileLayer(ESRI + 'World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap' }),
+      'Topo': L.tileLayer(ESRI + 'World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap' }),
+      'Satélite': L.layerGroup([
+        L.tileLayer(ESRI + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, Maxar, Earthstar Geographics' }),
+        L.tileLayer(ESRI + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 })
+      ])
+    };
+    var STYLE_KEY = 'mosela-plan-map-style', styleName = 'Claro';
+    try { var sv = localStorage.getItem(STYLE_KEY); if (sv && styles[sv]) styleName = sv; } catch (e) {}
+    styles[styleName].addTo(map);
+    L.control.layers(styles, null, { position: 'topright', collapsed: true }).addTo(map);
+    map.on('baselayerchange', function (e) { try { localStorage.setItem(STYLE_KEY, e.name); } catch (err) {} });
+    layer = L.layerGroup().addTo(map);
+    map.on('focus', function () { map.scrollWheelZoom.enable(); });
+    map.on('blur', function () { map.scrollWheelZoom.disable(); });
+    draw('all');
+  }
+  panel.addEventListener('toggle', function () {
+    if (!panel.open) return;
+    init();
+    if (map) setTimeout(function () { map.invalidateSize(); draw(current); }, 60);
+  });
+  document.querySelectorAll('#map-filters button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#map-filters button').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active'); if (map) draw(b.getAttribute('data-day'));
+    });
+  });
+})();
+</script>
 
 </body>
 </html>

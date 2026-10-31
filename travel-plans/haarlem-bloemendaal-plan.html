@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Haarlem & Bloemendaal — Dunas y Mar del Norte</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Haarlem &amp; Bloemendaal — Dunas y Mar del Norte</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&amp;family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&amp;display=swap" rel="stylesheet"/>
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
 <style>
   :root {
     --sand: #f2ebe0;
@@ -465,875 +467,1081 @@
     .warnings { margin: 0 1rem 2rem; }
     .backup { margin: 0 1rem 1.5rem; }
   }
+
+  /* ===================== COMPONENTES v2 (plegables, mapa, cabecera de tarjeta) ===================== */
+  :root {
+    --fp-bg: var(--sand); --fp-surface: var(--dune);
+    --fp-main: var(--sea); --fp-mid: var(--sea-mid); --fp-light: var(--sea-light);
+    --fp-gold: var(--gold);
+  }
+
+  /* Cabecera de tarjeta de día: franja + lugares arriba, título centrado abajo */
+  .day-card-header {
+    display: grid !important;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "block place" "date date";
+    align-items: baseline;
+    column-gap: 0.75rem;
+    row-gap: 0.25rem;
+    padding: 0.85rem 1.2rem 0.7rem;
+  }
+  .day-card-header .card-block, .day-card-header .day-number { grid-area: block; white-space: nowrap; margin: 0; }
+  .day-card-header .card-date, .day-card-header .day-date { grid-area: date; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; font-size: 0.95rem; }
+  .day-card-header .card-title, .day-card-header .day-title { grid-area: place; display: block !important; margin: 0 !important; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+
+  /* Paneles plegables */
+  .map-panel {
+    margin: 0 2rem 1rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.07);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+  .map-panel > summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center; gap: 0.9rem;
+    padding: 0.9rem 1.2rem; border-left: 3px solid var(--fp-main); user-select: none;
+  }
+  .map-panel > summary::-webkit-details-marker { display: none; }
+  .map-sum-icon {
+    width: 2.2rem; height: 2.2rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    background: var(--fp-mid); color: white; font-size: 1rem; border-radius: 2px;
+  }
+  .map-sum-text { display: flex; flex-direction: column; min-width: 0; }
+  .map-sum-title { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em; color: var(--ink); }
+  .map-sum-sub { font-size: 0.82rem; font-style: italic; color: var(--ink-light); }
+  .chev {
+    margin-left: auto; flex-shrink: 0; width: 0.6rem; height: 0.6rem;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    transform: rotate(45deg); transition: transform 0.2s ease; margin-right: 0.3rem; margin-top: -0.25rem;
+  }
+  .map-panel > summary .chev { color: var(--ink-light); }
+  .map-panel[open] > summary .chev { transform: rotate(-135deg); margin-top: 0.25rem; }
+  .map-body { padding: 0 1.2rem 1.1rem; border-top: 1px solid var(--fp-surface); }
+
+  /* Paneles de contenido: solo el summary es tarjeta; el contenido abierto ocupa el ancho de los días */
+  .fold-panel { background: transparent; border: none; box-shadow: none; overflow: visible; border-radius: 0; }
+  .fold-panel > summary {
+    background: white; border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.07); border-left: 3px solid var(--fp-main);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .fold-panel > summary:hover { background: #fcfcfc; }
+  .fold-body { padding: 1rem 0 0.6rem; }
+  .fold-body > * { margin-left: 0 !important; margin-right: 0 !important; }
+  .fold-body > *:last-child { margin-bottom: 0 !important; }
+  .fold-body > .section-block, .fold-body > .warnings { padding-left: 0 !important; padding-right: 0 !important; }
+  .fold-body .light-table, .fold-body .warnings { margin-bottom: 1rem; }
+  .fold-first { margin-top: 2rem; }
+  .fold-after-days { margin-top: 2.2rem; }
+
+  /* Mapa */
+  .map-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.9rem 0 0.8rem; }
+  .map-filters button {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 0.4rem 0.8rem; border-radius: 2px; cursor: pointer;
+    border: 1px solid var(--fp-surface); background: var(--fp-bg); color: var(--ink-mid);
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .map-filters button i { width: 9px; height: 9px; display: inline-block; transform: rotate(45deg); }
+  .map-filters button.active { background: var(--ink); border-color: var(--ink); color: var(--fp-bg); }
+  #trip-map { height: 440px; border-radius: 4px; border: 1px solid var(--fp-surface); background: var(--fp-surface); z-index: 0; }
+  #trip-map .leaflet-control-layers { border: 1px solid var(--fp-surface); border-radius: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-family: 'Crimson Pro', Georgia, serif; font-size: 0.85rem; color: var(--ink); }
+  #trip-map .leaflet-control-layers-expanded { padding: 0.4rem 0.7rem 0.4rem 0.5rem; }
+  #trip-map .leaflet-control-layers-base label { margin: 0.15rem 0; cursor: pointer; }
+  .map-hint { font-size: 0.78rem; font-style: italic; color: var(--ink-light); margin-top: 0.5rem; }
+  .map-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.7rem; }
+  .map-chip {
+    display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--ink-mid); text-decoration: none;
+    padding: 0.2rem 0.6rem 0.2rem 0.25rem; border-radius: 99px; background: var(--fp-bg); border: 1px solid var(--fp-surface);
+  }
+  .map-chip:hover { border-color: var(--fp-light); color: var(--ink); }
+  .map-chip b {
+    width: 1.25rem; height: 1.25rem; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-size: 0.65rem; font-weight: 600; font-family: 'Cinzel', serif;
+  }
+  .pin { width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.35); }
+  .pin span { transform: rotate(45deg); color: white; font: 600 11px 'Cinzel', serif; }
+  .pin.base { width: 30px; height: 30px; }
+  .pin.base span { font-size: 13px; }
+  .leaflet-tooltip.trip-tip { font-family: 'Crimson Pro', Georgia, serif; font-size: 0.85rem; color: var(--ink); border: 1px solid var(--fp-surface); border-radius: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); padding: 0.3rem 0.55rem; }
+  .trip-tip small { display: block; color: var(--ink-light); font-style: italic; }
+
+  /* Días plegables */
+  .days-toolbar { display: flex; justify-content: flex-end; gap: 0.4rem; margin: 1.6rem 2rem 0.8rem; }
+  .days-toolbar button {
+    font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 0.35rem 0.75rem; border: 1px solid var(--fp-surface); background: white; color: var(--ink-mid); border-radius: 2px; cursor: pointer;
+  }
+  .days-toolbar button:hover { border-color: var(--fp-light); color: var(--ink); }
+  .fold-day-head { cursor: pointer; user-select: none; position: relative; }
+  .fold-day-head:focus-visible { outline: 2px solid var(--fp-gold); outline-offset: -4px; }
+  .fold-day-head .chev { color: rgba(255,255,255,0.75); margin-left: 0.6rem; transform: rotate(45deg); }
+  .fold-day.collapsed .fold-day-head .chev { transform: rotate(-45deg); margin-top: 0; }
+  .fold-day.collapsed .day-body { display: none; }
+  .fold-day.collapsed { margin-bottom: 0.6rem; }
+  .fold-day.collapsed .fold-day-head { margin-bottom: 0; }
+
+  @media (max-width: 600px) {
+    .map-panel { margin: 0 1rem 0.8rem; }
+    .map-body { padding: 0 0.8rem 0.9rem; }
+    #trip-map { height: 360px; }
+    .fold-body { padding: 0.8rem 0 0.4rem; }
+    .fold-first { margin-top: 1.5rem; }
+    .days-toolbar { margin: 1.2rem 1rem 0.8rem; }
+    .fold-day-head { flex-wrap: wrap; }
+    .fold-day-head .chev { position: absolute; right: 1.1rem; top: 1.6rem; }
+    .light-table { overflow-x: auto; padding-left: 0.8rem !important; padding-right: 0.8rem !important; }
+    .light-table table { font-size: 0.78rem; }
+  }
 </style>
 </head>
 <body>
-
 <!-- HEADER -->
 <div class="header">
-  <div class="header-ornament">〰 Itinerario de viaje 〰</div>
-  <h1>Haarlem & <span>Dunas</span></h1>
-  <p class="header-sub">Mar del Norte, dunas UNESCO y la ciudad más auténtica del Randstad · base en Ámsterdam</p>
-  <div class="header-dates">2–4 Octubre 2026 · 1 viajero · NS Weekend · Base Ámsterdam</div>
+<div class="header-ornament">〰 Itinerario de viaje 〰</div>
+<h1>Haarlem &amp; <span>Dunas</span></h1>
+<p class="header-sub">Mar del Norte, dunas UNESCO y la ciudad más auténtica del Randstad · base en Ámsterdam</p>
+<div class="header-dates">2–4 Octubre 2026 · 1 viajero · NS Weekend · Base Ámsterdam</div>
 </div>
-
 <!-- PRACTICAL NOTES -->
-<div class="divider" style="margin-top:2rem">
-  <div class="divider-line"></div>
-  <div class="divider-text">Antes de salir</div>
-  <div class="divider-line"></div>
-</div>
-
+<details class="map-panel fold-panel fold-first" id="antes-de-salir-panel">
+  <summary>
+<span class="map-sum-icon">🧳</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Antes de salir</span>
+<span class="map-sum-sub">Obras en Amsterdam Centraal · E-bike reservada · Kennemerplein + Safe Plan · FODMAP · Luz octubre · tabla de luz</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body">
 <div class="warnings">
-  <div class="warning-card reed">
-    <div class="warning-label">⚠️ Obras en Amsterdam Centraal — 3 y 4 oct</div>
-    <div class="warning-text"><strong>Desde el sábado 3 a las 00:50 y hasta el martes 6 no circulan trenes entre Amsterdam Sloterdijk, Centraal y Muiderpoort.</strong> Los trenes de Haarlem terminan en <strong>Sloterdijk</strong> — no llegan a Centraal. La llegada del viernes no se ve afectada. <strong>⚠️ El domingo tampoco:</strong> verificado en el aviso oficial de NS, los Sprinter 4800 y 5400 están cancelados entre Centraal y Haarlem todo el domingo; solo circula el Sprinter 28600 entre <strong>Sloterdijk y Haarlem</strong>. No cruces en ferry a Centraal esperando un tren directo. <strong>Ruta los dos días:</strong> a pie al metro <strong>Noorderpark</strong> (~13 min) → metro 52 a Amsterdam Zuid → metro 50 o 51 a Sloterdijk → tren a Haarlem (~13 min). Total <strong>~50-60 min</strong>, sin ferry y sin pasar por Centraal. NS indica explícitamente usar el metro entre Centraal, Sloterdijk, Lelylaan, Zuid y Amstel el sábado de 05:00 a 01:00, lo que respalda la validez del billete NS; para el domingo, verificar en la app. El <strong>bus 22 NO está cubierto</strong>.</div>
-  </div>
-  <div class="warning-card gold">
-    <div class="warning-label">✅ E-bike reservada — Green Bikes</div>
-    <div class="warning-text"><strong>Green Bikes</strong>, Kruisweg 30 (3 min de la estación), tel. 023 751 6512. <strong>60 € los 2 días + 10 € de Rental Bike Safe Plan = 70 €.</strong> Recogida <strong>sábado 09:30</strong> — el sistema no admite antes, comprobado — y devolución <strong>domingo 15:00</strong> (cierran a las 18:00). El alquiler multidía implica que te quedas la bici fuera del horario de tienda, así que la noche del sábado duerme en la stalling del Kennemerplein. Al recogerla: comprobar que incluye <strong>candado de cuadro y cadena</strong> (no lo publican en ningún sitio — si solo dan ringslot, comprar cadena allí mismo, son tienda también) y pedir el cargador.</div>
-  </div>
-  <div class="warning-card">
-    <div class="warning-label">🅿️ Kennemerplein + Safe Plan</div>
-    <div class="warning-text">La stalling: <strong>abierta 24 h, gratuita</strong> (Spaarnelanden, no NS), cubierta, cámaras, <strong>punto de carga eléctrica</strong>, y desde la planta superior <strong>sales directo al andén 8</strong>. <strong>El Safe Plan resuelve el riesgo:</strong> no exige guardar la bici en espacio cerrado — las únicas exclusiones por robo son que no estuviera candada o que no puedas entregar las llaves. Así que: candar con <strong>cuadro Y cadena a un soporte fijo</strong>, guardar las llaves y <strong>hacerle una foto candada</strong> como prueba. Franquicia de <strong>250 €</strong> en e-bike. No cubre daños a terceros (eso sería un seguro de responsabilidad civil AVP).</div>
-  </div>
-  <div class="warning-card green">
-    <div class="warning-label">🥗 FODMAP</div>
-    <div class="warning-text">Palabras clave: <strong>"zonder ui en knoflook"</strong> (sin cebolla ni ajo), <strong>"zonder saus"</strong> (sin salsa). Mercado: haring "zonder ui" se entiende al instante. Gouda belegen/extra belegen = 100% FODMAP-seguro. Beach clubs: kibbeling zonder saus, pescado a la plancha. Cerveza Jopen = FODMAP-segura.</div>
-  </div>
-  <div class="warning-card reed">
-    <div class="warning-label">📷 Luz octubre — datos clave</div>
-    <div class="warning-text">Ventaja de otoño pleno: luz más baja y dorada todo el día, playa vacía, menos turistas, cielos más dramáticos. La golden hour empieza ~17:55 y el atardecer es ~18:55 — el día se comprime respecto a septiembre, planificar la vuelta de la costa con margen. Llevar trípode para reflejos en el Spaarne y largas exposiciones nocturnas de la Grote Kerk.</div>
-  </div>
+<div class="warning-card reed">
+<div class="warning-label">⚠️ Obras en Amsterdam Centraal — 3 y 4 oct</div>
+<div class="warning-text"><strong>Desde el sábado 3 a las 00:50 y hasta el martes 6 no circulan trenes entre Amsterdam Sloterdijk, Centraal y Muiderpoort.</strong> Los trenes de Haarlem terminan en <strong>Sloterdijk</strong> — no llegan a Centraal. La llegada del viernes no se ve afectada. <strong>⚠️ El domingo tampoco:</strong> verificado en el aviso oficial de NS, los Sprinter 4800 y 5400 están cancelados entre Centraal y Haarlem todo el domingo; solo circula el Sprinter 28600 entre <strong>Sloterdijk y Haarlem</strong>. No cruces en ferry a Centraal esperando un tren directo. <strong>Ruta los dos días:</strong> a pie al metro <strong>Noorderpark</strong> (~13 min) → metro 52 a Amsterdam Zuid → metro 50 o 51 a Sloterdijk → tren a Haarlem (~13 min). Total <strong>~50-60 min</strong>, sin ferry y sin pasar por Centraal. NS indica explícitamente usar el metro entre Centraal, Sloterdijk, Lelylaan, Zuid y Amstel el sábado de 05:00 a 01:00, lo que respalda la validez del billete NS; para el domingo, verificar en la app. El <strong>bus 22 NO está cubierto</strong>.</div>
 </div>
-
+<div class="warning-card gold">
+<div class="warning-label">✅ E-bike reservada — Green Bikes</div>
+<div class="warning-text"><strong>Green Bikes</strong>, Kruisweg 30 (3 min de la estación), tel. 023 751 6512. <strong>60 € los 2 días + 10 € de Rental Bike Safe Plan = 70 €.</strong> Recogida <strong>sábado 09:30</strong> — el sistema no admite antes, comprobado — y devolución <strong>domingo 15:00</strong> (cierran a las 18:00). El alquiler multidía implica que te quedas la bici fuera del horario de tienda, así que la noche del sábado duerme en la stalling del Kennemerplein. Al recogerla: comprobar que incluye <strong>candado de cuadro y cadena</strong> (no lo publican en ningún sitio — si solo dan ringslot, comprar cadena allí mismo, son tienda también) y pedir el cargador.</div>
+</div>
+<div class="warning-card">
+<div class="warning-label">🅿️ Kennemerplein + Safe Plan</div>
+<div class="warning-text">La stalling: <strong>abierta 24 h, gratuita</strong> (Spaarnelanden, no NS), cubierta, cámaras, <strong>punto de carga eléctrica</strong>, y desde la planta superior <strong>sales directo al andén 8</strong>. <strong>El Safe Plan resuelve el riesgo:</strong> no exige guardar la bici en espacio cerrado — las únicas exclusiones por robo son que no estuviera candada o que no puedas entregar las llaves. Así que: candar con <strong>cuadro Y cadena a un soporte fijo</strong>, guardar las llaves y <strong>hacerle una foto candada</strong> como prueba. Franquicia de <strong>250 €</strong> en e-bike. No cubre daños a terceros (eso sería un seguro de responsabilidad civil AVP).</div>
+</div>
+<div class="warning-card green">
+<div class="warning-label">🥗 FODMAP</div>
+<div class="warning-text">Palabras clave: <strong>"zonder ui en knoflook"</strong> (sin cebolla ni ajo), <strong>"zonder saus"</strong> (sin salsa). Mercado: haring "zonder ui" se entiende al instante. Gouda belegen/extra belegen = 100% FODMAP-seguro. Beach clubs: kibbeling zonder saus, pescado a la plancha. Cerveza Jopen = FODMAP-segura.</div>
+</div>
+<div class="warning-card reed">
+<div class="warning-label">📷 Luz octubre — datos clave</div>
+<div class="warning-text">Ventaja de otoño pleno: luz más baja y dorada todo el día, playa vacía, menos turistas, cielos más dramáticos. La golden hour empieza ~17:55 y el atardecer es ~18:55 — el día se comprime respecto a septiembre, planificar la vuelta de la costa con margen. Llevar trípode para reflejos en el Spaarne y largas exposiciones nocturnas de la Grote Kerk.</div>
+</div>
+</div>
 <!-- LIGHT TABLE -->
 <div class="light-table">
-  <table>
-    <tr>
-      <th></th>
-      <th>Amanecer</th>
-      <th>Atardecer</th>
-      <th>Golden hour</th>
-      <th>Crepúsculo civil</th>
-    </tr>
-    <tr>
-      <td><strong>Sáb 3</strong></td>
-      <td>~07:47</td>
-      <td class="highlight">~18:54</td>
-      <td class="highlight">17:55 – 18:54</td>
-      <td>hasta ~19:26</td>
-    </tr>
-    <tr>
-      <td><strong>Dom 4</strong></td>
-      <td>~07:49</td>
-      <td class="highlight">~18:52</td>
-      <td class="highlight">17:53 – 18:52</td>
-      <td>hasta ~19:24</td>
-    </tr>
-  </table>
+<table>
+<tr>
+<th></th>
+<th>Amanecer</th>
+<th>Atardecer</th>
+<th>Golden hour</th>
+<th>Crepúsculo civil</th>
+</tr>
+<tr>
+<td><strong>Sáb 3</strong></td>
+<td>~07:47</td>
+<td class="highlight">~18:54</td>
+<td class="highlight">17:55 – 18:54</td>
+<td>hasta ~19:26</td>
+</tr>
+<tr>
+<td><strong>Dom 4</strong></td>
+<td>~07:49</td>
+<td class="highlight">~18:52</td>
+<td class="highlight">17:53 – 18:52</td>
+<td>hasta ~19:24</td>
+</tr>
+</table>
 </div>
+</div>
+</details>
 
+<details class="map-panel" id="map-panel">
+<summary>
+<span class="map-sum-icon">🗺️</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Mapa del viaje</span>
+<span class="map-sum-sub">Ámsterdam y Haarlem sobre el plano · toca un punto para abrirlo en Google Maps</span>
+</span>
+<span class="chev"></span>
+</summary>
+<div class="map-body">
+<div class="map-filters" id="map-filters">
+<button class="active" data-day="all">Todos</button>
+<button data-day="1"><i style="background:#2a3048"></i>Vie 2</button>
+<button data-day="2"><i style="background:#0b5e6e"></i>Sáb 3</button>
+<button data-day="3"><i style="background:#2a5c10"></i>Dom 4</button>
+</div>
+<div aria-label="Mapa interactivo del viaje" id="trip-map" role="region"></div>
+<div class="map-hint">El número sigue el orden del día. ★ = alojamiento. Arriba a la derecha (▤) cambias el estilo del mapa. Pasa el ratón para ver el nombre; un clic abre el sitio en Google Maps.</div>
+<div class="map-chips" id="map-chips"></div>
+</div>
+</details><div class="days-toolbar"><button data-days="expand" type="button">Expandir días</button><button data-days="collapse" type="button">Colapsar días</button></div>
 
 <!-- ============ VIERNES — LLEGADA ============ -->
-<div class="day-section">
-  <div class="day-header d0">
-    <div class="day-numeral">V</div>
-    <div class="day-info">
-      <h2>Viernes 2 — Llegada a Ámsterdam</h2>
-      <p>Tren · Check-in · Canales de noche opcional</p>
-    </div>
-    <div class="day-badge">Ganar terreno</div>
-  </div>
-
-  <div class="days-grid">
-    <div class="day-card">
-      <div class="day-card-header d0">
-        <div class="card-block">Noche</div>
-        <div class="card-date">~20:45 — Llegada</div>
-        <div class="card-title">Check-in · Canales de noche</div>
-      </div>
-      <div class="day-card-body">
-
-        <div class="time-block">
-          <div class="time-tag transit">🚆</div>
-          <div class="time-content">
-            <span class="time-label">18:30 — Tren desde Maastricht</span>
-            <div class="activity-name">NS Weekend Vrij — primer tren gratuito</div>
-            <div class="activity-detail">Maastricht → Eindhoven → Amsterdam Centraal. ~2h20 con 1 cambio. Te bajas en Amsterdam Centraal (sin seguir a Haarlem). <strong>Las obras de Centraal arrancan a las 00:50 del sábado, así que esta llegada es normal y directa.</strong> Llevar algo de cenar para el tren o comprar en Eindhoven durante el cambio.</div>
-            <div class="activity-meta"><span class="tag transport">NS Weekend · gratuito desde las 18:30</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag evening">🏨</div>
-          <div class="time-content">
-            <span class="time-label">~20:45 — Check-in</span>
-            <div class="activity-name">Cabins Hotel Amsterdam — Grasweg 54, Noord</div>
-            <div class="activity-detail">Pod/cabina con cortina blackout, enchufe, USB y almacenaje. Recepción y lounge 24/7 (sin problema por la llegada tardía). Desde Centraal: ferry gratuito 24/7 de ~5 min + ~15 min a pie. Solo tarjeta (no aceptan efectivo). Llevas la mochila encima todo el finde.</div>
-            <div class="activity-meta">
-              <span class="tag price">~53 €/noche + tasa 12,5% (se paga al llegar)</span>
-              <span class="tag tip">Reservado · recepción 24/7</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag evening">📷</div>
-          <div class="time-content">
-            <span class="time-label">21:15 — Paseo nocturno (opcional)</span>
-            <div class="activity-name">Canales de Ámsterdam — fotografía nocturna</div>
-            <div class="activity-detail">Si no estás agotado del viaje, los canales del centro (Brouwersgracht, la zona de Damrak con los reflejos, los puentes iluminados) son un sujeto nocturno excelente con trípode. Desde el hotel, el ferry gratuito a Centraal cruza en ~5 min. Alternativa: dejarlo para otra noche y descansar.</div>
-            <div class="activity-meta"><span class="tag photo">📷 Trípode · larga exposición</span></div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
+<div class="day-section fold-day" data-day-section="">
+<div aria-expanded="true" class="day-header d0 fold-day-head" role="button" tabindex="0">
+<div class="day-numeral">V</div>
+<div class="day-info">
+<h2>Viernes 2 — Llegada a Ámsterdam</h2>
+<p>Tren · Check-in · Canales de noche opcional</p>
 </div>
-
-
+<div class="day-badge">Ganar terreno</div>
+<span aria-hidden="true" class="chev"></span>
+  </div><div class="day-body">
+<div class="days-grid">
+<div class="day-card">
+<div class="day-card-header d0">
+<div class="card-block">Noche</div>
+<div class="card-date">~20:45 — Llegada</div>
+<div class="card-title">Check-in · Canales de noche</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag transit">🚆</div>
+<div class="time-content">
+<span class="time-label">18:30 — Tren desde Maastricht</span>
+<div class="activity-name">NS Weekend Vrij — primer tren gratuito</div>
+<div class="activity-detail">Maastricht → Eindhoven → Amsterdam Centraal. ~2h20 con 1 cambio. Te bajas en Amsterdam Centraal (sin seguir a Haarlem). <strong>Las obras de Centraal arrancan a las 00:50 del sábado, así que esta llegada es normal y directa.</strong> Llevar algo de cenar para el tren o comprar en Eindhoven durante el cambio.</div>
+<div class="activity-meta"><span class="tag transport">NS Weekend · gratuito desde las 18:30</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🏨</div>
+<div class="time-content">
+<span class="time-label">~20:45 — Check-in</span>
+<div class="activity-name">Cabins Hotel Amsterdam — Grasweg 54, Noord</div>
+<div class="activity-detail">Pod/cabina con cortina blackout, enchufe, USB y almacenaje. Recepción y lounge 24/7 (sin problema por la llegada tardía). Desde Centraal: ferry gratuito 24/7 de ~5 min + ~15 min a pie. Solo tarjeta (no aceptan efectivo). Llevas la mochila encima todo el finde.</div>
+<div class="activity-meta">
+<span class="tag price">~53 €/noche + tasa 12,5% (se paga al llegar)</span>
+<span class="tag tip">Reservado · recepción 24/7</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">📷</div>
+<div class="time-content">
+<span class="time-label">21:15 — Paseo nocturno (opcional)</span>
+<div class="activity-name">Canales de Ámsterdam — fotografía nocturna</div>
+<div class="activity-detail">Si no estás agotado del viaje, los canales del centro (Brouwersgracht, la zona de Damrak con los reflejos, los puentes iluminados) son un sujeto nocturno excelente con trípode. Desde el hotel, el ferry gratuito a Centraal cruza en ~5 min. Alternativa: dejarlo para otra noche y descansar.</div>
+<div class="activity-meta"><span class="tag photo">📷 Trípode · larga exposición</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div>
 <!-- ============ DÍA 1 — SÁBADO ============ -->
-<div class="day-section">
-  <div class="day-header d1">
-    <div class="day-numeral">I</div>
-    <div class="day-info">
-      <h2>Sábado 3 — Costa y ciudad</h2>
-      <p>Brederode · Dunas · Bloemendaal · Mercado · Teylers · Golden hour en el Spaarne</p>
-    </div>
-    <div class="day-badge">Fotografía primero</div>
-  </div>
-
-  <div class="days-grid">
-
-    <!-- MAÑANA: COSTA -->
-    <div class="day-card">
-      <div class="day-card-header d1">
-        <div class="card-block">Mañana</div>
-        <div class="card-date">07:10 — A Haarlem</div>
-        <div class="card-title">Tren · Brederode · Dunas · Playa</div>
-      </div>
-      <div class="day-card-body">
-
-        <div class="time-block">
-          <div class="time-tag transit">🚆</div>
-          <div class="time-content">
-            <span class="time-label">07:10 — Hotel → Haarlem (vía Noorderpark)</span>
-            <div class="activity-name">Cabins → metro 52 → Zuid → metro 50/51 → Sloterdijk → Haarlem (~50-60 min)</div>
-            <div class="activity-detail">Centraal no conecta con Haarlem, así que se esquiva entero: <strong>~13 min a pie al metro Noorderpark</strong> + <strong>metro 52 a Amsterdam Zuid</strong> (~11 min) + <strong>metro 50 o 51 a Sloterdijk</strong> (~12 min) + <strong>tren Sloterdijk → Haarlem</strong> (~13 min). Sin ferry y sin el gentío de Centraal. Salir del hotel <strong>~07:10</strong> para llegar a Haarlem ~08:20; la bici no se recoge antes de las 09:30, así que salir antes solo añade espera. Mochila encima.</div>
-            <div class="activity-meta">
-              <span class="tag transport">~50-60 min · metro 52 + 50/51 + tren</span>
-              <span class="tag tip">NS indica usar el metro sáb 05:00–01:00</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag morning">☕</div>
-          <div class="time-content">
-            <span class="time-label">08:30 — Desayuno en Haarlem</span>
-            <div class="food-highlight">
-              <div class="resto">Grand Café Brinkmann <span style="font-weight:300;font-size:0.78rem">(Grote Markt 10 · abre 08:00)</span></div>
-              <div class="dish">La mejor terraza del Grote Markt. Pedir: <strong>uitsmijter</strong> (huevo frito sobre pan, sin salsas) o broodje met kaas con gouda madurado. Rápido, contundente, FODMAP-seguro. ~€8–12.</div>
-            </div>
-            <div class="activity-meta"><span class="tag fodmap">✓ FODMAP</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag morning">📷</div>
-          <div class="time-content">
-            <span class="time-label">09:00 — Fotos mañaneras</span>
-            <div class="activity-name">Grote Markt + orilla del Spaarne — luz baja matutina</div>
-            <div class="activity-detail">Mientras abren la tienda de bicis: los puestos del mercado montándose en la plaza (actividad auténtica), la Grote Kerk con luz lateral, el Spaarne con reflejos de la mañana. 30 minutos productivos a pie antes de recoger la bici a las 09:30.</div>
-            <div class="activity-meta"><span class="tag photo">📷 Luz baja · actividad callejera</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag transit">🚲</div>
-          <div class="time-content">
-            <span class="time-label">09:30 — Recoger e-bike ✅ reservada</span>
-            <div class="activity-name">Green Bikes — Kruisweg 30 (3 min de la estación)</div>
-            <div class="activity-detail">E-bike <strong>reservada 2 días con Safe Plan</strong> (la usas sáb + dom sin re-alquilar). <strong>No admiten recogida antes de las 09:30</strong>, por eso la hora previa va al desayuno y a las fotos a pie. La e-bike es clave para los desniveles de duna con el equipo encima. Llevar: agua, capa cortavientos, batería de móvil. Al recogerla: comprobar <strong>candado de cuadro + cadena</strong> y pedir el cargador.</div>
-            <div class="activity-meta">
-              <span class="tag price">70 € (60 € + 10 € Safe Plan)</span>
-              <span class="tag free">✅ Reservada · devolución dom 15:00</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag morning">🏰</div>
-          <div class="time-content">
-            <span class="time-label">10:00 — Ruinas de Brederode</span>
-            <div class="activity-name">Castillo del s.XIII en Santpoort-Zuid (4 km, 20 min)</div>
-            <div class="activity-detail">Parada fotográfica en ruta a Bloemendaal. Castillo fundado por Willem I van Brederode (~1282), destruido por los españoles en 1573 y enterrado bajo las dunas durante siglos. Los muros medievales con vegetación de duna creciendo entre las piedras son un sujeto excelente. <strong>Confirmado: abre a las 11:00</strong> (mié, jue, sáb y dom; cerrado lu, ma y <strong>viernes</strong>). Pasas a las 10:00, así que <strong>solo exterior</strong> — que es el motivo fotográfico principal de todas formas. La entrada al recinto son ~7 €, no ~2 €. ~20 min de parada.</div>
-            <div class="activity-meta">
-              <span class="tag warning">⚠ Abre 11:00 — llegas antes, solo exterior</span>
-              <span class="tag photo">📷 Muros y foso desde el perímetro</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag morning">🚴</div>
-          <div class="time-content">
-            <span class="time-label">10:20 — Travesía de dunas</span>
-            <div class="activity-name">Nationaal Park Zuid-Kennemerland → Bloemendaal aan Zee</div>
-            <div class="activity-detail">~6 km desde Brederode, 25-30 min. La sección más fotogénica del viaje: senderos de arena entre dunas altas, vegetación de brezal otoñal (tonos dorados), las primeras vistas del Mar del Norte al cruzar el crestón (~40 m de altitud). Parar en los miradores para fotografiar. Los tramos más empinados requieren bajar de la bici y empujar.</div>
-            <div class="bike-route">
-              <div class="route-step"><div class="dot"></div><span>Brederode → carril bici dirección oeste por Velserenderlaan</span></div>
-              <div class="route-arrow">↓</div>
-              <div class="route-step"><div class="dot"></div><span>Entrada Nationaal Park Zuid-Kennemerland (acceso libre en bici)</span></div>
-              <div class="route-arrow">↓</div>
-              <div class="route-step"><div class="dot"></div><span>Subida al crestón de dunas — parada panorámica con vista al Mar del Norte</span></div>
-              <div class="route-arrow">↓</div>
-              <div class="route-step"><div class="dot"></div><span>Descenso por sendero de dunas → Bloemendaal aan Zee</span></div>
-            </div>
-            <div class="activity-meta">
-              <span class="tag free">Parque sin coste de entrada</span>
-              <span class="tag photo">📷 Dunas · brezal otoñal · mar</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- BLOEMENDAAL + VUELTA -->
-    <div class="day-card">
-      <div class="day-card-header d1">
-        <div class="card-block">Media mañana</div>
-        <div class="card-date">11:00 — Playa</div>
-        <div class="card-title">Bloemendaal · Kibbeling · Regreso</div>
-      </div>
-      <div class="day-card-body">
-
-        <div class="time-block">
-          <div class="time-tag morning">🏖️</div>
-          <div class="time-content">
-            <span class="time-label">11:00 — Bloemendaal aan Zee</span>
-            <div class="activity-name">Playa vacía de octubre — set fotográfico privado</div>
-            <div class="activity-detail">Sin las masas de verano: 4,3 km de arena con apenas gente. Fotografiar: línea de costa, estructuras de beach clubs contra cielos de otoño, transición duna-playa, espuma del oleaje. Beach clubs a principios de octubre: <strong>Bloomingdale confirmado abierto todos los días 09:00–22:00</strong>. Otros como Later aan Zee o FUEL pueden estar ya cerrando temporada. Con Bloomingdale tienes comida asegurada. ~1 hora de fotos y paseo.</div>
-            <div class="activity-meta">
-              <span class="tag tip">Bloomingdale 09:00–22:00 · confirmado</span>
-              <span class="tag photo">📷 Playa vacía · luz otoñal</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag morning">🐟</div>
-          <div class="time-content">
-            <span class="time-label">12:00 — Almuerzo en la playa</span>
-            <div class="food-highlight">
-              <div class="resto">Bloomingdale <span style="font-weight:300;font-size:0.78rem">(confirmado: todos los días 09:00–22:00)</span></div>
-              <div class="dish">Pedir: <strong>kibbeling zonder saus</strong> (pescado rebozado frito, el snack de costa holandés) con limón. O gegrilde vis (pescado a la plancha). Evitar knoflooksaus y tartar. Frites sin mayo como acompañamiento. ~€7–12.</div>
-            </div>
-            <div class="activity-meta"><span class="tag fodmap">✓ FODMAP — "zonder saus" es la clave</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag transit">🚲</div>
-          <div class="time-content">
-            <span class="time-label">12:45 — Vuelta a Haarlem</span>
-            <div class="activity-name">Regreso por Overveen (~7 km, 30 min)</div>
-            <div class="activity-detail">Ruta plana y directa por el carril bici de la Bloemendaalseweg/Zeeweg. Guardar la bici en los aparcabicis del centro (sigues con ella el resto del día para moverte). Mochila encima.</div>
-            <div class="activity-meta"><span class="tag transport">30 min · plano · carril bici dedicado</span></div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- TARDE: CIUDAD -->
-    <div class="day-card">
-      <div class="day-card-header d1">
-        <div class="card-block">Tarde</div>
-        <div class="card-date">13:00 — Ciudad</div>
-        <div class="card-title">Mercado · Grote Kerk · Teylers · Hofjes</div>
-      </div>
-      <div class="day-card-body">
-
-        <div class="time-block">
-          <div class="time-tag afternoon">🧀</div>
-          <div class="time-content">
-            <span class="time-label">13:15 — Mercado del sábado</span>
-            <div class="activity-name">Grote Markt — mercado de productores (hasta 17:00)</div>
-            <div class="activity-detail">El mercado sigue animado por la tarde. Comprar: haring zonder ui (arenque sin cebolla, ~€3-4), gouda extra belegen de granja (degustación gratis, comprar cuña para el domingo), stroopwafel caliente. Aprovechar para fotografiar: edificios rodeando la plaza (Stadhuis s.XIII, Vleeshal s.XVII) con el mercado como escena de vida.</div>
-            <div class="activity-meta">
-              <span class="tag fodmap">✓ FODMAP — "zonder ui"</span>
-              <span class="tag free">Entrada gratuita</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">⛪</div>
-          <div class="time-content">
-            <span class="time-label">14:00 — Grote Kerk (Sint-Bavokerk)</span>
-            <div class="activity-name">La iglesia donde Mozart tocó a los 10 años</div>
-            <div class="activity-detail">Órgano Christian Müller (1738), uno de los mejores de Europa — Haendel, Mendelssohn y Mozart (con 10 años, 1766) tocaron aquí. 400 lápidas en el suelo incluyen la de Frans Hals. Interior de madera oscura y bóveda de piedra. Posibles conciertos de órgano los sábados. <strong>Tiene que ser hoy: el domingo solo abre para culto, no para visita turística.</strong> ~45 min.</div>
-            <div class="activity-meta">
-              <span class="tag price">~4 € entrada</span>
-              <span class="tag tip">Verificar conciertos de órgano</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">🏛️</div>
-          <div class="time-content">
-            <span class="time-label">15:00 — Teylers Museum</span>
-            <div class="activity-name">El museo más antiguo de los Países Bajos (1784)</div>
-            <div class="activity-detail">Fundado por Pieter Teyler van der Hulst, abierto desde 1784 sin apenas cambios. Tres colecciones: ciencias naturales (fósiles y minerales), instrumentos científicos, y dibujos del s.XVI–XVIII (Rafael, Miguel Ángel). La Sala Oval neoclásica es el punto central — impresionante y muy fotogénica. <strong>Horario confirmado: ma–do 10:00–17:00</strong> (lunes cerrado), 17,50 €. ~1h 30 min.</div>
-            <div class="activity-meta">
-              <span class="tag price">17,50 €</span>
-              <span class="tag reserve">Entrada online evita colas</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">🌿</div>
-          <div class="time-content">
-            <span class="time-label">16:15 — Hofjes — solo hoy</span>
-            <div class="activity-name">Jardines ocultos medievales — cierran a las 17:00</div>
-            <div class="activity-detail">Patios comunitarios del s.XIV–XV con jardín y pozo de agua, escondidos tras portones. Siguen habitados. Imprescindibles: <strong>Hofje van Bakenes</strong> (1395, el más antiguo de los Países Bajos — Wijde Appelaarsteeg 13) y <strong>Hofje van Staats</strong> (1730 — <strong>Jansweg</strong>, junto a la estación; ojo, NO Jansstraat). ~7 min andando entre sí. <strong>Horario lu–sá 10:00–17:00: los hofjes con portón están cerrados los domingos</strong>, así que no se pueden mover. Entrar a las 16:15 como muy tarde. Código de conducta: son casas habitadas, no museos — silencio, nada de bicis dentro y <strong>no disparar hacia las ventanas</strong>. Si un hofje no deja pasar, fotografiarlo desde el portón.</div>
-            <div class="activity-meta">
-              <span class="tag free">Gratuito · respetar silencio</span>
-              <span class="tag warning">⚠ Cierran 17:00 · domingos cerrados</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- GOLDEN HOUR + NOCHE -->
-    <div class="day-card">
-      <div class="day-card-header d1">
-        <div class="card-block">Golden hour + Noche</div>
-        <div class="card-date">17:00 — Spaarne</div>
-        <div class="card-title">Atardecer · Jopenkerk</div>
-      </div>
-      <div class="day-card-body">
-
-        <div class="time-block">
-          <div class="time-tag golden">🌅</div>
-          <div class="time-content">
-            <span class="time-label">17:00 — Golden hour en el Spaarne</span>
-            <div class="activity-name">El mejor momento fotográfico del viaje</div>
-            <div class="activity-detail">Posicionarte en el Spaarne riverside entre el puente del Teylers y el Molen de Adriaan. A partir de las 17:55 la luz dorada pinta las fachadas históricas; el molino de viento retroiluminado se refleja en el agua quieta del río. Atardecer ~18:54, crepúsculo civil hasta ~19:26. Llevar trípode para reflejos largos. El Molen de Adriaan (reconstruido) cierra a las 17:00 pero es fotogénico desde fuera.</div>
-            <div class="activity-meta">
-              <span class="tag photo">📷 Trípode · reflejos en el río · golden hour 17:55–18:54</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag evening">🍺</div>
-          <div class="time-content">
-            <span class="time-label">18:30 — Aperitivo</span>
-            <div class="activity-name">Klokhuisplein</div>
-            <div class="activity-detail">Jopen Mooie Nel (IPA local) o Jopen Amberbier — recetas del s.XVI, elaboradas en Haarlem. FODMAP-seguras. Plazas con terraza entre el Grote Markt y el Spaarne.</div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag evening">🍽️</div>
-          <div class="time-content">
-            <span class="time-label">19:15 — Cena</span>
-            <div class="food-highlight">
-              <div class="resto">Jopenkerk <span style="font-weight:300;font-size:0.78rem">(Gedempte Voldersgracht 2)</span></div>
-              <div class="dish">Cervecería artesanal en la antigua Jacobskerk del s.XIX: columnas, vidrieras, techos abovedados. Restaurante en mezzanine (solo cenas). Pedir: <strong>filete a la brasa o pescado del día</strong>. FODMAP: "zonder ui, knoflook en roomsauzen" — el personal está acostumbrado. ~€22–28 principal.</div>
-            </div>
-            <div class="activity-meta">
-              <span class="tag reserve">Reservar con antelación · jopenkerk.nl</span>
-              <span class="tag fodmap">✓ FODMAP — comunicar al reservar</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag evening">🌙</div>
-          <div class="time-content">
-            <span class="time-label">21:15 — Brown café (opcional)</span>
-            <div class="activity-name">Última ronda en Haarlem antes del tren</div>
-            <div class="activity-detail">Café de Gekroonde Suiker (Gedempte Voldersgracht) para un ambiente de brown café auténtico, o largas exposiciones nocturnas de la Grote Kerk y el Spaarne. Antes del tren: <strong>dejar la e-bike en la fietsenstalling Kennemerplein</strong> (24 h, gratuita, cubierta, cámaras, enchufes para cargar). La recoges mañana a las 08:45. Usar la zona municipal (Spaarnelanden), no la de NS, para que sea gratis. <strong>Variante sin riesgo:</strong> devolverla a Green Bikes a las 17:30 — desde ahí todo el plan de la tarde y la noche es a pie, y el domingo la recoges a las 09:30.</div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag transit">🚆</div>
-          <div class="time-content">
-            <span class="time-label">~22:00 — Vuelta a Ámsterdam (vía Sloterdijk)</span>
-            <div class="activity-name">Haarlem → Sloterdijk → metro → Centraal → ferry (~55 min)</div>
-            <div class="activity-detail">Por las obras, el tren te deja en <strong>Sloterdijk</strong>: de ahí metro 51 directo a Centraal, o metro 50 a Zuid + metro 52. El metro circula hasta pasada la medianoche el sábado, así que a las 22:00 no hay problema; si se alarga mucho la noche, hay buses nocturnos. Ferry gratuito 24/7 + ~15 min a pie al hotel. NS Weekend válido hasta las 04:00 del lunes.</div>
-            <div class="activity-meta"><span class="tag transport">Tren + metro · ~55 min · metro hasta ~00:30</span></div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-
-  <div class="backup">
-    <div class="backup-icon">🌧️</div>
-    <div class="backup-text"><strong>Backup lluvia sábado mañana:</strong> Si llueve fuerte al amanecer, invertir el día: Teylers + Grote Kerk + hofjes por la mañana (todo cubierto). Si aclara por la tarde, hacer la ruta en bici con luz más baja — la costa con nubes dramáticas es incluso mejor fotográficamente. Si llueve todo el día: Frans Hals Museum (€20, 1h) sustituye la excursión a la costa. <strong>Nota:</strong> la travesía de dunas con llovizna ligera es ciclable y muy fotogénica. <strong>Lo que NO se puede aplazar al domingo:</strong> hofjes (cerrados los domingos), Grote Kerk (domingo solo culto) y el mercado (solo sábado).</div>
-  </div>
+<div class="day-section fold-day" data-day-section="">
+<div aria-expanded="true" class="day-header d1 fold-day-head" role="button" tabindex="0">
+<div class="day-numeral">I</div>
+<div class="day-info">
+<h2>Sábado 3 — Costa y ciudad</h2>
+<p>Brederode · Dunas · Bloemendaal · Mercado · Teylers · Golden hour en el Spaarne</p>
 </div>
-
-
+<div class="day-badge">Fotografía primero</div>
+<span aria-hidden="true" class="chev"></span>
+  </div><div class="day-body">
+<div class="days-grid">
+<!-- MAÑANA: COSTA -->
+<div class="day-card">
+<div class="day-card-header d1">
+<div class="card-block">Mañana</div>
+<div class="card-date">07:10 — A Haarlem</div>
+<div class="card-title">Tren · Brederode · Dunas · Playa</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag transit">🚆</div>
+<div class="time-content">
+<span class="time-label">07:10 — Hotel → Haarlem (vía Noorderpark)</span>
+<div class="activity-name">Cabins → metro 52 → Zuid → metro 50/51 → Sloterdijk → Haarlem (~50-60 min)</div>
+<div class="activity-detail">Centraal no conecta con Haarlem, así que se esquiva entero: <strong>~13 min a pie al metro Noorderpark</strong> + <strong>metro 52 a Amsterdam Zuid</strong> (~11 min) + <strong>metro 50 o 51 a Sloterdijk</strong> (~12 min) + <strong>tren Sloterdijk → Haarlem</strong> (~13 min). Sin ferry y sin el gentío de Centraal. Salir del hotel <strong>~07:10</strong> para llegar a Haarlem ~08:20; la bici no se recoge antes de las 09:30, así que salir antes solo añade espera. Mochila encima.</div>
+<div class="activity-meta">
+<span class="tag transport">~50-60 min · metro 52 + 50/51 + tren</span>
+<span class="tag tip">NS indica usar el metro sáb 05:00–01:00</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">☕</div>
+<div class="time-content">
+<span class="time-label">08:30 — Desayuno en Haarlem</span>
+<div class="food-highlight">
+<div class="resto">Grand Café Brinkmann <span style="font-weight:300;font-size:0.78rem">(Grote Markt 10 · abre 08:00)</span></div>
+<div class="dish">La mejor terraza del Grote Markt. Pedir: <strong>uitsmijter</strong> (huevo frito sobre pan, sin salsas) o broodje met kaas con gouda madurado. Rápido, contundente, FODMAP-seguro. ~€8–12.</div>
+</div>
+<div class="activity-meta"><span class="tag fodmap">✓ FODMAP</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">📷</div>
+<div class="time-content">
+<span class="time-label">09:00 — Fotos mañaneras</span>
+<div class="activity-name">Grote Markt + orilla del Spaarne — luz baja matutina</div>
+<div class="activity-detail">Mientras abren la tienda de bicis: los puestos del mercado montándose en la plaza (actividad auténtica), la Grote Kerk con luz lateral, el Spaarne con reflejos de la mañana. 30 minutos productivos a pie antes de recoger la bici a las 09:30.</div>
+<div class="activity-meta"><span class="tag photo">📷 Luz baja · actividad callejera</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag transit">🚲</div>
+<div class="time-content">
+<span class="time-label">09:30 — Recoger e-bike ✅ reservada</span>
+<div class="activity-name">Green Bikes — Kruisweg 30 (3 min de la estación)</div>
+<div class="activity-detail">E-bike <strong>reservada 2 días con Safe Plan</strong> (la usas sáb + dom sin re-alquilar). <strong>No admiten recogida antes de las 09:30</strong>, por eso la hora previa va al desayuno y a las fotos a pie. La e-bike es clave para los desniveles de duna con el equipo encima. Llevar: agua, capa cortavientos, batería de móvil. Al recogerla: comprobar <strong>candado de cuadro + cadena</strong> y pedir el cargador.</div>
+<div class="activity-meta">
+<span class="tag price">70 € (60 € + 10 € Safe Plan)</span>
+<span class="tag free">✅ Reservada · devolución dom 15:00</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">🏰</div>
+<div class="time-content">
+<span class="time-label">10:00 — Ruinas de Brederode</span>
+<div class="activity-name">Castillo del s.XIII en Santpoort-Zuid (4 km, 20 min)</div>
+<div class="activity-detail">Parada fotográfica en ruta a Bloemendaal. Castillo fundado por Willem I van Brederode (~1282), destruido por los españoles en 1573 y enterrado bajo las dunas durante siglos. Los muros medievales con vegetación de duna creciendo entre las piedras son un sujeto excelente. <strong>Confirmado: abre a las 11:00</strong> (mié, jue, sáb y dom; cerrado lu, ma y <strong>viernes</strong>). Pasas a las 10:00, así que <strong>solo exterior</strong> — que es el motivo fotográfico principal de todas formas. La entrada al recinto son ~7 €, no ~2 €. ~20 min de parada.</div>
+<div class="activity-meta">
+<span class="tag warning">⚠ Abre 11:00 — llegas antes, solo exterior</span>
+<span class="tag photo">📷 Muros y foso desde el perímetro</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">🚴</div>
+<div class="time-content">
+<span class="time-label">10:20 — Travesía de dunas</span>
+<div class="activity-name">Nationaal Park Zuid-Kennemerland → Bloemendaal aan Zee</div>
+<div class="activity-detail">~6 km desde Brederode, 25-30 min. La sección más fotogénica del viaje: senderos de arena entre dunas altas, vegetación de brezal otoñal (tonos dorados), las primeras vistas del Mar del Norte al cruzar el crestón (~40 m de altitud). Parar en los miradores para fotografiar. Los tramos más empinados requieren bajar de la bici y empujar.</div>
+<div class="bike-route">
+<div class="route-step"><div class="dot"></div><span>Brederode → carril bici dirección oeste por Velserenderlaan</span></div>
+<div class="route-arrow">↓</div>
+<div class="route-step"><div class="dot"></div><span>Entrada Nationaal Park Zuid-Kennemerland (acceso libre en bici)</span></div>
+<div class="route-arrow">↓</div>
+<div class="route-step"><div class="dot"></div><span>Subida al crestón de dunas — parada panorámica con vista al Mar del Norte</span></div>
+<div class="route-arrow">↓</div>
+<div class="route-step"><div class="dot"></div><span>Descenso por sendero de dunas → Bloemendaal aan Zee</span></div>
+</div>
+<div class="activity-meta">
+<span class="tag free">Parque sin coste de entrada</span>
+<span class="tag photo">📷 Dunas · brezal otoñal · mar</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- BLOEMENDAAL + VUELTA -->
+<div class="day-card">
+<div class="day-card-header d1">
+<div class="card-block">Mediodía</div>
+<div class="card-date">11:00 — Playa</div>
+<div class="card-title">Bloemendaal · Kibbeling · Vuelta</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag morning">🏖️</div>
+<div class="time-content">
+<span class="time-label">11:00 — Bloemendaal aan Zee</span>
+<div class="activity-name">Playa vacía de octubre — set fotográfico privado</div>
+<div class="activity-detail">Sin las masas de verano: 4,3 km de arena con apenas gente. Fotografiar: línea de costa, estructuras de beach clubs contra cielos de otoño, transición duna-playa, espuma del oleaje. Beach clubs a principios de octubre: <strong>Bloomingdale confirmado abierto todos los días 09:00–22:00</strong>. Otros como Later aan Zee o FUEL pueden estar ya cerrando temporada. Con Bloomingdale tienes comida asegurada. ~1 hora de fotos y paseo.</div>
+<div class="activity-meta">
+<span class="tag tip">Bloomingdale 09:00–22:00 · confirmado</span>
+<span class="tag photo">📷 Playa vacía · luz otoñal</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">🐟</div>
+<div class="time-content">
+<span class="time-label">12:00 — Almuerzo en la playa</span>
+<div class="food-highlight">
+<div class="resto">Bloomingdale <span style="font-weight:300;font-size:0.78rem">(confirmado: todos los días 09:00–22:00)</span></div>
+<div class="dish">Pedir: <strong>kibbeling zonder saus</strong> (pescado rebozado frito, el snack de costa holandés) con limón. O gegrilde vis (pescado a la plancha). Evitar knoflooksaus y tartar. Frites sin mayo como acompañamiento. ~€7–12.</div>
+</div>
+<div class="activity-meta"><span class="tag fodmap">✓ FODMAP — "zonder saus" es la clave</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag transit">🚲</div>
+<div class="time-content">
+<span class="time-label">12:45 — Vuelta a Haarlem</span>
+<div class="activity-name">Regreso por Overveen (~7 km, 30 min)</div>
+<div class="activity-detail">Ruta plana y directa por el carril bici de la Bloemendaalseweg/Zeeweg. Guardar la bici en los aparcabicis del centro (sigues con ella el resto del día para moverte). Mochila encima.</div>
+<div class="activity-meta"><span class="tag transport">30 min · plano · carril bici dedicado</span></div>
+</div>
+</div>
+</div>
+</div>
+<!-- TARDE: CIUDAD -->
+<div class="day-card">
+<div class="day-card-header d1">
+<div class="card-block">Tarde</div>
+<div class="card-date">13:00 — Ciudad</div>
+<div class="card-title">Mercado · Grote Kerk · Teylers · Hofjes</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag afternoon">🧀</div>
+<div class="time-content">
+<span class="time-label">13:15 — Mercado del sábado</span>
+<div class="activity-name">Grote Markt — mercado de productores (hasta 17:00)</div>
+<div class="activity-detail">El mercado sigue animado por la tarde. Comprar: haring zonder ui (arenque sin cebolla, ~€3-4), gouda extra belegen de granja (degustación gratis, comprar cuña para el domingo), stroopwafel caliente. Aprovechar para fotografiar: edificios rodeando la plaza (Stadhuis s.XIII, Vleeshal s.XVII) con el mercado como escena de vida.</div>
+<div class="activity-meta">
+<span class="tag fodmap">✓ FODMAP — "zonder ui"</span>
+<span class="tag free">Entrada gratuita</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">⛪</div>
+<div class="time-content">
+<span class="time-label">14:00 — Grote Kerk (Sint-Bavokerk)</span>
+<div class="activity-name">La iglesia donde Mozart tocó a los 10 años</div>
+<div class="activity-detail">Órgano Christian Müller (1738), uno de los mejores de Europa — Haendel, Mendelssohn y Mozart (con 10 años, 1766) tocaron aquí. 400 lápidas en el suelo incluyen la de Frans Hals. Interior de madera oscura y bóveda de piedra. Posibles conciertos de órgano los sábados. <strong>Tiene que ser hoy: el domingo solo abre para culto, no para visita turística.</strong> ~45 min.</div>
+<div class="activity-meta">
+<span class="tag price">~4 € entrada</span>
+<span class="tag tip">Verificar conciertos de órgano</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🏛️</div>
+<div class="time-content">
+<span class="time-label">15:00 — Teylers Museum</span>
+<div class="activity-name">El museo más antiguo de los Países Bajos (1784)</div>
+<div class="activity-detail">Fundado por Pieter Teyler van der Hulst, abierto desde 1784 sin apenas cambios. Tres colecciones: ciencias naturales (fósiles y minerales), instrumentos científicos, y dibujos del s.XVI–XVIII (Rafael, Miguel Ángel). La Sala Oval neoclásica es el punto central — impresionante y muy fotogénica. <strong>Horario confirmado: ma–do 10:00–17:00</strong> (lunes cerrado), 17,50 €. ~1h 30 min.</div>
+<div class="activity-meta">
+<span class="tag price">17,50 €</span>
+<span class="tag reserve">Entrada online evita colas</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🌿</div>
+<div class="time-content">
+<span class="time-label">16:15 — Hofjes — solo hoy</span>
+<div class="activity-name">Jardines ocultos medievales — cierran a las 17:00</div>
+<div class="activity-detail">Patios comunitarios del s.XIV–XV con jardín y pozo de agua, escondidos tras portones. Siguen habitados. Imprescindibles: <strong>Hofje van Bakenes</strong> (1395, el más antiguo de los Países Bajos — Wijde Appelaarsteeg 13) y <strong>Hofje van Staats</strong> (1730 — <strong>Jansweg</strong>, junto a la estación; ojo, NO Jansstraat). ~7 min andando entre sí. <strong>Horario lu–sá 10:00–17:00: los hofjes con portón están cerrados los domingos</strong>, así que no se pueden mover. Entrar a las 16:15 como muy tarde. Código de conducta: son casas habitadas, no museos — silencio, nada de bicis dentro y <strong>no disparar hacia las ventanas</strong>. Si un hofje no deja pasar, fotografiarlo desde el portón.</div>
+<div class="activity-meta">
+<span class="tag free">Gratuito · respetar silencio</span>
+<span class="tag warning">⚠ Cierran 17:00 · domingos cerrados</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- GOLDEN HOUR + NOCHE -->
+<div class="day-card">
+<div class="day-card-header d1">
+<div class="card-block">Tarde-noche</div>
+<div class="card-date">17:00 — Spaarne</div>
+<div class="card-title">Golden hour · Jopenkerk</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag golden">🌅</div>
+<div class="time-content">
+<span class="time-label">17:00 — Golden hour en el Spaarne</span>
+<div class="activity-name">El mejor momento fotográfico del viaje</div>
+<div class="activity-detail">Posicionarte en el Spaarne riverside entre el puente del Teylers y el Molen de Adriaan. A partir de las 17:55 la luz dorada pinta las fachadas históricas; el molino de viento retroiluminado se refleja en el agua quieta del río. Atardecer ~18:54, crepúsculo civil hasta ~19:26. Llevar trípode para reflejos largos. El Molen de Adriaan (reconstruido) cierra a las 17:00 pero es fotogénico desde fuera.</div>
+<div class="activity-meta">
+<span class="tag photo">📷 Trípode · reflejos en el río · golden hour 17:55–18:54</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🍺</div>
+<div class="time-content">
+<span class="time-label">18:30 — Aperitivo</span>
+<div class="activity-name">Klokhuisplein</div>
+<div class="activity-detail">Jopen Mooie Nel (IPA local) o Jopen Amberbier — recetas del s.XVI, elaboradas en Haarlem. FODMAP-seguras. Plazas con terraza entre el Grote Markt y el Spaarne.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🍽️</div>
+<div class="time-content">
+<span class="time-label">19:15 — Cena</span>
+<div class="food-highlight">
+<div class="resto">Jopenkerk <span style="font-weight:300;font-size:0.78rem">(Gedempte Voldersgracht 2)</span></div>
+<div class="dish">Cervecería artesanal en la antigua Jacobskerk del s.XIX: columnas, vidrieras, techos abovedados. Restaurante en mezzanine (solo cenas). Pedir: <strong>filete a la brasa o pescado del día</strong>. FODMAP: "zonder ui, knoflook en roomsauzen" — el personal está acostumbrado. ~€22–28 principal.</div>
+</div>
+<div class="activity-meta">
+<span class="tag reserve">Reservar con antelación · jopenkerk.nl</span>
+<span class="tag fodmap">✓ FODMAP — comunicar al reservar</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag evening">🌙</div>
+<div class="time-content">
+<span class="time-label">21:15 — Brown café (opcional)</span>
+<div class="activity-name">Última ronda en Haarlem antes del tren</div>
+<div class="activity-detail">Café de Gekroonde Suiker (Gedempte Voldersgracht) para un ambiente de brown café auténtico, o largas exposiciones nocturnas de la Grote Kerk y el Spaarne. Antes del tren: <strong>dejar la e-bike en la fietsenstalling Kennemerplein</strong> (24 h, gratuita, cubierta, cámaras, enchufes para cargar). La recoges mañana a las 08:45. Usar la zona municipal (Spaarnelanden), no la de NS, para que sea gratis. <strong>Variante sin riesgo:</strong> devolverla a Green Bikes a las 17:30 — desde ahí todo el plan de la tarde y la noche es a pie, y el domingo la recoges a las 09:30.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag transit">🚆</div>
+<div class="time-content">
+<span class="time-label">~22:00 — Vuelta a Ámsterdam (vía Sloterdijk)</span>
+<div class="activity-name">Haarlem → Sloterdijk → metro → Centraal → ferry (~55 min)</div>
+<div class="activity-detail">Por las obras, el tren te deja en <strong>Sloterdijk</strong>: de ahí metro 51 directo a Centraal, o metro 50 a Zuid + metro 52. El metro circula hasta pasada la medianoche el sábado, así que a las 22:00 no hay problema; si se alarga mucho la noche, hay buses nocturnos. Ferry gratuito 24/7 + ~15 min a pie al hotel. NS Weekend válido hasta las 04:00 del lunes.</div>
+<div class="activity-meta"><span class="tag transport">Tren + metro · ~55 min · metro hasta ~00:30</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="backup">
+<div class="backup-icon">🌧️</div>
+<div class="backup-text"><strong>Backup lluvia sábado mañana:</strong> Si llueve fuerte al amanecer, invertir el día: Teylers + Grote Kerk + hofjes por la mañana (todo cubierto). Si aclara por la tarde, hacer la ruta en bici con luz más baja — la costa con nubes dramáticas es incluso mejor fotográficamente. Si llueve todo el día: Frans Hals Museum (€20, 1h) sustituye la excursión a la costa. <strong>Nota:</strong> la travesía de dunas con llovizna ligera es ciclable y muy fotogénica. <strong>Lo que NO se puede aplazar al domingo:</strong> hofjes (cerrados los domingos), Grote Kerk (domingo solo culto) y el mercado (solo sábado).</div>
+</div>
+</div></div>
 <!-- ============ DÍA 2 — DOMINGO ============ -->
-<div class="day-section">
-  <div class="day-header d2">
-    <div class="day-numeral">II</div>
-    <div class="day-info">
-      <h2>Domingo 4 — Pueblo y despedida</h2>
-      <p>Spaarndam · Haarlemmerhout · Ciudad tranquila · Regreso</p>
-    </div>
-    <div class="day-badge">Pueblo + calma dominical</div>
-  </div>
-
-  <div class="days-grid">
-
-    <!-- MAÑANA: SPAARNDAM -->
-    <div class="day-card">
-      <div class="day-card-header d2">
-        <div class="card-block">Mañana</div>
-        <div class="card-date">07:35 — A Haarlem</div>
-        <div class="card-title">Tren · Bici · Spaarndam</div>
-      </div>
-      <div class="day-card-body">
-
-        <div class="time-block">
-          <div class="time-tag transit">🚆</div>
-          <div class="time-content">
-            <span class="time-label">07:35 — Hotel → Haarlem (vía Noorderpark)</span>
-            <div class="activity-name">Cabins → metro 52 → Zuid → metro 50/51 → Sloterdijk → Haarlem (~50-60 min)</div>
-            <div class="activity-detail">Misma ruta que ayer, y por el mismo motivo: <strong>el domingo tampoco hay trenes de Centraal a Haarlem</strong> — verificado en el aviso de NS. No cruces en ferry esperando un tren directo. A pie al metro Noorderpark, metro 52 a Zuid, metro 50/51 a Sloterdijk, tren a Haarlem. <strong>Check-out antes de las 11:00</strong>: sales con todo, hoy no vuelves a dormir a Ámsterdam. Salir ~07:35 para llegar ~08:35.</div>
-            <div class="activity-meta">
-              <span class="tag transport">~50-60 min · sin pasar por Centraal</span>
-              <span class="tag warning">⚠ Dom: verificar validez del billete en metro</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag transit">🚲</div>
-          <div class="time-content">
-            <span class="time-label">08:45 — Recoger la e-bike</span>
-            <div class="activity-name">Fietsenstalling Kennemerplein — salida directa del andén 8</div>
-            <div class="activity-detail">La bici te espera donde la dejaste anoche, ya cargada y sin trámite de alquiler: bajas del tren y en 3 minutos estás pedaleando. Esto es lo que compra la estrategia de la stalling — <strong>45 minutos de ventaja</strong> sobre esperar a que abra la tienda. <strong>Si optaste por devolverla el sábado:</strong> recogida en Green Bikes a las 09:30 y todo el día se desplaza 45 min (Spaarndam 09:45, brunch 11:15, almuerzo 13:45, devolución 15:00 — sigue cuadrando con el tren de las 17:00).</div>
-            <div class="activity-meta"><span class="tag tip">Sin cola · sin papeleo · batería llena</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag transit">🚲</div>
-          <div class="time-content">
-            <span class="time-label">09:00 — Bici a Spaarndam</span>
-            <div class="activity-name">Ribera del Spaarne hacia el norte (~5 km, 15 min)</div>
-            <div class="activity-detail">Ruta plana siguiendo el río Spaarne hacia el norte. Paisaje de pólder, canales paralelos, casas junto al agua. La ruta en sí es fotogénica — ir sin prisa.</div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag morning">🏘️</div>
-          <div class="time-content">
-            <span class="time-label">09:15 — Spaarndam</span>
-            <div class="activity-name">Pueblo-esclusa del s.XIII — paisaje urbano protegido</div>
-            <div class="activity-detail">Spaarndam-West es uno de los primeros paisajes urbanos protegidos de los Países Bajos. Pueblo creado alrededor del dique del Conde Floris V (1285). Fotografiar: el Westkolk (puerto histórico con barcos y casas reflejándose), la Oude Kerk (reconstruida en 1627), el sistema de esclusas antiguo, y la estatua de Hans Brinker en el IJdijk — el niño del cuento americano que tapó el dique con el dedo. Pueblo muy pequeño: 45 min–1h es suficiente. Domingo por la mañana = calma total.</div>
-            <div class="activity-meta">
-              <span class="tag free">Gratuito · acceso libre</span>
-              <span class="tag photo">📷 Puerto · reflejos · iglesia · esclusas</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag transit">🚲</div>
-          <div class="time-content">
-            <span class="time-label">10:30 — Vuelta a Haarlem</span>
-            <div class="activity-name">Regreso por la ribera (~15 min)</div>
-            <div class="activity-detail">Mismo camino de vuelta, ahora con el sol más alto sobre el agua. Directo al brunch — PIP Deli está en Lorentzplein, al sur del centro, a unos 8 min en bici desde la ribera.</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- MEDIODÍA: CIUDAD -->
-    <div class="day-card">
-      <div class="day-card-header d2">
-        <div class="card-block">Mediodía</div>
-        <div class="card-date">11:00 — Brunch</div>
-        <div class="card-title">PIP Deli · Haarlemmerhout · Almuerzo</div>
-      </div>
-      <div class="day-card-body">
-
-        <div class="time-block">
-          <div class="time-tag morning">☕</div>
-          <div class="time-content">
-            <span class="time-label">11:00 — Brunch</span>
-            <div class="food-highlight">
-              <div class="resto">PIP Deli <span style="font-weight:300;font-size:0.78rem">(<strong>Lorentzplein 2a</strong> · domingo 09:00–17:00 — corregido, no Anegang)</span></div>
-              <div class="dish">El brunch favorito de los locales. Pedir: <strong>huevos revueltos con salmón ahumado</strong> (sin crema, sin queso fundido). Evitar opciones con queso crema o cebolla caramelizada. ~€10–14. Lorentzplein queda pegado al Haarlemmerhout, así que el bosque cae de camino.</div>
-            </div>
-            <div class="activity-meta"><span class="tag fodmap">✓ FODMAP con selección</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">🍂</div>
-          <div class="time-content">
-            <span class="time-label">12:15 — Haarlemmerhout en bici</span>
-            <div class="activity-name">El bosque público más antiguo de los Países Bajos</div>
-            <div class="activity-detail">Justo al lado de PIP. Bosque histórico al sur del centro, con los primeros colores otoñales ya presentes a principios de octubre: hayas, avenidas rectas, luz filtrada. Recorrerlo en bici sin rumbo fijo, parando donde entre la luz. Es el hueco de respiro que le faltaba al plan — una hora sin agenda.</div>
-            <div class="activity-meta">
-              <span class="tag free">Gratuito · acceso libre</span>
-              <span class="tag photo">📷 Colores otoñales · luz filtrada</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">🍽️</div>
-          <div class="time-content">
-            <span class="time-label">13:30 — Almuerzo</span>
-            <div class="food-highlight">
-              <div class="resto">DeDAKKAS <span style="font-weight:300;font-size:0.78rem">(De Witstraat 1A — invernadero en la azotea del parking De Kamp)</span></div>
-              <div class="dish">Restaurante de temporada con vistas sobre los tejados del centro. Pedir: <strong>ceviche de pescado</strong> (lima, verificar sin ajo en la marinada) o proteína a la plancha. Avisar de FODMAP al reservar. ~€16–22. <strong>Confirmado: abre los domingos, 10:00–22:00</strong> — ya no hace falta el backup de Fortuyn.</div>
-            </div>
-            <div class="activity-meta">
-              <span class="tag fodmap">✓ FODMAP con comunicación</span>
-              <span class="tag tip">Domingos 10:00–22:00 · confirmado</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- TARDE: REGRESO -->
-    <div class="day-card">
-      <div class="day-card-header d2">
-        <div class="card-block">Tarde</div>
-        <div class="card-date">15:00 — Regreso</div>
-        <div class="card-title">Devolver bici · Paseo a pie · Tren</div>
-      </div>
-      <div class="day-card-body">
-
-        <div class="time-block">
-          <div class="time-tag transit">🚲</div>
-          <div class="time-content">
-            <span class="time-label">15:00 — Devolver e-bike</span>
-            <div class="activity-name">Green Bikes (Kruisweg 30) — 3 min de la estación</div>
-            <div class="activity-detail"><strong>Hora reservada: 15:00</strong> (cierran a las 18:00, así que hay margen si el almuerzo se alarga). A partir de aquí todo es a pie y con la mochila encima — el centro está a 5 minutos.</div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag afternoon">☕</div>
-          <div class="time-content">
-            <span class="time-label">15:15 — Paseo a pie por el centro</span>
-            <div class="activity-name">El bloque sin estructura que le faltaba al plan</div>
-            <div class="activity-detail">El sábado va encadenado sin un solo hueco; esta es la hora y media para caminar sin agenda. Y el domingo por la tarde es mejor momento que el sábado: es <strong>koopzondag</strong> — las tiendas del centro abren desde las 12:00, así que la calle está viva, pero sin el cuello de botella del mercado.</div>
-            <div class="bike-route">
-              <div class="route-step"><div class="dot"></div><span><strong>Kruisstraat y Grote Houtstraat</strong> — comercio local, gente, street photography</span></div>
-              <div class="route-arrow">↓</div>
-              <div class="route-step"><div class="dot"></div><span><strong>Bakenessergracht</strong> — el canal más bonito de Haarlem y el menos fotografiado, con la torre de la Bakenesserkerk al fondo</span></div>
-              <div class="route-arrow">↓</div>
-              <div class="route-step"><div class="dot"></div><span><strong>Nieuwe Gracht</strong> — fachadas del s.XVII, prácticamente vacía</span></div>
-              <div class="route-arrow">↓</div>
-              <div class="route-step"><div class="dot"></div><span>Última pasada por el <strong>Spaarne</strong> y café de despedida en el Grote Markt (~16:30)</span></div>
-            </div>
-            <div class="activity-detail" style="margin-top:0.5rem">Si prefieres el tren de las 16:00, recortar a Bakenessergracht + Spaarne: ~45 min, sigue mereciendo la pena.</div>
-            <div class="activity-meta"><span class="tag photo">📷 Koopzondag · calle viva · canales vacíos</span></div>
-          </div>
-        </div>
-
-        <div class="time-block">
-          <div class="time-tag transit">🚆</div>
-          <div class="time-content">
-            <span class="time-label">17:00 — Tren a Maastricht (esquivando Ámsterdam)</span>
-            <div class="activity-name">Haarlem → Leiden → Utrecht → Maastricht (~3h–3h20)</div>
-            <div class="activity-detail">Por las obras, la ruta vía Amsterdam Centraal deja de tener sentido: <strong>Haarlem → Leiden Centraal → Utrecht → Maastricht</strong> es todo NS, sin metro y sin transbordos raros. Horas de llegada aproximadas: saliendo a las <strong>15:30 → ~18:45</strong>, a las <strong>16:00 → ~19:15</strong>, a las <strong>17:00 → ~20:15</strong>. El NS Weekend vale hasta las 04:00 del lunes, así que la hora la eliges tú; el único límite real es el cierre de la tienda de bicis. Cenar en el tren o comprar en Utrecht durante el cambio.</div>
-            <div class="activity-meta">
-              <span class="tag transport">NS Weekend · vía Leiden · sin metro</span>
-              <span class="tag tip">17:00 recomendado · llegada ~20:15</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-
-  <div class="backup">
-    <div class="backup-icon">🌧️</div>
-    <div class="backup-text"><strong>Backup lluvia domingo:</strong> si Spaarndam no compensa con lluvia fuerte, usar la mañana para el <strong>Frans Hals Museum</strong> (Groot Heiligland 62, ~1h, 20 € — verificar horario de domingo al comprar). Y si lo que llueve es la tarde, el paseo a pie de las 15:00 se cambia por el Frans Hals en esa misma franja y se coge el tren de las 17:00 igual. ⚠️ Ojo: los <strong>hofjes están cerrados los domingos</strong> y la <strong>Grote Kerk solo abre para culto</strong>, así que ninguno de los dos sirve de plan B dominical. <strong>Si la bici falla:</strong> bus 75 desde la estación a Spaarndam (~10 min) o domingo entero a pie por la ciudad.</div>
-  </div>
+<div class="day-section fold-day" data-day-section="">
+<div aria-expanded="true" class="day-header d2 fold-day-head" role="button" tabindex="0">
+<div class="day-numeral">II</div>
+<div class="day-info">
+<h2>Domingo 4 — Pueblo y despedida</h2>
+<p>Spaarndam · Haarlemmerhout · Ciudad tranquila · Regreso</p>
 </div>
-
-
+<div class="day-badge">Pueblo + calma dominical</div>
+<span aria-hidden="true" class="chev"></span>
+  </div><div class="day-body">
+<div class="days-grid">
+<!-- MAÑANA: SPAARNDAM -->
+<div class="day-card">
+<div class="day-card-header d2">
+<div class="card-block">Mañana</div>
+<div class="card-date">07:35 — A Haarlem</div>
+<div class="card-title">Tren · Bici · Spaarndam</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag transit">🚆</div>
+<div class="time-content">
+<span class="time-label">07:35 — Hotel → Haarlem (vía Noorderpark)</span>
+<div class="activity-name">Cabins → metro 52 → Zuid → metro 50/51 → Sloterdijk → Haarlem (~50-60 min)</div>
+<div class="activity-detail">Misma ruta que ayer, y por el mismo motivo: <strong>el domingo tampoco hay trenes de Centraal a Haarlem</strong> — verificado en el aviso de NS. No cruces en ferry esperando un tren directo. A pie al metro Noorderpark, metro 52 a Zuid, metro 50/51 a Sloterdijk, tren a Haarlem. <strong>Check-out antes de las 11:00</strong>: sales con todo, hoy no vuelves a dormir a Ámsterdam. Salir ~07:35 para llegar ~08:35.</div>
+<div class="activity-meta">
+<span class="tag transport">~50-60 min · sin pasar por Centraal</span>
+<span class="tag warning">⚠ Dom: verificar validez del billete en metro</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag transit">🚲</div>
+<div class="time-content">
+<span class="time-label">08:45 — Recoger la e-bike</span>
+<div class="activity-name">Fietsenstalling Kennemerplein — salida directa del andén 8</div>
+<div class="activity-detail">La bici te espera donde la dejaste anoche, ya cargada y sin trámite de alquiler: bajas del tren y en 3 minutos estás pedaleando. Esto es lo que compra la estrategia de la stalling — <strong>45 minutos de ventaja</strong> sobre esperar a que abra la tienda. <strong>Si optaste por devolverla el sábado:</strong> recogida en Green Bikes a las 09:30 y todo el día se desplaza 45 min (Spaarndam 09:45, brunch 11:15, almuerzo 13:45, devolución 15:00 — sigue cuadrando con el tren de las 17:00).</div>
+<div class="activity-meta"><span class="tag tip">Sin cola · sin papeleo · batería llena</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag transit">🚲</div>
+<div class="time-content">
+<span class="time-label">09:00 — Bici a Spaarndam</span>
+<div class="activity-name">Ribera del Spaarne hacia el norte (~5 km, 15 min)</div>
+<div class="activity-detail">Ruta plana siguiendo el río Spaarne hacia el norte. Paisaje de pólder, canales paralelos, casas junto al agua. La ruta en sí es fotogénica — ir sin prisa.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag morning">🏘️</div>
+<div class="time-content">
+<span class="time-label">09:15 — Spaarndam</span>
+<div class="activity-name">Pueblo-esclusa del s.XIII — paisaje urbano protegido</div>
+<div class="activity-detail">Spaarndam-West es uno de los primeros paisajes urbanos protegidos de los Países Bajos. Pueblo creado alrededor del dique del Conde Floris V (1285). Fotografiar: el Westkolk (puerto histórico con barcos y casas reflejándose), la Oude Kerk (reconstruida en 1627), el sistema de esclusas antiguo, y la estatua de Hans Brinker en el IJdijk — el niño del cuento americano que tapó el dique con el dedo. Pueblo muy pequeño: 45 min–1h es suficiente. Domingo por la mañana = calma total.</div>
+<div class="activity-meta">
+<span class="tag free">Gratuito · acceso libre</span>
+<span class="tag photo">📷 Puerto · reflejos · iglesia · esclusas</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag transit">🚲</div>
+<div class="time-content">
+<span class="time-label">10:30 — Vuelta a Haarlem</span>
+<div class="activity-name">Regreso por la ribera (~15 min)</div>
+<div class="activity-detail">Mismo camino de vuelta, ahora con el sol más alto sobre el agua. Directo al brunch — PIP Deli está en Lorentzplein, al sur del centro, a unos 8 min en bici desde la ribera.</div>
+</div>
+</div>
+</div>
+</div>
+<!-- MEDIODÍA: CIUDAD -->
+<div class="day-card">
+<div class="day-card-header d2">
+<div class="card-block">Mediodía</div>
+<div class="card-date">11:00 — Brunch</div>
+<div class="card-title">PIP Deli · Haarlemmerhout · Almuerzo</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag morning">☕</div>
+<div class="time-content">
+<span class="time-label">11:00 — Brunch</span>
+<div class="food-highlight">
+<div class="resto">PIP Deli <span style="font-weight:300;font-size:0.78rem">(<strong>Lorentzplein 2a</strong> · domingo 09:00–17:00 — corregido, no Anegang)</span></div>
+<div class="dish">El brunch favorito de los locales. Pedir: <strong>huevos revueltos con salmón ahumado</strong> (sin crema, sin queso fundido). Evitar opciones con queso crema o cebolla caramelizada. ~€10–14. Lorentzplein queda pegado al Haarlemmerhout, así que el bosque cae de camino.</div>
+</div>
+<div class="activity-meta"><span class="tag fodmap">✓ FODMAP con selección</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🍂</div>
+<div class="time-content">
+<span class="time-label">12:15 — Haarlemmerhout en bici</span>
+<div class="activity-name">El bosque público más antiguo de los Países Bajos</div>
+<div class="activity-detail">Justo al lado de PIP. Bosque histórico al sur del centro, con los primeros colores otoñales ya presentes a principios de octubre: hayas, avenidas rectas, luz filtrada. Recorrerlo en bici sin rumbo fijo, parando donde entre la luz. Es el hueco de respiro que le faltaba al plan — una hora sin agenda.</div>
+<div class="activity-meta">
+<span class="tag free">Gratuito · acceso libre</span>
+<span class="tag photo">📷 Colores otoñales · luz filtrada</span>
+</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">🍽️</div>
+<div class="time-content">
+<span class="time-label">13:30 — Almuerzo</span>
+<div class="food-highlight">
+<div class="resto">DeDAKKAS <span style="font-weight:300;font-size:0.78rem">(De Witstraat 1A — invernadero en la azotea del parking De Kamp)</span></div>
+<div class="dish">Restaurante de temporada con vistas sobre los tejados del centro. Pedir: <strong>ceviche de pescado</strong> (lima, verificar sin ajo en la marinada) o proteína a la plancha. Avisar de FODMAP al reservar. ~€16–22. <strong>Confirmado: abre los domingos, 10:00–22:00</strong> — ya no hace falta el backup de Fortuyn.</div>
+</div>
+<div class="activity-meta">
+<span class="tag fodmap">✓ FODMAP con comunicación</span>
+<span class="tag tip">Domingos 10:00–22:00 · confirmado</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- TARDE: REGRESO -->
+<div class="day-card">
+<div class="day-card-header d2">
+<div class="card-block">Tarde</div>
+<div class="card-date">15:00 — Regreso</div>
+<div class="card-title">Devolver bici · Paseo a pie · Tren</div>
+</div>
+<div class="day-card-body">
+<div class="time-block">
+<div class="time-tag transit">🚲</div>
+<div class="time-content">
+<span class="time-label">15:00 — Devolver e-bike</span>
+<div class="activity-name">Green Bikes (Kruisweg 30) — 3 min de la estación</div>
+<div class="activity-detail"><strong>Hora reservada: 15:00</strong> (cierran a las 18:00, así que hay margen si el almuerzo se alarga). A partir de aquí todo es a pie y con la mochila encima — el centro está a 5 minutos.</div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag afternoon">☕</div>
+<div class="time-content">
+<span class="time-label">15:15 — Paseo a pie por el centro</span>
+<div class="activity-name">El bloque sin estructura que le faltaba al plan</div>
+<div class="activity-detail">El sábado va encadenado sin un solo hueco; esta es la hora y media para caminar sin agenda. Y el domingo por la tarde es mejor momento que el sábado: es <strong>koopzondag</strong> — las tiendas del centro abren desde las 12:00, así que la calle está viva, pero sin el cuello de botella del mercado.</div>
+<div class="bike-route">
+<div class="route-step"><div class="dot"></div><span><strong>Kruisstraat y Grote Houtstraat</strong> — comercio local, gente, street photography</span></div>
+<div class="route-arrow">↓</div>
+<div class="route-step"><div class="dot"></div><span><strong>Bakenessergracht</strong> — el canal más bonito de Haarlem y el menos fotografiado, con la torre de la Bakenesserkerk al fondo</span></div>
+<div class="route-arrow">↓</div>
+<div class="route-step"><div class="dot"></div><span><strong>Nieuwe Gracht</strong> — fachadas del s.XVII, prácticamente vacía</span></div>
+<div class="route-arrow">↓</div>
+<div class="route-step"><div class="dot"></div><span>Última pasada por el <strong>Spaarne</strong> y café de despedida en el Grote Markt (~16:30)</span></div>
+</div>
+<div class="activity-detail" style="margin-top:0.5rem">Si prefieres el tren de las 16:00, recortar a Bakenessergracht + Spaarne: ~45 min, sigue mereciendo la pena.</div>
+<div class="activity-meta"><span class="tag photo">📷 Koopzondag · calle viva · canales vacíos</span></div>
+</div>
+</div>
+<div class="time-block">
+<div class="time-tag transit">🚆</div>
+<div class="time-content">
+<span class="time-label">17:00 — Tren a Maastricht (esquivando Ámsterdam)</span>
+<div class="activity-name">Haarlem → Leiden → Utrecht → Maastricht (~3h–3h20)</div>
+<div class="activity-detail">Por las obras, la ruta vía Amsterdam Centraal deja de tener sentido: <strong>Haarlem → Leiden Centraal → Utrecht → Maastricht</strong> es todo NS, sin metro y sin transbordos raros. Horas de llegada aproximadas: saliendo a las <strong>15:30 → ~18:45</strong>, a las <strong>16:00 → ~19:15</strong>, a las <strong>17:00 → ~20:15</strong>. El NS Weekend vale hasta las 04:00 del lunes, así que la hora la eliges tú; el único límite real es el cierre de la tienda de bicis. Cenar en el tren o comprar en Utrecht durante el cambio.</div>
+<div class="activity-meta">
+<span class="tag transport">NS Weekend · vía Leiden · sin metro</span>
+<span class="tag tip">17:00 recomendado · llegada ~20:15</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="backup">
+<div class="backup-icon">🌧️</div>
+<div class="backup-text"><strong>Backup lluvia domingo:</strong> si Spaarndam no compensa con lluvia fuerte, usar la mañana para el <strong>Frans Hals Museum</strong> (Groot Heiligland 62, ~1h, 20 € — verificar horario de domingo al comprar). Y si lo que llueve es la tarde, el paseo a pie de las 15:00 se cambia por el Frans Hals en esa misma franja y se coge el tren de las 17:00 igual. ⚠️ Ojo: los <strong>hofjes están cerrados los domingos</strong> y la <strong>Grote Kerk solo abre para culto</strong>, así que ninguno de los dos sirve de plan B dominical. <strong>Si la bici falla:</strong> bus 75 desde la estación a Spaarndam (~10 min) o domingo entero a pie por la ciudad.</div>
+</div>
+</div></div>
 <!-- ============ RESTAURANTES ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1.5rem">
-    <div class="divider-line"></div>
-    <div class="divider-text">Guía de restaurantes · FODMAP</div>
-    <div class="divider-line"></div>
-  </div>
+<details class="map-panel fold-panel fold-after-days" id="gu-a-de-restaurantes-fod-panel">
+  <summary>
+<span class="map-sum-icon">🥗</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Guía de restaurantes · FODMAP</span>
+<span class="map-sum-sub">10 restaurantes con qué pedir</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body"><div class="section-block">
 
-  <p style="font-style:italic;color:var(--ink-light);font-size:0.88rem;margin-bottom:1.5rem;">Todos con nota FODMAP. Recordatorio clave en cualquier sitio: <strong>"zonder ui en knoflook, zonder saus"</strong> (sin cebolla, ajo ni salsas).</p>
+<p style="font-style:italic;color:var(--ink-light);font-size:0.88rem;margin-bottom:1.5rem;">Todos con nota FODMAP. Recordatorio clave en cualquier sitio: <strong>"zonder ui en knoflook, zonder saus"</strong> (sin cebolla, ajo ni salsas).</p>
+<div style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--sea);margin-bottom:0.75rem;">🌅 Desayuno y brunch</div>
+<div class="resto-grid" style="margin-bottom:1.8rem">
+<div class="resto-card">
+<h4>☕ Grand Café Brinkmann ⭐</h4>
+<div class="resto-item">Grote Markt 10 · abre 08:00 todos los días</div>
+<div class="resto-item">La mejor terraza del Grote Markt. Ambiente de gran café del s.XIX. Para el sábado: desayuno rápido antes de salir con la bici.</div>
+<div class="resto-item">FODMAP: uitsmijter sin salsas, broodje met kaas (queso madurado) <span class="fodmap-safe">✓ Seguro</span></div>
+<div class="resto-item">~€8–12</div>
+</div>
+<div class="resto-card">
+<h4>🥣 PIP Deli ⭐</h4>
+<div class="resto-item"><strong>Lorentzplein 2a</strong> · domingo 09:00–17:00 · cerrado lunes y martes <span class="fodmap-safe">Dirección corregida</span></div>
+<div class="resto-item">El brunch favorito de los locales. Ingredientes frescos, menú de temporada. Para el domingo <em>después</em> de Spaarndam — abre a las 09:00, no a las 08:30, y está pegado al Haarlemmerhout.</div>
+<div class="resto-item">FODMAP: huevos revueltos + salmón ahumado sin crema. Evitar queso crema o cebolla <span class="fodmap-safe">✓ Con selección</span></div>
+<div class="resto-item">~€10–14</div>
+</div>
+</div>
+<div style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--sea);margin-bottom:0.75rem;">🍽️ Comidas</div>
+<div class="resto-grid" style="margin-bottom:1.8rem">
+<div class="resto-card">
+<h4>🐟 Fishbar MONK ⭐</h4>
+<div class="resto-item">Korte Veerstraat 1 · junto al Spaarne</div>
+<div class="resto-item">Marisquería con barra de ostras y ambiente mediterráneo. Alternativa si quieres almorzar en la ciudad el sábado en vez de en la playa.</div>
+<div class="resto-item">FODMAP: sole meunière, ostras al natural, pescado a la plancha — "no garlic, butter and lemon only" <span class="fodmap-safe">✓ Con precisión</span></div>
+<div class="resto-item">~€18–24 · reservar o llegar antes de las 13h</div>
+</div>
+<div class="resto-card">
+<h4>🏙️ DeDAKKAS</h4>
+<div class="resto-item">De Witstraat 1A (azotea parking De Kamp)</div>
+<div class="resto-item">Invernadero en azotea con vistas. Producto de temporada. Para el almuerzo del domingo. <strong>Confirmado: abre domingos 10:00–22:00.</strong></div>
+<div class="resto-item">FODMAP: ceviche sin ajo, proteína a la plancha. Avisar al reservar <span class="fodmap-safe">✓ Con comunicación</span></div>
+<div class="resto-item">~€16–22</div>
+</div>
+<div class="resto-card">
+<h4>🏛️ Fortuyn (alternativa)</h4>
+<div class="resto-item">Grote Markt 14 · terraza · sin reserva</div>
+<div class="resto-item">Horno Josper para carnes y verduras. Ya no es backup obligado — DeDAKKAS abre los domingos — pero queda como opción sin reserva en la plaza.</div>
+<div class="resto-item">FODMAP: hamburguesa Hereford sin salsa, sopa (verificar), broodje simple <span class="fodmap-safe">✓ Con selección</span></div>
+<div class="resto-item">~€12–18 · abierto todos los días</div>
+</div>
+</div>
+<div style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--sea);margin-bottom:0.75rem;">🌙 Cenas</div>
+<div class="resto-grid" style="margin-bottom:1.8rem">
+<div class="resto-card">
+<h4>⛪ Jopenkerk ⭐ Imprescindible</h4>
+<div class="resto-item">Gedempte Voldersgracht 2 · solo cenas · jopenkerk.nl</div>
+<div class="resto-item">Cervecería en la Jacobskerk del s.XIX. Interior espectacular. Menú de temporada — carne y pescado disponibles.</div>
+<div class="resto-item">FODMAP: "zonder ui, knoflook en roomsauzen" — comunicar al reservar. Proteínas a la plancha/horno <span class="fodmap-safe">✓ Comunicando</span></div>
+<div class="resto-item">~€22–28 principal · RESERVAR con 2–3 días</div>
+</div>
+<div class="resto-card">
+<h4>🌊 Restaurant De Zeeuw</h4>
+<div class="resto-item">Zijlvest 5 · cenas mar–sáb</div>
+<div class="resto-item">El más recomendado por locales. Menú de 3–7 pasos con fermentación y producto propio. Janine (anfitriona) gestiona alergias con cuidado.</div>
+<div class="resto-item">FODMAP: avisar al reservar — muy adaptable. Proteínas limpias siempre disponibles <span class="fodmap-safe">✓ Muy adaptable</span></div>
+<div class="resto-item">~€55–80 menú completo · RESERVAR anticipadamente</div>
+</div>
+</div>
+<div style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--sea);margin-bottom:0.75rem;">🧀 Mercado y street food FODMAP</div>
+<div class="resto-grid">
+<div class="resto-card">
+<h4>🐟 Haring sin cebolla — mercado sáb.</h4>
+<div class="resto-item">Puestos del Grote Markt · sábado 09:00–17:00</div>
+<div class="resto-item">Arenque en salmuera "zonder ui". Solo ácido y fresco, con pepinillo opcional. 100% FODMAP-seguro.</div>
+<div class="resto-item">~€3–4 · comer en el acto sujetándolo por la cola</div>
+</div>
+<div class="resto-card">
+<h4>🧀 Gouda belegen de granja</h4>
+<div class="resto-item">Puestos de queso del Grote Markt · sábado</div>
+<div class="resto-item">Gouda belegen y extra belegen: 100% FODMAP-seguros (lactosa eliminada en fermentación larga). Degustación gratis. Comprar cuña para llevar al domingo.</div>
+<div class="resto-item">~€2–4 por porción</div>
+</div>
+<div class="resto-card">
+<h4>🐟 Kibbeling — beach clubs</h4>
+<div class="resto-item">Bloomingdale / Later aan Zee · sábado</div>
+<div class="resto-item">Pescado rebozado frito, el snack costero holandés. Pedir "zonder saus" — la tartar y la de ajo son el problema. Con limón solo, seguro.</div>
+<div class="resto-item">~€7–9</div>
+</div>
+</div>
+</div>
+</div>
+</details><!-- ============ RESERVAS ============ -->
+<details class="map-panel fold-panel" id="lista-de-reservas-panel">
+  <summary>
+<span class="map-sum-icon">📋</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Lista de reservas</span>
+<span class="map-sum-sub">9 reservas y comprobaciones, con urgencia y fecha</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body"><div class="section-block">
 
-  <div style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--sea);margin-bottom:0.75rem;">🌅 Desayuno y brunch</div>
-  <div class="resto-grid" style="margin-bottom:1.8rem">
-    <div class="resto-card">
-      <h4>☕ Grand Café Brinkmann ⭐</h4>
-      <div class="resto-item">Grote Markt 10 · abre 08:00 todos los días</div>
-      <div class="resto-item">La mejor terraza del Grote Markt. Ambiente de gran café del s.XIX. Para el sábado: desayuno rápido antes de salir con la bici.</div>
-      <div class="resto-item">FODMAP: uitsmijter sin salsas, broodje met kaas (queso madurado) <span class="fodmap-safe">✓ Seguro</span></div>
-      <div class="resto-item">~€8–12</div>
-    </div>
-    <div class="resto-card">
-      <h4>🥣 PIP Deli ⭐</h4>
-      <div class="resto-item"><strong>Lorentzplein 2a</strong> · domingo 09:00–17:00 · cerrado lunes y martes <span class="fodmap-safe">Dirección corregida</span></div>
-      <div class="resto-item">El brunch favorito de los locales. Ingredientes frescos, menú de temporada. Para el domingo <em>después</em> de Spaarndam — abre a las 09:00, no a las 08:30, y está pegado al Haarlemmerhout.</div>
-      <div class="resto-item">FODMAP: huevos revueltos + salmón ahumado sin crema. Evitar queso crema o cebolla <span class="fodmap-safe">✓ Con selección</span></div>
-      <div class="resto-item">~€10–14</div>
-    </div>
-  </div>
+<div class="booking-list">
+<div class="booking-item">
+<div class="booking-dot red"></div>
+<div>
+<div class="booking-name">Cabins Hotel Amsterdam — pod con cortina (2 noches: vie 2 + sáb 3 oct) ✅ RESERVADO</div>
+<div class="booking-when">Grasweg 54, Amsterdam-Noord · ferry gratuito 24/7 + ~15 min a pie de Centraal · recepción 24/7 · check-out 11:00 · solo tarjeta · ⚠️ tasa turística 12,5% del valor de la reserva se cobra al llegar (no incluida en la tarifa)</div>
+</div>
+<div class="booking-urgency">✅ Hecho</div>
+<div class="booking-price">~106 € + 12,5% tasa</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot red"></div>
+<div>
+<div class="booking-name">Jopenkerk — cena sábado 3 oct ~19:15</div>
+<div class="booking-when">jopenkerk.nl · indicar FODMAP: "zonder ui, knoflook en roomsauzen"</div>
+</div>
+<div class="booking-urgency">🔴 Reservar</div>
+<div class="booking-price">~35–45 € pp</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot red"></div>
+<div>
+<div class="booking-name">✅ E-bike 2 días — RESERVADA en Green Bikes</div>
+<div class="booking-when">Kruisweg 30 · tel. 023 751 6512 · recogida <strong>sáb 09:30</strong> (no admiten antes) · devolución <strong>dom 15:00</strong> · incluye <strong>Rental Bike Safe Plan</strong>: franquicia 250 €, cubre robo solo si la bici estaba candada y puedes entregar las llaves, no cubre daños a terceros · al recoger: comprobar candado de cuadro + cadena y pedir el cargador</div>
+</div>
+<div class="booking-urgency">🟢 Reservada</div>
+<div class="booking-price">70 €</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot yellow"></div>
+<div>
+<div class="booking-name">Teylers Museum — sábado 3 oct ~15:00</div>
+<div class="booking-when">teylers.nl · entrada online evita colas · en octubre poca presión</div>
+</div>
+<div class="booking-urgency">🟡 Recomendable</div>
+<div class="booking-price">17,50 €</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot red"></div>
+<div>
+<div class="booking-name">NS — obras Amsterdam Centraal CONFIRMADAS (3–6 oct)</div>
+<div class="booking-when">Sin trenes Sloterdijk–Centraal–Muiderpoort del sáb 3 a las 00:50 al mar 6. <strong>El domingo tampoco hay tren Centraal–Haarlem</strong> (Sprinters 4800 y 5400 cancelados en ese tramo; solo circula el 28600 Sloterdijk–Haarlem). Ruta los dos días: <strong>a pie a Noorderpark → metro 52 a Zuid → metro 50/51 a Sloterdijk → tren a Haarlem</strong>, ~50-60 min. Vuelta del domingo: vía Leiden o Sloterdijk hacia Utrecht y de ahí IC directo a Maastricht, ~2h50</div>
+</div>
+<div class="booking-urgency">🔴 Replanificar</div>
+<div class="booking-price">Gratuito NS</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot green"></div>
+<div>
+<div class="booking-name">Brederode — verificado: abre a las 11:00</div>
+<div class="booking-when">Mié, jue, sáb y dom 11:00–17:00 · cerrado lu, ma y viernes. Pasas a las 10:00 → <strong>solo exterior</strong>, sin coste. Sin acción necesaria</div>
+</div>
+<div class="booking-urgency">🟢 Resuelto</div>
+<div class="booking-price">0 € (exterior)</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot green"></div>
+<div>
+<div class="booking-name">DeDAKKAS — almuerzo domingo 4 oct ~13:30</div>
+<div class="booking-when"><strong>Confirmado: abre los domingos 10:00–22:00.</strong> Reservar mesa y avisar de FODMAP al hacerlo</div>
+</div>
+<div class="booking-urgency">🟢 Confirmado</div>
+<div class="booking-price">~16–22 € pp</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot yellow"></div>
+<div>
+<div class="booking-name">Huelgas de transporte — vigilar</div>
+<div class="booking-when">FNV anunció acciones más duras en octubre tras la huelga nacional del 9 de septiembre. Se convocan con 1-2 semanas de antelación: revisar a finales de mes</div>
+</div>
+<div class="booking-urgency">🟡 Vigilar</div>
+<div class="booking-price">—</div>
+</div>
+<div class="booking-item">
+<div class="booking-dot green"></div>
+<div>
+<div class="booking-name">Frans Hals Museum — domingo 4 oct (opcional, plan de lluvia)</div>
+<div class="booking-when">franshalsmuseum.nl · tickets online · solo si interesa pintura del s.XVII</div>
+</div>
+<div class="booking-urgency">🟢 Opcional</div>
+<div class="booking-price">20 €</div>
+</div>
+</div>
+</div>
+</div>
+</details><!-- ============ PRESUPUESTO ============ -->
+<details class="map-panel fold-panel" id="presupuesto-estimado-panel">
+  <summary>
+<span class="map-sum-icon">💶</span>
+<span class="map-sum-text">
+<span class="map-sum-title">Presupuesto estimado</span>
+<span class="map-sum-sub">Total estimado: ~310–370 €</span>
+</span>
+<span class="chev"></span>
+</summary>
+  <div class="fold-body"><div class="section-block">
 
-  <div style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--sea);margin-bottom:0.75rem;">🍽️ Comidas</div>
-  <div class="resto-grid" style="margin-bottom:1.8rem">
-    <div class="resto-card">
-      <h4>🐟 Fishbar MONK ⭐</h4>
-      <div class="resto-item">Korte Veerstraat 1 · junto al Spaarne</div>
-      <div class="resto-item">Marisquería con barra de ostras y ambiente mediterráneo. Alternativa si quieres almorzar en la ciudad el sábado en vez de en la playa.</div>
-      <div class="resto-item">FODMAP: sole meunière, ostras al natural, pescado a la plancha — "no garlic, butter and lemon only" <span class="fodmap-safe">✓ Con precisión</span></div>
-      <div class="resto-item">~€18–24 · reservar o llegar antes de las 13h</div>
-    </div>
-    <div class="resto-card">
-      <h4>🏙️ DeDAKKAS</h4>
-      <div class="resto-item">De Witstraat 1A (azotea parking De Kamp)</div>
-      <div class="resto-item">Invernadero en azotea con vistas. Producto de temporada. Para el almuerzo del domingo. <strong>Confirmado: abre domingos 10:00–22:00.</strong></div>
-      <div class="resto-item">FODMAP: ceviche sin ajo, proteína a la plancha. Avisar al reservar <span class="fodmap-safe">✓ Con comunicación</span></div>
-      <div class="resto-item">~€16–22</div>
-    </div>
-    <div class="resto-card">
-      <h4>🏛️ Fortuyn (alternativa)</h4>
-      <div class="resto-item">Grote Markt 14 · terraza · sin reserva</div>
-      <div class="resto-item">Horno Josper para carnes y verduras. Ya no es backup obligado — DeDAKKAS abre los domingos — pero queda como opción sin reserva en la plaza.</div>
-      <div class="resto-item">FODMAP: hamburguesa Hereford sin salsa, sopa (verificar), broodje simple <span class="fodmap-safe">✓ Con selección</span></div>
-      <div class="resto-item">~€12–18 · abierto todos los días</div>
-    </div>
-  </div>
-
-  <div style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--sea);margin-bottom:0.75rem;">🌙 Cenas</div>
-  <div class="resto-grid" style="margin-bottom:1.8rem">
-    <div class="resto-card">
-      <h4>⛪ Jopenkerk ⭐ Imprescindible</h4>
-      <div class="resto-item">Gedempte Voldersgracht 2 · solo cenas · jopenkerk.nl</div>
-      <div class="resto-item">Cervecería en la Jacobskerk del s.XIX. Interior espectacular. Menú de temporada — carne y pescado disponibles.</div>
-      <div class="resto-item">FODMAP: "zonder ui, knoflook en roomsauzen" — comunicar al reservar. Proteínas a la plancha/horno <span class="fodmap-safe">✓ Comunicando</span></div>
-      <div class="resto-item">~€22–28 principal · RESERVAR con 2–3 días</div>
-    </div>
-    <div class="resto-card">
-      <h4>🌊 Restaurant De Zeeuw</h4>
-      <div class="resto-item">Zijlvest 5 · cenas mar–sáb</div>
-      <div class="resto-item">El más recomendado por locales. Menú de 3–7 pasos con fermentación y producto propio. Janine (anfitriona) gestiona alergias con cuidado.</div>
-      <div class="resto-item">FODMAP: avisar al reservar — muy adaptable. Proteínas limpias siempre disponibles <span class="fodmap-safe">✓ Muy adaptable</span></div>
-      <div class="resto-item">~€55–80 menú completo · RESERVAR anticipadamente</div>
-    </div>
-  </div>
-
-  <div style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--sea);margin-bottom:0.75rem;">🧀 Mercado y street food FODMAP</div>
-  <div class="resto-grid">
-    <div class="resto-card">
-      <h4>🐟 Haring sin cebolla — mercado sáb.</h4>
-      <div class="resto-item">Puestos del Grote Markt · sábado 09:00–17:00</div>
-      <div class="resto-item">Arenque en salmuera "zonder ui". Solo ácido y fresco, con pepinillo opcional. 100% FODMAP-seguro.</div>
-      <div class="resto-item">~€3–4 · comer en el acto sujetándolo por la cola</div>
-    </div>
-    <div class="resto-card">
-      <h4>🧀 Gouda belegen de granja</h4>
-      <div class="resto-item">Puestos de queso del Grote Markt · sábado</div>
-      <div class="resto-item">Gouda belegen y extra belegen: 100% FODMAP-seguros (lactosa eliminada en fermentación larga). Degustación gratis. Comprar cuña para llevar al domingo.</div>
-      <div class="resto-item">~€2–4 por porción</div>
-    </div>
-    <div class="resto-card">
-      <h4>🐟 Kibbeling — beach clubs</h4>
-      <div class="resto-item">Bloomingdale / Later aan Zee · sábado</div>
-      <div class="resto-item">Pescado rebozado frito, el snack costero holandés. Pedir "zonder saus" — la tartar y la de ajo son el problema. Con limón solo, seguro.</div>
-      <div class="resto-item">~€7–9</div>
-    </div>
-  </div>
+<div class="budget-box">
+<div class="budget-row">
+<span class="budget-label">Trenes (Maastricht ↔ Ámsterdam + hops diarios a Haarlem)</span>
+<span class="budget-value">Incluido — NS Weekend</span>
+</div>
+<div class="budget-row">
+<span class="budget-label">Metro GVB por las obras (3 trayectos, si el abono NS no lo cubre)</span>
+<span class="budget-value">0–10 €</span>
+</div>
+<div class="budget-row">
+<span class="budget-label">Alojamiento — Cabins Hotel Amsterdam (2 noches) ✅</span>
+<span class="budget-value">~106 €</span>
+</div>
+<div class="budget-row">
+<span class="budget-label">Tasa turística Ámsterdam (12,5%, se paga al llegar)</span>
+<span class="budget-value">~13 €</span>
+</div>
+<div class="budget-row">
+<span class="budget-label">E-bike 2 días + Rental Bike Safe Plan (Green Bikes) — reservado</span>
+<span class="budget-value">70 €</span>
+</div>
+<div class="budget-row">
+<span class="budget-label">Teylers Museum</span>
+<span class="budget-value">17,50 €</span>
+</div>
+<div class="budget-row">
+<span class="budget-label">Grote Kerk</span>
+<span class="budget-value">~4 €</span>
+</div>
+<div class="budget-row">
+<span class="budget-label">Cena Jopenkerk (comida + cervezas)</span>
+<span class="budget-value">~35–45 €</span>
+</div>
+<div class="budget-row">
+<span class="budget-label">Resto de comidas y cafés (~5 comidas en 2,5 días)</span>
+<span class="budget-value">~55–75 €</span>
+</div>
+<div class="budget-row">
+<span class="budget-label">Mercado sábado (haring, gouda, stroopwafel)</span>
+<span class="budget-value">~10–15 €</span>
+</div>
+<div class="budget-row">
+<span class="budget-label">Opcionales (Frans Hals Museum, cerveza extra, alforja)</span>
+<span class="budget-value">0–25 €</span>
+</div>
+<div class="budget-row">
+<span class="budget-label">Total estimado</span>
+<span class="budget-value">~310–370 €</span>
+</div>
+</div>
+</div>
+</div>
+</details><div class="footer">
+<p>Haarlem &amp; Bloemendaal · Dunas y Mar del Norte · Base Ámsterdam · 2–4 Octubre 2026</p>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+/* ---------- Días plegables ---------- */
+(function () {
+  var KEY = 'haarlem-plan-collapsed';
+  var sections = Array.prototype.slice.call(document.querySelectorAll('[data-day-section]'));
+  var saved = [];
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) {}
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(sections.map(function (s, i) { return s.classList.contains('collapsed') ? i : -1; }).filter(function (i) { return i >= 0; }))); } catch (e) {}
+  }
+  function setCollapsed(sec, c) { sec.classList.toggle('collapsed', c); sec.querySelector('.fold-day-head').setAttribute('aria-expanded', String(!c)); }
+  sections.forEach(function (sec, i) {
+    if (saved.indexOf(i) >= 0) setCollapsed(sec, true);
+    var head = sec.querySelector('.fold-day-head');
+    head.addEventListener('click', function () { setCollapsed(sec, !sec.classList.contains('collapsed')); save(); });
+    head.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); head.click(); } });
+  });
+  document.querySelectorAll('[data-days]').forEach(function (b) {
+    b.addEventListener('click', function () { var c = b.getAttribute('data-days') === 'collapse'; sections.forEach(function (s) { setCollapsed(s, c); }); save(); });
+  });
+})();
 
-<!-- ============ RESERVAS ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1rem">
-    <div class="divider-line"></div>
-    <div class="divider-text">Lista de reservas</div>
-    <div class="divider-line"></div>
-  </div>
-
-  <div class="booking-list">
-    <div class="booking-item">
-      <div class="booking-dot red"></div>
-      <div>
-        <div class="booking-name">Cabins Hotel Amsterdam — pod con cortina (2 noches: vie 2 + sáb 3 oct) ✅ RESERVADO</div>
-        <div class="booking-when">Grasweg 54, Amsterdam-Noord · ferry gratuito 24/7 + ~15 min a pie de Centraal · recepción 24/7 · check-out 11:00 · solo tarjeta · ⚠️ tasa turística 12,5% del valor de la reserva se cobra al llegar (no incluida en la tarifa)</div>
-      </div>
-      <div class="booking-urgency">✅ Hecho</div>
-      <div class="booking-price">~106 € + 12,5% tasa</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot red"></div>
-      <div>
-        <div class="booking-name">Jopenkerk — cena sábado 3 oct ~19:15</div>
-        <div class="booking-when">jopenkerk.nl · indicar FODMAP: "zonder ui, knoflook en roomsauzen"</div>
-      </div>
-      <div class="booking-urgency">🔴 Reservar</div>
-      <div class="booking-price">~35–45 € pp</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot red"></div>
-      <div>
-        <div class="booking-name">✅ E-bike 2 días — RESERVADA en Green Bikes</div>
-        <div class="booking-when">Kruisweg 30 · tel. 023 751 6512 · recogida <strong>sáb 09:30</strong> (no admiten antes) · devolución <strong>dom 15:00</strong> · incluye <strong>Rental Bike Safe Plan</strong>: franquicia 250 €, cubre robo solo si la bici estaba candada y puedes entregar las llaves, no cubre daños a terceros · al recoger: comprobar candado de cuadro + cadena y pedir el cargador</div>
-      </div>
-      <div class="booking-urgency">🟢 Reservada</div>
-      <div class="booking-price">70 €</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot yellow"></div>
-      <div>
-        <div class="booking-name">Teylers Museum — sábado 3 oct ~15:00</div>
-        <div class="booking-when">teylers.nl · entrada online evita colas · en octubre poca presión</div>
-      </div>
-      <div class="booking-urgency">🟡 Recomendable</div>
-      <div class="booking-price">17,50 €</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot red"></div>
-      <div>
-        <div class="booking-name">NS — obras Amsterdam Centraal CONFIRMADAS (3–6 oct)</div>
-        <div class="booking-when">Sin trenes Sloterdijk–Centraal–Muiderpoort del sáb 3 a las 00:50 al mar 6. <strong>El domingo tampoco hay tren Centraal–Haarlem</strong> (Sprinters 4800 y 5400 cancelados en ese tramo; solo circula el 28600 Sloterdijk–Haarlem). Ruta los dos días: <strong>a pie a Noorderpark → metro 52 a Zuid → metro 50/51 a Sloterdijk → tren a Haarlem</strong>, ~50-60 min. Vuelta del domingo: vía Leiden o Sloterdijk hacia Utrecht y de ahí IC directo a Maastricht, ~2h50</div>
-      </div>
-      <div class="booking-urgency">🔴 Replanificar</div>
-      <div class="booking-price">Gratuito NS</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot green"></div>
-      <div>
-        <div class="booking-name">Brederode — verificado: abre a las 11:00</div>
-        <div class="booking-when">Mié, jue, sáb y dom 11:00–17:00 · cerrado lu, ma y viernes. Pasas a las 10:00 → <strong>solo exterior</strong>, sin coste. Sin acción necesaria</div>
-      </div>
-      <div class="booking-urgency">🟢 Resuelto</div>
-      <div class="booking-price">0 € (exterior)</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot green"></div>
-      <div>
-        <div class="booking-name">DeDAKKAS — almuerzo domingo 4 oct ~13:30</div>
-        <div class="booking-when"><strong>Confirmado: abre los domingos 10:00–22:00.</strong> Reservar mesa y avisar de FODMAP al hacerlo</div>
-      </div>
-      <div class="booking-urgency">🟢 Confirmado</div>
-      <div class="booking-price">~16–22 € pp</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot yellow"></div>
-      <div>
-        <div class="booking-name">Huelgas de transporte — vigilar</div>
-        <div class="booking-when">FNV anunció acciones más duras en octubre tras la huelga nacional del 9 de septiembre. Se convocan con 1-2 semanas de antelación: revisar a finales de mes</div>
-      </div>
-      <div class="booking-urgency">🟡 Vigilar</div>
-      <div class="booking-price">—</div>
-    </div>
-    <div class="booking-item">
-      <div class="booking-dot green"></div>
-      <div>
-        <div class="booking-name">Frans Hals Museum — domingo 4 oct (opcional, plan de lluvia)</div>
-        <div class="booking-when">franshalsmuseum.nl · tickets online · solo si interesa pintura del s.XVII</div>
-      </div>
-      <div class="booking-urgency">🟢 Opcional</div>
-      <div class="booking-price">20 €</div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ PRESUPUESTO ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1rem">
-    <div class="divider-line"></div>
-    <div class="divider-text">Presupuesto estimado</div>
-    <div class="divider-line"></div>
-  </div>
-
-  <div class="budget-box">
-    <div class="budget-row">
-      <span class="budget-label">Trenes (Maastricht ↔ Ámsterdam + hops diarios a Haarlem)</span>
-      <span class="budget-value">Incluido — NS Weekend</span>
-    </div>
-    <div class="budget-row">
-      <span class="budget-label">Metro GVB por las obras (3 trayectos, si el abono NS no lo cubre)</span>
-      <span class="budget-value">0–10 €</span>
-    </div>
-    <div class="budget-row">
-      <span class="budget-label">Alojamiento — Cabins Hotel Amsterdam (2 noches) ✅</span>
-      <span class="budget-value">~106 €</span>
-    </div>
-    <div class="budget-row">
-      <span class="budget-label">Tasa turística Ámsterdam (12,5%, se paga al llegar)</span>
-      <span class="budget-value">~13 €</span>
-    </div>
-    <div class="budget-row">
-      <span class="budget-label">E-bike 2 días + Rental Bike Safe Plan (Green Bikes) — reservado</span>
-      <span class="budget-value">70 €</span>
-    </div>
-    <div class="budget-row">
-      <span class="budget-label">Teylers Museum</span>
-      <span class="budget-value">17,50 €</span>
-    </div>
-    <div class="budget-row">
-      <span class="budget-label">Grote Kerk</span>
-      <span class="budget-value">~4 €</span>
-    </div>
-    <div class="budget-row">
-      <span class="budget-label">Cena Jopenkerk (comida + cervezas)</span>
-      <span class="budget-value">~35–45 €</span>
-    </div>
-    <div class="budget-row">
-      <span class="budget-label">Resto de comidas y cafés (~5 comidas en 2,5 días)</span>
-      <span class="budget-value">~55–75 €</span>
-    </div>
-    <div class="budget-row">
-      <span class="budget-label">Mercado sábado (haring, gouda, stroopwafel)</span>
-      <span class="budget-value">~10–15 €</span>
-    </div>
-    <div class="budget-row">
-      <span class="budget-label">Opcionales (Frans Hals Museum, cerveza extra, alforja)</span>
-      <span class="budget-value">0–25 €</span>
-    </div>
-    <div class="budget-row">
-      <span class="budget-label">Total estimado</span>
-      <span class="budget-value">~310–370 €</span>
-    </div>
-  </div>
-</div>
-
-<div class="footer">
-  <p>Haarlem & Bloemendaal · Dunas y Mar del Norte · Base Ámsterdam · 2–4 Octubre 2026</p>
-</div>
+/* ---------- Mapa ---------- */
+(function () {
+  var COLORS = {"1": "#2a3048", "2": "#0b5e6e", "3": "#2a5c10"};
+  var BASES = [{"name": "Cabins Hotel Amsterdam", "note": "Base · Grasweg 54, Noord", "q": "Cabins Hotel Amsterdam, Grasweg 54", "lat": 52.3927214, "lon": 4.8993286, "days": [1], "fitAll": false}];
+  var P = [[1, "Amsterdam Centraal", "~20:30 · llegada", "Amsterdam Centraal", 52.3789, 4.90058], [1, "Canales · Brouwersgracht", "21:15 · noche (opcional)", "Brouwersgracht, Amsterdam", 52.38004, 4.88931], [2, "Grand Café Brinkmann", "08:30 · desayuno", "Grand Café Brinkmann, Grote Markt 10, Haarlem", 52.38121, 4.6353], [2, "Green Bikes", "09:30 · e-bike", "Green Bikes, Kruisweg 30, Haarlem", 52.38744, 4.63665], [2, "Ruinas de Brederode", "10:00", "Ruïne van Brederode, Santpoort-Zuid", 52.42537, 4.62254], [2, "Zuid-Kennemerland · dunas", "10:20 · travesía", "Nationaal Park Zuid-Kennemerland", 52.37793, 4.56541], [2, "Bloomingdale · Bloemendaal aan Zee", "11:00 · playa + almuerzo", "Bloomingdale, Bloemendaal aan Zee", 52.40262, 4.54491], [2, "Grote Markt · mercado", "13:15", "Grote Markt, Haarlem", 52.38137, 4.63609], [2, "Grote Kerk (Sint-Bavokerk)", "14:00", "Grote Kerk Haarlem", 52.38114, 4.63729], [2, "Teylers Museum", "15:00", "Teylers Museum, Haarlem", 52.38035, 4.64034], [2, "Hofje van Bakenes", "16:15 · hofjes", "Hofje van Bakenes, Haarlem", 52.38155, 4.63939], [2, "Spaarne · Molen De Adriaan", "17:00 · golden hour", "Molen De Adriaan, Haarlem", 52.38384, 4.64278], [2, "Jopenkerk", "19:15 · cena", "Jopenkerk, Gedempte Voldersgracht 2, Haarlem", 52.3812, 4.62982], [3, "Fietsenstalling Kennemerplein", "08:45 · e-bike", "Fietsenstalling Kennemerplein, Haarlem", 52.38858, 4.63818], [3, "Spaarndam", "09:15 · pueblo-esclusa", "Spaarndam", 52.4128, 4.68201], [3, "PIP Deli", "11:00 · brunch", "PIP Deli, Lorentzplein 2a, Haarlem", 52.37455, 4.62834], [3, "Haarlemmerhout", "12:15 · bosque", "Haarlemmerhout, Haarlem", 52.36767, 4.62603], [3, "DeDAKKAS", "13:30 · almuerzo", "DeDAKKAS, De Witstraat 1A, Haarlem", 52.37737, 4.63704], [3, "Estación de Haarlem", "17:00 · tren", "Station Haarlem", 52.38808, 4.63858]];
+  var pts = []; var count = {};
+  P.forEach(function (r) { count[r[0]] = (count[r[0]] || 0) + 1; pts.push({ day: r[0], n: count[r[0]], name: r[1], note: r[2], q: r[3], lat: r[4], lon: r[5] }); });
+  function gmaps(q) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q); }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var panel = document.getElementById('map-panel');
+  var map = null, layer = null, current = 'all';
+  var GOLD = getComputedStyle(document.documentElement).getPropertyValue('--fp-gold').trim() || '#a8823a';
+  function pinIcon(bg, label, base) {
+    return L.divIcon({ className: '', html: '<div class="pin' + (base ? ' base' : '') + '" style="background:' + bg + '"><span>' + label + '</span></div>',
+      iconSize: base ? [30, 30] : [26, 26], iconAnchor: base ? [15, 30] : [13, 26], tooltipAnchor: [0, base ? -30 : -26] });
+  }
+  function addMarker(p, color, label, base) {
+    var m = L.marker([p.lat, p.lon], { icon: pinIcon(color, label, base), keyboard: true, title: p.name, zIndexOffset: base ? 1000 : 0 });
+    m.bindTooltip('<b>' + esc(p.name) + '</b><small>' + esc(p.note) + ' · clic → Google Maps</small>', { direction: 'top', className: 'trip-tip' });
+    m.on('click', function () { window.open(gmaps(p.q), '_blank', 'noopener'); });
+    m.addTo(layer); return m;
+  }
+  function chip(p, color, label) {
+    return '<a class="map-chip" target="_blank" rel="noopener" href="' + gmaps(p.q) + '"><b style="background:' + color + '">' + label + '</b>' + esc(p.name) + '</a>';
+  }
+  function draw(filter) {
+    current = filter; layer.clearLayers();
+    var bounds = [], html = '', days = Object.keys(COLORS).map(Number);
+    days.forEach(function (d) {
+      if (filter !== 'all' && +filter !== d) return;
+      var dp = pts.filter(function (p) { return p.day === d; });
+      L.polyline(dp.map(function (p) { return [p.lat, p.lon]; }), { color: COLORS[d], weight: 2.5, opacity: 0.55, dashArray: '5 7' }).addTo(layer);
+      dp.forEach(function (p) { addMarker(p, COLORS[d], p.n, false); bounds.push([p.lat, p.lon]); });
+      if (filter !== 'all') html += dp.map(function (p) { return chip(p, COLORS[d], p.n); }).join('');
+    });
+    var bh = '';
+    BASES.forEach(function (b) {
+      if (filter !== 'all' && b.days.indexOf(+filter) < 0) return;
+      addMarker(b, GOLD, '★', true); bh += chip(b, GOLD, '★');
+      if (filter !== 'all' || b.fitAll) bounds.push([b.lat, b.lon]);
+    });
+    document.getElementById('map-chips').innerHTML = bh + html;
+    if (bounds.length) map.fitBounds(bounds, { padding: [28, 28], maxZoom: 16 });
+  }
+  function init() {
+    if (map || typeof L === 'undefined') return;
+    map = L.map('trip-map', { scrollWheelZoom: false, tap: true });
+    var ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+    var esriAttr = 'Tiles &copy; <a href="https://www.esri.com">Esri</a>';
+    var styles = {
+      'Claro': L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', { maxZoom: 19, subdomains: 'abc', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &mdash; <a href="https://www.hotosm.org/">HOT</a>' }),
+      'Calles': L.tileLayer(ESRI + 'World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap' }),
+      'Topo': L.tileLayer(ESRI + 'World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap' }),
+      'Satélite': L.layerGroup([
+        L.tileLayer(ESRI + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: esriAttr + ' &mdash; Esri, Maxar, Earthstar Geographics' }),
+        L.tileLayer(ESRI + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 })
+      ])
+    };
+    var STYLE_KEY = 'haarlem-plan-map-style', styleName = 'Claro';
+    try { var sv = localStorage.getItem(STYLE_KEY); if (sv && styles[sv]) styleName = sv; } catch (e) {}
+    styles[styleName].addTo(map);
+    L.control.layers(styles, null, { position: 'topright', collapsed: true }).addTo(map);
+    map.on('baselayerchange', function (e) { try { localStorage.setItem(STYLE_KEY, e.name); } catch (err) {} });
+    layer = L.layerGroup().addTo(map);
+    map.on('focus', function () { map.scrollWheelZoom.enable(); });
+    map.on('blur', function () { map.scrollWheelZoom.disable(); });
+    draw('all');
+  }
+  panel.addEventListener('toggle', function () {
+    if (!panel.open) return;
+    init();
+    if (map) setTimeout(function () { map.invalidateSize(); draw(current); }, 60);
+  });
+  document.querySelectorAll('#map-filters button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#map-filters button').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active'); if (map) draw(b.getAttribute('data-day'));
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
