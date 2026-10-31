@@ -558,7 +558,7 @@
 
   /* ---- MAPA (colapsable) ---- */
   .map-panel {
-    margin: 0 2rem 2rem;
+    margin: 0 2rem 1rem;
     background: white;
     border-radius: 6px;
     border: 1px solid rgba(29,61,120,0.08);
@@ -643,7 +643,11 @@
   .fold-body { padding: 1rem 1.2rem 1.2rem; border-top: 1px solid var(--glaze); background: var(--porcelain); }
   .fold-panel .info-card { box-shadow: none; }
   /* ---- DÍAS COLAPSABLES ---- */
-  .days-toolbar { display: flex; justify-content: flex-end; gap: 0.4rem; margin: 0 2rem 0.8rem; }
+  .days-toolbar { display: flex; justify-content: flex-end; gap: 0.4rem; margin: 1.6rem 2rem 0.8rem; }
+  #food-panel { margin-top: 2.2rem; }
+  #before-panel { margin-top: 2rem; }
+  .fold-body .warnings { margin: 0 0 1rem; }
+  .fold-body .light-table { margin: 0; }
   .days-toolbar button {
     font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase;
     padding: 0.35rem 0.75rem; border: 1px solid var(--glaze); background: white; color: var(--ink-mid);
@@ -660,11 +664,13 @@
   .day-section.collapsed .day-header { margin-bottom: 0; }
 
   @media (max-width: 600px) {
-    .map-panel { margin: 0 1rem 2rem; }
+    .map-panel { margin: 0 1rem 0.8rem; }
     .map-body { padding: 0 0.8rem 0.9rem; }
     .fold-body { padding: 0.8rem; }
     #trip-map { height: 360px; }
-    .days-toolbar { margin: 0 1rem 0.8rem; }
+    .days-toolbar { margin: 1.2rem 1rem 0.8rem; }
+    #before-panel { margin-top: 1.5rem; }
+    .fold-body .warnings, .fold-body .light-table { margin-left: 0; margin-right: 0; }
     .day-header .chev { position: absolute; right: 1.1rem; top: 1.6rem; }
   }
 </style>
@@ -681,11 +687,16 @@
 <div class="tile-strip"></div>
 
 <!-- ============ ANTES DE SALIR ============ -->
-<div class="divider" style="margin-top:2rem">
-  <div class="divider-line"></div><div class="divider-tile"></div>
-  <div class="divider-text">Antes de salir</div>
-  <div class="divider-tile"></div><div class="divider-line"></div>
-</div>
+<details class="map-panel fold-panel" id="before-panel">
+  <summary>
+    <span class="map-sum-icon">🧳</span>
+    <span class="map-sum-text">
+      <span class="map-sum-title">Antes de salir</span>
+      <span class="map-sum-sub">Lluvia en noviembre · frases FODMAP · luz: ocaso 17:12, hora azul hasta 17:43</span>
+    </span>
+    <span class="chev"></span>
+  </summary>
+  <div class="fold-body">
 
 <div class="warnings">
   <div class="warning-card terra">
@@ -708,6 +719,9 @@
   </table>
   <div class="light-note">Hora local de Portugal (UTC+0), calculado para Oporto. ~9 h 50 min de luz. Regla del viaje: <strong>en el mirador a las 16:30</strong>, y no te vayas al ponerse el sol — la hora azul sobre la Ribeira iluminada es la mejor foto de la ciudad.</div>
 </div>
+
+  </div>
+</details>
 
 <!-- ============ MAPA ============ -->
 <details class="map-panel" id="map-panel">
@@ -1362,12 +1376,16 @@
 </div>
 
 <!-- ============ GASTRONOMÍA ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1.3rem">
-    <div class="divider-line"></div><div class="divider-tile"></div>
-    <div class="divider-text">Guía gastronómica · FODMAP</div>
-    <div class="divider-tile"></div><div class="divider-line"></div>
-  </div>
+<details class="map-panel fold-panel" id="food-panel">
+  <summary>
+    <span class="map-sum-icon">🥗</span>
+    <span class="map-sum-text">
+      <span class="map-sum-title">Guía gastronómica · FODMAP</span>
+      <span class="map-sum-sub">Semáforo FODMAP de platos del norte · dónde comer cada día</span>
+    </span>
+    <span class="chev"></span>
+  </summary>
+  <div class="fold-body">
 
   <div class="sub-label">Semáforo de platos del norte</div>
   <div class="dish-grid">
@@ -1474,15 +1492,20 @@
       <div class="meta"><span class="tag warning">⚠ Trampa</span></div>
     </div>
   </div>
-</div>
+  </div>
+</details>
 
 <!-- ============ SPOTS FOTOGRÁFICOS ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1.3rem">
-    <div class="divider-line"></div><div class="divider-tile"></div>
-    <div class="divider-text">Spots fotográficos</div>
-    <div class="divider-tile"></div><div class="divider-line"></div>
-  </div>
+<details class="map-panel fold-panel" id="photo-panel">
+  <summary>
+    <span class="map-sum-icon">📷</span>
+    <span class="map-sum-text">
+      <span class="map-sum-title">Spots fotográficos</span>
+      <span class="map-sum-sub">La regla de luz de la ciudad · 9 spots con momento, focal y ajustes</span>
+    </span>
+    <span class="chev"></span>
+  </summary>
+  <div class="fold-body">
 
   <div class="photo-grid">
     <div class="photo-card wide">
@@ -1536,15 +1559,20 @@
       <div class="photo-meta">Jue 11:15 · 35-50 mm</div>
     </div>
   </div>
-</div>
+  </div>
+</details>
 
 <!-- ============ RESERVAS ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1.3rem">
-    <div class="divider-line"></div><div class="divider-tile"></div>
-    <div class="divider-text">A reservar / verificar</div>
-    <div class="divider-tile"></div><div class="divider-line"></div>
-  </div>
+<details class="map-panel fold-panel" id="booking-panel">
+  <summary>
+    <span class="map-sum-icon">📋</span>
+    <span class="map-sum-text">
+      <span class="map-sum-title">A reservar / verificar</span>
+      <span class="map-sum-sub">Qué reservar, urgencia y fecha límite</span>
+    </span>
+    <span class="chev"></span>
+  </summary>
+  <div class="fold-body">
 
   <div class="booking-list">
     <div class="booking-item">
@@ -1638,15 +1666,20 @@
       <div class="booking-price">—</div>
     </div>
   </div>
-</div>
+  </div>
+</details>
 
 <!-- ============ PRESUPUESTO ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1.3rem">
-    <div class="divider-line"></div><div class="divider-tile"></div>
-    <div class="divider-text">Presupuesto estimado</div>
-    <div class="divider-tile"></div><div class="divider-line"></div>
-  </div>
+<details class="map-panel fold-panel" id="budget-panel">
+  <summary>
+    <span class="map-sum-icon">💶</span>
+    <span class="map-sum-text">
+      <span class="map-sum-title">Presupuesto estimado</span>
+      <span class="map-sum-sub">~490 € todo incluido · rango 460-560 €</span>
+    </span>
+    <span class="chev"></span>
+  </summary>
+  <div class="fold-body">
 
   <div class="budget-box">
     <div class="budget-row"><span class="budget-label">Vuelos BCN ⇄ OPO (Vueling)</span><span class="budget-value">85 €</span></div>
@@ -1660,15 +1693,20 @@
     <div class="budget-row"><span class="budget-label">Libro de cocina (Lello descuenta su entrada)</span><span class="budget-value">25-40 €</span></div>
     <div class="budget-row total"><span class="budget-label">Total estimado</span><span class="budget-value">~490 € (rango 460-560 €)</span></div>
   </div>
-</div>
+  </div>
+</details>
 
 <!-- ============ CHECKLIST ============ -->
-<div class="section-block">
-  <div class="divider" style="padding:0;margin-bottom:1.3rem">
-    <div class="divider-line"></div><div class="divider-tile"></div>
-    <div class="divider-text">Checklist pre-viaje</div>
-    <div class="divider-tile"></div><div class="divider-line"></div>
-  </div>
+<details class="map-panel fold-panel" id="checklist-panel">
+  <summary>
+    <span class="map-sum-icon">✅</span>
+    <span class="map-sum-text">
+      <span class="map-sum-title">Checklist pre-viaje</span>
+      <span class="map-sum-sub">Documentos · dinero · apps · mochila · salud · fechas clave</span>
+    </span>
+    <span class="chev"></span>
+  </summary>
+  <div class="fold-body">
 
   <div class="check-grid">
     <div class="check-card">
@@ -1714,7 +1752,8 @@
       <div class="check-item">14 nov: previsión y reordenar días si hace falta</div>
     </div>
   </div>
-</div>
+  </div>
+</details>
 
 <div class="tile-strip" style="margin-top:3rem"></div>
 <div class="footer" style="margin-top:0">
