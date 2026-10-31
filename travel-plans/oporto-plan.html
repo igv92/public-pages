@@ -640,8 +640,16 @@
   }
   .trip-tip small { display: block; color: var(--ink-light); font-style: italic; }
 
-  .fold-body { padding: 1rem 1.2rem 1.2rem; border-top: 1px solid var(--glaze); background: var(--porcelain); }
-  .fold-panel .info-card { box-shadow: none; }
+  /* Paneles de contenido: la tarjeta es solo el summary; al abrir, el contenido ocupa el ancho completo de la página */
+  .fold-panel { background: transparent; border: none; box-shadow: none; overflow: visible; border-radius: 0; }
+  .fold-panel > summary {
+    background: white; border-radius: 6px;
+    border: 1px solid rgba(29,61,120,0.08); border-left: 3px solid var(--cobalt);
+    box-shadow: 0 2px 12px rgba(29,61,120,0.07);
+  }
+  .fold-panel > summary:hover { background: #fbfcfe; }
+  .fold-panel[open] > summary { border-bottom-left-radius: 6px; }
+  .fold-body { padding: 1rem 0 0.6rem; }
   /* ---- DÍAS COLAPSABLES ---- */
   .days-toolbar { display: flex; justify-content: flex-end; gap: 0.4rem; margin: 1.6rem 2rem 0.8rem; }
   #food-panel { margin-top: 2.2rem; }
@@ -666,7 +674,7 @@
   @media (max-width: 600px) {
     .map-panel { margin: 0 1rem 0.8rem; }
     .map-body { padding: 0 0.8rem 0.9rem; }
-    .fold-body { padding: 0.8rem; }
+    .fold-body { padding: 0.8rem 0 0.4rem; }
     #trip-map { height: 360px; }
     .days-toolbar { margin: 1.2rem 1rem 0.8rem; }
     #before-panel { margin-top: 1.5rem; }
